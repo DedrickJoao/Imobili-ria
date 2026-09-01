@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Search, X, ArrowRight, Sparkles } from 'lucide-react';
 import { useShop } from '../context/ShopContext';
+import { useLanguage } from '../context/LanguageContext';
 import { motion, AnimatePresence } from 'motion/react';
 
 interface SearchBarProps {
@@ -10,6 +11,7 @@ interface SearchBarProps {
 
 export const SearchBar: React.FC<SearchBarProps> = ({ isMobile, onCloseMobile }) => {
   const { products, activeFilter, setFilter, openProductDetail, setIsAIStylistOpen } = useShop();
+  const { t, formatCurrency, language } = useLanguage();
   const [isOpen, setIsOpen] = useState(false);
   const [query, setQuery] = useState(activeFilter.searchQuery || '');
   const containerRef = useRef<HTMLDivElement>(null);
@@ -60,7 +62,9 @@ export const SearchBar: React.FC<SearchBarProps> = ({ isMobile, onCloseMobile })
         .slice(0, 4)
     : [];
 
-  const popularKeywords = ['Bouclé Sofa', 'Travertine Table', 'Walnut Desk', 'Lounge Chair', 'Washi Lamp', 'Platform Bed'];
+  const popularKeywords = language === 'pt'
+    ? ['Sofá Bouclé', 'Mesa Travertino', 'Escrivaninha Nogueira', 'Poltrona', 'Luminária Washi', 'Cama Plataforma']
+    : ['Bouclé Sofa', 'Travertine Table', 'Walnut Desk', 'Lounge Chair', 'Washi Lamp', 'Platform Bed'];
 
   return (
     <div ref={containerRef} className="relative w-full">
@@ -72,7 +76,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({ isMobile, onCloseMobile })
           value={query}
           onChange={e => handleSearchChange(e.target.value)}
           onFocus={() => setIsOpen(true)}
-          placeholder="Search pieces, materials, styles..."
+          placeholder={t.searchPlaceholder}
           className="w-full bg-[#F5F5F5] border-none text-[#1A1A1A] placeholder:text-[#7A7A7A] text-xs pl-9 pr-8 py-2.5 rounded-sm focus:ring-1 focus:ring-[#A08C75] transition-all outline-none"
         />
         {query && (
@@ -102,7 +106,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({ isMobile, onCloseMobile })
               <div>
                 <div className="flex items-center justify-between pb-2 border-b border-[#E5E4E2] mb-3">
                   <span className="text-[10px] uppercase tracking-[0.2em] font-bold text-[#A08C75]">
-                    Matching Pieces ({matchingProducts.length})
+                    {t.searchMatchingPieces} ({matchingProducts.length})
                   </span>
                   <button
                     id="view-all-results-btn"
@@ -112,7 +116,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({ isMobile, onCloseMobile })
                     }}
                     className="text-[10px] uppercase tracking-wider font-bold text-[#1A1A1A] hover:text-[#A08C75] flex items-center gap-1 border-b border-[#1A1A1A]"
                   >
-                    View in gallery <ArrowRight className="w-3 h-3" />
+                    {t.searchViewInGallery} <ArrowRight className="w-3 h-3" />
                   </button>
                 </div>
 
@@ -139,13 +143,13 @@ export const SearchBar: React.FC<SearchBarProps> = ({ isMobile, onCloseMobile })
                           <h4 className="text-xs font-semibold text-[#1A1A1A] group-hover:text-[#A08C75] truncate transition-colors font-serif italic">
                             {product.name}
                           </h4>
-                          <p className="text-[10px] text-[#7A7A7A] truncate">
+                          <p className="text-[10px] text-[#7A7A7A] truncate font-light">
                             {product.materials.join(' · ')}
                           </p>
                         </div>
                         <div className="text-right shrink-0">
-                          <span className="text-xs font-bold text-[#1A1A1A]">
-                            ${product.price.toLocaleString()}
+                          <span className="text-xs font-bold text-[#1A1A1A] font-mono">
+                            {formatCurrency(product.price)}
                           </span>
                         </div>
                       </div>
@@ -153,7 +157,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({ isMobile, onCloseMobile })
                   </div>
                 ) : (
                   <div className="py-6 text-center">
-                    <p className="text-xs text-[#7A7A7A]">No exact pieces found for "{query}".</p>
+                    <p className="text-xs text-[#7A7A7A]">{t.searchNoExact} "{query}".</p>
                     <button
                       id="search-ai-recommend-btn"
                       onClick={() => {
@@ -163,7 +167,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({ isMobile, onCloseMobile })
                       }}
                       className="mt-3 inline-flex items-center gap-2 px-3 py-1.5 rounded-sm bg-[#FAF9F6] text-[10px] uppercase tracking-wider font-bold text-[#A08C75] border border-[#E5E4E2] hover:bg-[#F5F2ED] transition-colors"
                     >
-                      <Sparkles className="w-3.5 h-3.5 text-[#A08C75]" /> Ask AI Stylist for recommendations
+                      <Sparkles className="w-3.5 h-3.5 text-[#A08C75]" /> {t.searchAskAi}
                     </button>
                   </div>
                 )}
@@ -171,7 +175,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({ isMobile, onCloseMobile })
             ) : (
               <div>
                 <span className="text-[10px] uppercase tracking-[0.2em] font-bold text-[#A08C75] block mb-2.5">
-                  Popular Searches
+                  {t.searchPopular}
                 </span>
                 <div className="flex flex-wrap gap-1.5 mb-3">
                   {popularKeywords.map(keyword => (
@@ -193,7 +197,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({ isMobile, onCloseMobile })
                 <div className="pt-3 border-t border-[#E5E4E2] flex items-center justify-between">
                   <div className="flex items-center gap-2 text-[10px] text-[#7A7A7A]">
                     <Sparkles className="w-3.5 h-3.5 text-[#A08C75]" />
-                    <span>Looking for specific room advice?</span>
+                    <span>{t.searchRoomAdvice}</span>
                   </div>
                   <button
                     id="search-ai-stylist-shortcut"
@@ -204,7 +208,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({ isMobile, onCloseMobile })
                     }}
                     className="text-[10px] uppercase tracking-wider font-bold text-[#A08C75] hover:text-[#1A1A1A] border-b border-[#A08C75]"
                   >
-                    Launch AI Stylist →
+                    {t.searchLaunchAi}
                   </button>
                 </div>
               </div>

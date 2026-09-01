@@ -1,6 +1,7 @@
 import React from 'react';
 import { useShop } from '../context/ShopContext';
-import { X, Heart, ShoppingBag, Trash2, ArrowRight } from 'lucide-react';
+import { useLanguage } from '../context/LanguageContext';
+import { X, Heart, ShoppingBag, Trash2 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 
 export const WishlistDrawer: React.FC = () => {
@@ -13,6 +14,8 @@ export const WishlistDrawer: React.FC = () => {
     addToCart,
     openProductDetail,
   } = useShop();
+
+  const { t, formatCurrency } = useLanguage();
 
   if (!isWishlistOpen) return null;
 
@@ -43,7 +46,7 @@ export const WishlistDrawer: React.FC = () => {
               <div className="flex items-center gap-2">
                 <Heart className="w-4 h-4 text-[#A08C75] fill-current" />
                 <h2 className="font-serif italic text-base sm:text-lg font-bold text-[#1A1A1A]">
-                  Saved Wishlist ({wishlistProducts.length})
+                  {t.wishlistTitle} ({wishlistProducts.length})
                 </h2>
               </div>
               <button
@@ -104,7 +107,7 @@ export const WishlistDrawer: React.FC = () => {
 
                       <div className="flex items-center justify-between mt-2 pt-2 border-t border-[#E5E4E2]">
                         <span className="text-xs font-bold text-[#1A1A1A] font-mono">
-                          ${prod.price.toLocaleString()}
+                          {formatCurrency(prod.price)}
                         </span>
 
                         <button
@@ -115,7 +118,7 @@ export const WishlistDrawer: React.FC = () => {
                           className="px-3 py-1.5 rounded-sm bg-[#1A1A1A] hover:bg-black text-white text-[10px] uppercase tracking-wider font-bold flex items-center gap-1.5 transition-colors"
                         >
                           <ShoppingBag className="w-3 h-3" />
-                          <span>Move to Bag</span>
+                          <span>{t.wishlistMoveToBag}</span>
                         </button>
                       </div>
                     </div>
@@ -127,9 +130,9 @@ export const WishlistDrawer: React.FC = () => {
                     <Heart className="w-6 h-6" />
                   </div>
                   <div className="space-y-1">
-                    <h3 className="font-serif italic text-base font-bold text-[#1A1A1A]">No saved pieces yet</h3>
+                    <h3 className="font-serif italic text-base font-bold text-[#1A1A1A]">{t.wishlistEmptyTitle}</h3>
                     <p className="text-xs text-[#7A7A7A] max-w-xs mx-auto font-light">
-                      Click the heart on any furniture piece to save it to your personal curation.
+                      {t.wishlistEmptyDesc}
                     </p>
                   </div>
                 </div>
@@ -148,7 +151,7 @@ export const WishlistDrawer: React.FC = () => {
                   className="w-full py-3 px-4 rounded-sm bg-[#1A1A1A] hover:bg-black text-white text-[10px] uppercase font-bold tracking-widest flex items-center justify-center gap-2 transition-colors"
                 >
                   <ShoppingBag className="w-3.5 h-3.5" />
-                  <span>Add All Saved Pieces to Bag</span>
+                  <span>{t.wishlistAddAll}</span>
                 </button>
               </div>
             )}

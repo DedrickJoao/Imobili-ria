@@ -1,5 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import { useShop } from '../context/ShopContext';
+import { useLanguage } from '../context/LanguageContext';
 import { ProductCard } from './ProductCard';
 import { CATEGORIES_LIST, MATERIALS_LIST, COLORS_LIST } from '../data/products';
 import { FurnitureCategory, RoomCategory, FilterState } from '../types';
@@ -20,9 +21,34 @@ import { motion, AnimatePresence } from 'motion/react';
 
 export const ProductGallery: React.FC = () => {
   const { products, activeFilter, setFilter, resetFilters, setIsAIStylistOpen } = useShop();
+  const { t, formatCurrency, language } = useLanguage();
 
   const [isFilterDrawerOpen, setIsFilterDrawerOpen] = useState(false);
   const [maxPrice, setMaxPrice] = useState(activeFilter.priceRange[1]);
+
+  const getLocalizedCategoryLabel = (id: string, defaultLabel: string) => {
+    switch (id) {
+      case 'all': return t.catAll;
+      case 'sofas': return t.catSofas;
+      case 'tables': return t.catTables;
+      case 'chairs': return t.catChairs;
+      case 'beds': return t.catBeds;
+      case 'storage': return t.catStorage;
+      case 'lighting': return t.catLighting;
+      default: return defaultLabel;
+    }
+  };
+
+  const getLocalizedRoomLabel = (room: RoomCategory) => {
+    switch (room) {
+      case 'all': return t.roomAll;
+      case 'living': return t.roomLiving;
+      case 'dining': return t.roomDining;
+      case 'bedroom': return t.roomBedroom;
+      case 'workspace': return t.roomWorkspace;
+      default: return room;
+    }
+  };
 
   // Handle category change
   const handleCategorySelect = (catId: FurnitureCategory) => {
@@ -144,10 +170,10 @@ export const ProductGallery: React.FC = () => {
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
           <div>
             <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#A08C75]">
-              The Studio Collection
+              {t.gallerySubTitle}
             </span>
             <h2 className="font-serif italic text-2xl sm:text-3xl md:text-4xl font-bold text-[#1A1A1A] mt-1">
-              Curated Furniture Pieces
+              {t.galleryMainTitle}
             </h2>
           </div>
 
@@ -201,36 +227,39 @@ export const ProductGallery: React.FC = () => {
               className="flex items-center gap-2 px-3.5 py-2 rounded-sm bg-[#F5F2ED] border border-[#E5E4E2] text-[10px] uppercase tracking-wider font-bold text-[#1A1A1A] hover:border-[#A08C75] transition-all"
             >
               <Sparkles className="w-3.5 h-3.5 text-[#A08C75]" />
-              <span>AI Recommendation</span>
+              <span>{t.galleryAiRec}</span>
             </button>
           </div>
         </div>
 
         {/* Category horizontal scroll bar */}
         <div className="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-none">
-          {CATEGORIES_LIST.map(cat => (
-            <button
-              key={cat.id}
-              id={`gallery-cat-tab-${cat.id}`}
-              onClick={() => handleCategorySelect(cat.id as FurnitureCategory)}
-              className={`px-3.5 py-1.5 rounded-full text-[10px] uppercase font-bold tracking-wider whitespace-nowrap transition-all flex items-center gap-2 border ${
-                activeFilter.category === cat.id
-                  ? 'bg-[#1A1A1A] text-white border-[#1A1A1A] shadow-xs'
-                  : 'bg-white text-[#7A7A7A] border-[#E5E4E2] hover:border-[#1A1A1A] hover:text-[#1A1A1A]'
-              }`}
-            >
-              <span>{cat.label}</span>
-              <span
-                className={`text-[9px] px-1.5 py-0.2 rounded-full ${
+          {CATEGORIES_LIST.map(cat => {
+            const label = getLocalizedCategoryLabel(cat.id, cat.label);
+            return (
+              <button
+                key={cat.id}
+                id={`gallery-cat-tab-${cat.id}`}
+                onClick={() => handleCategorySelect(cat.id as FurnitureCategory)}
+                className={`px-3.5 py-1.5 rounded-full text-[10px] uppercase font-bold tracking-wider whitespace-nowrap transition-all flex items-center gap-2 border ${
                   activeFilter.category === cat.id
-                    ? 'bg-white/20 text-white'
-                    : 'bg-[#F5F5F5] text-[#7A7A7A]'
+                    ? 'bg-[#1A1A1A] text-white border-[#1A1A1A] shadow-xs'
+                    : 'bg-white text-[#7A7A7A] border-[#E5E4E2] hover:border-[#1A1A1A] hover:text-[#1A1A1A]'
                 }`}
               >
-                {cat.count}
-              </span>
-            </button>
-          ))}
+                <span>{label}</span>
+                <span
+                  className={`text-[9px] px-1.5 py-0.2 rounded-full ${
+                    activeFilter.category === cat.id
+                      ? 'bg-white/20 text-white'
+                      : 'bg-[#F5F5F5] text-[#7A7A7A]'
+                  }`}
+                >
+                  {cat.count}
+                </span>
+              </button>
+            );
+          })}
         </div>
 
         {/* Toolbar: Filter Toggles & Sort */}
@@ -247,7 +276,7 @@ export const ProductGallery: React.FC = () => {
               }`}
             >
               <SlidersHorizontal className="w-3 h-3 text-[#A08C75]" />
-              <span>Smart Filters</span>
+              <span>{t.gallerySmartFilters}</span>
               {activeFiltersCount > 0 && (
                 <span className="w-3.5 h-3.5 rounded-full bg-[#A08C75] text-white text-[9px] flex items-center justify-center font-bold">
                   {activeFiltersCount}
@@ -268,7 +297,7 @@ export const ProductGallery: React.FC = () => {
                       : 'bg-white border-[#E5E4E2] text-[#7A7A7A] hover:text-[#1A1A1A] hover:border-[#1A1A1A]'
                   }`}
                 >
-                  {room === 'all' ? 'All Rooms' : room}
+                  {getLocalizedRoomLabel(room)}
                 </button>
               ))}
             </div>
@@ -282,14 +311,14 @@ export const ProductGallery: React.FC = () => {
                 onChange={e => setFilter({ inStockOnly: e.target.checked })}
                 className="w-3.5 h-3.5 accent-[#A08C75] rounded-xs"
               />
-              <span>In-Stock Only</span>
+              <span>{t.galleryInStockOnly}</span>
             </label>
           </div>
 
           {/* Right side: Result Count & Sort Dropdown */}
           <div className="flex items-center gap-3">
             <span className="text-[11px] text-[#7A7A7A] hidden md:inline">
-              Showing <strong>{filteredProducts.length}</strong> of {products.length} pieces
+              {t.galleryShowing} <strong>{filteredProducts.length}</strong> {t.galleryOf} {products.length} {t.galleryPieces}
             </span>
 
             <div className="relative flex items-center">
@@ -303,11 +332,11 @@ export const ProductGallery: React.FC = () => {
                 }
                 className="bg-[#FAF9F6] border border-[#E5E4E2] text-[#1A1A1A] text-[10px] uppercase font-bold tracking-wider rounded-sm px-3 py-2 pr-8 focus:outline-none focus:border-[#A08C75] cursor-pointer"
               >
-                <option value="featured">Sort by: Featured</option>
-                <option value="price-asc">Price: Low to High</option>
-                <option value="price-desc">Price: High to Low</option>
-                <option value="rating">Highest Rated</option>
-                <option value="newest">New Arrivals</option>
+                <option value="featured">{t.gallerySortFeatured}</option>
+                <option value="price-asc">{t.gallerySortPriceAsc}</option>
+                <option value="price-desc">{t.gallerySortPriceDesc}</option>
+                <option value="rating">{t.gallerySortRating}</option>
+                <option value="newest">{t.gallerySortNewest}</option>
               </select>
               <ChevronDown className="w-3 h-3 text-[#7A7A7A] absolute right-2.5 pointer-events-none" />
             </div>
@@ -327,7 +356,7 @@ export const ProductGallery: React.FC = () => {
               <div className="flex items-center justify-between pb-3 border-b border-[#E5E4E2]">
                 <div className="flex items-center gap-2">
                   <SlidersHorizontal className="w-3.5 h-3.5 text-[#A08C75]" />
-                  <h3 className="font-serif italic text-base font-bold text-[#1A1A1A]">Refine by Attributes</h3>
+                  <h3 className="font-serif italic text-base font-bold text-[#1A1A1A]">{t.galleryRefineTitle}</h3>
                 </div>
                 {activeFiltersCount > 0 && (
                   <button
@@ -335,7 +364,7 @@ export const ProductGallery: React.FC = () => {
                     onClick={resetFilters}
                     className="text-[10px] uppercase tracking-wider font-bold text-[#A08C75] hover:text-[#1A1A1A] flex items-center gap-1 border-b border-[#A08C75]"
                   >
-                    <RotateCcw className="w-3 h-3" /> Reset all
+                    <RotateCcw className="w-3 h-3" /> {t.galleryResetAll}
                   </button>
                 )}
               </div>
@@ -344,8 +373,8 @@ export const ProductGallery: React.FC = () => {
                 {/* 1. Price Range Slider */}
                 <div className="space-y-2.5">
                   <div className="flex items-center justify-between text-xs font-bold text-[#1A1A1A]">
-                    <span className="text-[10px] uppercase tracking-wider text-[#7A7A7A]">Price Range</span>
-                    <span className="text-[#A08C75] font-mono">${activeFilter.priceRange[0]} - ${maxPrice.toLocaleString()}</span>
+                    <span className="text-[10px] uppercase tracking-wider text-[#7A7A7A]">{t.galleryPriceRange}</span>
+                    <span className="text-[#A08C75] font-mono">{formatCurrency(activeFilter.priceRange[0])} - {formatCurrency(maxPrice)}</span>
                   </div>
                   <input
                     id="price-range-slider"
@@ -358,15 +387,15 @@ export const ProductGallery: React.FC = () => {
                     className="w-full h-1 bg-[#E5E4E2] rounded-none appearance-none cursor-pointer accent-[#A08C75]"
                   />
                   <div className="flex items-center justify-between text-[10px] text-[#7A7A7A] font-mono">
-                    <span>$300</span>
-                    <span>$2,500</span>
-                    <span>$4,500</span>
+                    <span>{formatCurrency(300)}</span>
+                    <span>{formatCurrency(2500)}</span>
+                    <span>{formatCurrency(4500)}</span>
                   </div>
                 </div>
 
                 {/* 2. Materials */}
                 <div className="space-y-2">
-                  <span className="text-[10px] uppercase tracking-wider text-[#7A7A7A] font-bold block">Craft Materials</span>
+                  <span className="text-[10px] uppercase tracking-wider text-[#7A7A7A] font-bold block">{t.galleryMaterials}</span>
                   <div className="flex flex-wrap gap-1.5">
                     {MATERIALS_LIST.map(material => {
                       const selected = activeFilter.materials.includes(material);
@@ -391,7 +420,7 @@ export const ProductGallery: React.FC = () => {
 
                 {/* 3. Color Swatches */}
                 <div className="space-y-2">
-                  <span className="text-[10px] uppercase tracking-wider text-[#7A7A7A] font-bold block">Color Family</span>
+                  <span className="text-[10px] uppercase tracking-wider text-[#7A7A7A] font-bold block">{t.galleryColorFamily}</span>
                   <div className="flex flex-wrap gap-2">
                     {COLORS_LIST.map(color => {
                       const selected = activeFilter.colors.includes(color.name);
@@ -420,10 +449,10 @@ export const ProductGallery: React.FC = () => {
                   <div className="space-y-1">
                     <div className="flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wider text-[#A08C75]">
                       <Sparkles className="w-3 h-3 text-[#A08C75]" />
-                      <span>Need room guidance?</span>
+                      <span>{t.galleryAiPromptTitle}</span>
                     </div>
                     <p className="text-[11px] text-[#5A5A5A] leading-snug">
-                      Let our AI interior advisor curate matching furniture based on your room dimensions.
+                      {t.galleryAiPromptDesc}
                     </p>
                   </div>
                   <button
@@ -431,7 +460,7 @@ export const ProductGallery: React.FC = () => {
                     onClick={() => setIsAIStylistOpen(true)}
                     className="w-full py-1.5 px-3 rounded-sm bg-[#1A1A1A] text-white text-[10px] uppercase tracking-widest font-bold hover:bg-black transition-colors"
                   >
-                    Open Stylist Studio
+                    {t.galleryOpenAdvisor}
                   </button>
                 </div>
               </div>
@@ -442,11 +471,11 @@ export const ProductGallery: React.FC = () => {
         {/* Active Filter Badges */}
         {activeFiltersCount > 0 && (
           <div className="flex flex-wrap items-center gap-2 pt-1">
-            <span className="text-[10px] uppercase tracking-wider text-[#7A7A7A] font-bold">Active filters:</span>
+            <span className="text-[10px] uppercase tracking-wider text-[#7A7A7A] font-bold">{t.galleryActiveFilters}</span>
 
             {activeFilter.category !== 'all' && (
               <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-white border border-[#E5E4E2] text-[10px] uppercase font-bold text-[#1A1A1A]">
-                Category: {activeFilter.category}
+                {t.navCategories}: {getLocalizedCategoryLabel(activeFilter.category, activeFilter.category)}
                 <button
                   id="remove-cat-filter-btn"
                   onClick={() => setFilter({ category: 'all' })}
@@ -459,7 +488,7 @@ export const ProductGallery: React.FC = () => {
 
             {activeFilter.room !== 'all' && (
               <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-white border border-[#E5E4E2] text-[10px] uppercase font-bold text-[#1A1A1A] capitalize">
-                Room: {activeFilter.room}
+                {getLocalizedRoomLabel(activeFilter.room)}
                 <button
                   id="remove-room-filter-btn"
                   onClick={() => setFilter({ room: 'all' })}
@@ -472,7 +501,7 @@ export const ProductGallery: React.FC = () => {
 
             {activeFilter.searchQuery && (
               <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-white border border-[#E5E4E2] text-[10px] uppercase font-bold text-[#1A1A1A]">
-                Search: "{activeFilter.searchQuery}"
+                "{activeFilter.searchQuery}"
                 <button
                   id="remove-search-filter-btn"
                   onClick={() => setFilter({ searchQuery: '' })}
@@ -488,7 +517,7 @@ export const ProductGallery: React.FC = () => {
                 key={mat}
                 className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-white border border-[#E5E4E2] text-[10px] uppercase font-bold text-[#1A1A1A]"
               >
-                Material: {mat}
+                {mat}
                 <button
                   id={`remove-mat-${mat}`}
                   onClick={() => toggleMaterial(mat)}
@@ -504,7 +533,7 @@ export const ProductGallery: React.FC = () => {
                 key={col}
                 className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-white border border-[#E5E4E2] text-[10px] uppercase font-bold text-[#1A1A1A]"
               >
-                Color: {col}
+                {col}
                 <button
                   id={`remove-col-${col}`}
                   onClick={() => toggleColor(col)}
@@ -520,7 +549,7 @@ export const ProductGallery: React.FC = () => {
               onClick={resetFilters}
               className="text-[10px] uppercase tracking-wider font-bold text-[#A08C75] hover:text-[#1A1A1A] border-b border-[#A08C75] ml-2"
             >
-              Clear all
+              {t.galleryClearAll}
             </button>
           </div>
         )}
@@ -548,9 +577,9 @@ export const ProductGallery: React.FC = () => {
               <SlidersHorizontal className="w-5 h-5" />
             </div>
             <div className="space-y-1">
-              <h3 className="font-serif italic text-xl font-bold text-[#1A1A1A]">No matching pieces</h3>
+              <h3 className="font-serif italic text-xl font-bold text-[#1A1A1A]">{t.galleryNoMatchingTitle}</h3>
               <p className="text-xs text-[#7A7A7A]">
-                We couldn't find any furniture items matching your exact filter combination.
+                {t.galleryNoMatchingDesc}
               </p>
             </div>
             <div className="pt-2 flex justify-center gap-3">
@@ -559,7 +588,7 @@ export const ProductGallery: React.FC = () => {
                 onClick={resetFilters}
                 className="px-5 py-2.5 rounded-sm bg-[#1A1A1A] text-white text-[10px] uppercase tracking-widest font-bold hover:bg-black transition-colors"
               >
-                Reset All Filters
+                {t.galleryResetFiltersBtn}
               </button>
               <button
                 id="empty-ask-ai-btn"
@@ -567,7 +596,7 @@ export const ProductGallery: React.FC = () => {
                 className="px-5 py-2.5 rounded-sm bg-[#F5F2ED] text-[#1A1A1A] border border-[#E5E4E2] text-[10px] uppercase tracking-wider font-bold hover:border-[#A08C75] transition-colors flex items-center gap-1.5"
               >
                 <Sparkles className="w-3.5 h-3.5 text-[#A08C75]" />
-                <span>Ask AI Stylist</span>
+                <span>{t.galleryAskStylistBtn}</span>
               </button>
             </div>
           </div>

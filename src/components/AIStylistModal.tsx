@@ -1,19 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { useShop } from '../context/ShopContext';
-import { Product, AIStylistRecommendation } from '../types';
+import { useLanguage } from '../context/LanguageContext';
+import { AIStylistRecommendation } from '../types';
 import {
   Sparkles,
   X,
   Send,
   Loader2,
-  Check,
   ShoppingBag,
-  ArrowRight,
   MessageSquare,
   Wand2,
-  Palette,
   Lightbulb,
-  Compass,
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 
@@ -28,6 +25,8 @@ export const AIStylistModal: React.FC = () => {
     addToCart,
     addToast,
   } = useShop();
+
+  const { t, formatCurrency, language } = useLanguage();
 
   if (!isAIStylistOpen) return null;
 
@@ -48,9 +47,13 @@ export const AIStylistModal: React.FC = () => {
   const [chatMessages, setChatMessages] = useState<Array<{ role: 'user' | 'assistant'; content: string }>>([
     {
       role: 'assistant',
-      content: aiContextProduct
-        ? `Hello! I'm your Atelier Form Interior Stylist. How can I help you pair or style the **${aiContextProduct.name}** in your space? Ask me about rug pairings, lighting heights, or room dimensions!`
-        : `Welcome to Atelier Form Styling Studio. Tell me about your room dimensions, existing colors, or what mood you want to create, and I'll curate the perfect furniture pieces.`,
+      content: language === 'pt'
+        ? (aiContextProduct
+            ? `Olá! Sou seu Estilista de Interiores da Sarvicimobliaria. Como posso ajudar a combinar o **${aiContextProduct.name}** no seu espaço? Pergunte-me sobre tapetes, iluminação ou proporções!`
+            : `Boas-vindas ao Estúdio Sarvicimobliaria. Diga-me as dimensões do seu ambiente, tons existentes ou a atmosfera que deseja, e vou selecionar as peças ideais.`)
+        : (aiContextProduct
+            ? `Hello! I'm your Sarvicimobliaria Interior Stylist. How can I help you pair or style the **${aiContextProduct.name}** in your space? Ask me about rug pairings, lighting heights, or room dimensions!`
+            : `Welcome to Sarvicimobliaria Styling Studio. Tell me about your room dimensions, existing colors, or what mood you want to create, and I'll curate the perfect furniture pieces.`),
     },
   ]);
   const [inputMessage, setInputMessage] = useState('');
@@ -102,19 +105,22 @@ export const AIStylistModal: React.FC = () => {
         body: JSON.stringify({
           messages: newMessages,
           contextProduct: aiContextProduct,
+          language: language,
         }),
       });
       const data = await response.json();
       setChatMessages(prev => [
         ...prev,
-        { role: 'assistant', content: data.reply || "I'd suggest pairing natural woods with soft warm lighting." },
+        { role: 'assistant', content: data.reply || (language === 'pt' ? 'Sugiro combinar madeiras naturais com iluminação quente e suave.' : "I'd suggest pairing natural woods with soft warm lighting.") },
       ]);
     } catch (err) {
       setChatMessages(prev => [
         ...prev,
         {
           role: 'assistant',
-          content: 'For a cohesive modern look, combine neutral textured bouclé with natural travertine and dimmable 2700K ambient lighting.',
+          content: language === 'pt'
+            ? 'Para um visual harmonioso e sofisticado, combine tecidos bouclé neutros com mármore travertino e iluminação suave de 2700K.'
+            : 'For a cohesive modern look, combine neutral textured bouclé with natural travertine and dimmable 2700K ambient lighting.',
         },
       ]);
     } finally {
@@ -127,7 +133,12 @@ export const AIStylistModal: React.FC = () => {
     if (!recommendation) return;
     const matching = products.filter(p => recommendation.recommendedProductIds.includes(p.id));
     matching.forEach(p => addToCart(p, p.colors[0], 1));
-    addToast(`Added ${matching.length} recommended pieces to your bag!`, 'success');
+    addToast(
+      language === 'pt'
+        ? `${matching.length} peças recomendadas adicionadas à sacola!`
+        : `Added ${matching.length} recommended pieces to your bag!`,
+      'success'
+    );
   };
 
   // Find products matching the recommendation
@@ -153,10 +164,10 @@ export const AIStylistModal: React.FC = () => {
               </div>
               <div>
                 <h2 className="font-serif italic text-base sm:text-lg font-bold text-[#1A1A1A]">
-                  Atelier AI Interior Stylist
+                  {t.brandName} {t.aiModalTitle}
                 </h2>
                 <p className="text-[10px] uppercase tracking-wider text-[#7A7A7A]">
-                  Curated Spatial Design & Material Coordination
+                  {t.aiModalSubtitle}
                 </p>
               </div>
             </div>
@@ -174,7 +185,7 @@ export const AIStylistModal: React.FC = () => {
                   }`}
                 >
                   <Wand2 className="w-3 h-3" />
-                  <span>Curated Room</span>
+                  <span>{t.aiCuratedRoom}</span>
                 </button>
 
                 <button
@@ -187,7 +198,7 @@ export const AIStylistModal: React.FC = () => {
                   }`}
                 >
                   <MessageSquare className="w-3 h-3" />
-                  <span>Stylist Consultation</span>
+                  <span>{t.aiConsultation}</span>
                 </button>
               </div>
 
@@ -218,15 +229,15 @@ export const AIStylistModal: React.FC = () => {
                       />
                       <div className="min-w-0">
                         <div className="text-[9px] uppercase font-bold text-[#A08C75] tracking-widest">
-                          Focal Anchor Piece
+                          {t.aiFocalPiece}
                         </div>
                         <div className="font-serif italic font-bold text-xs text-[#1A1A1A] truncate">
-                          {aiContextProduct.name} (${aiContextProduct.price.toLocaleString()})
+                          {aiContextProduct.name} ({formatCurrency(aiContextProduct.price)})
                         </div>
                       </div>
                     </div>
                     <span className="text-[10px] uppercase font-bold tracking-wider text-[#7A7A7A] hidden sm:inline">
-                      Curating complementary pieces
+                      {language === 'pt' ? 'Curando peças complementares' : 'Curating complementary pieces'}
                     </span>
                   </div>
                 )}
@@ -236,23 +247,23 @@ export const AIStylistModal: React.FC = () => {
                   <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                     {/* Room Type */}
                     <div className="space-y-1.5">
-                      <label className="text-[10px] uppercase font-bold tracking-wider text-[#1A1A1A] block">Target Room</label>
+                      <label className="text-[10px] uppercase font-bold tracking-wider text-[#1A1A1A] block">{t.aiTargetRoom}</label>
                       <select
                         id="ai-room-select"
                         value={selectedRoom}
                         onChange={e => setSelectedRoom(e.target.value)}
                         className="w-full bg-[#FAF9F6] border border-[#E5E4E2] rounded-sm px-3 py-2 text-xs font-medium text-[#1A1A1A] focus:outline-none focus:border-[#A08C75]"
                       >
-                        <option value="living">Living Room Lounge</option>
-                        <option value="dining">Dining Room & Gathering</option>
-                        <option value="bedroom">Master Sanctuary Bedroom</option>
-                        <option value="workspace">Executive Home Office</option>
+                        <option value="living">{t.roomLiving}</option>
+                        <option value="dining">{t.roomDining}</option>
+                        <option value="bedroom">{t.roomBedroom}</option>
+                        <option value="workspace">{t.roomOffice}</option>
                       </select>
                     </div>
 
                     {/* Style Profile */}
                     <div className="space-y-1.5">
-                      <label className="text-[10px] uppercase font-bold tracking-wider text-[#1A1A1A] block">Aesthetic Vibe</label>
+                      <label className="text-[10px] uppercase font-bold tracking-wider text-[#1A1A1A] block">{t.aiAestheticVibe}</label>
                       <select
                         id="ai-style-select"
                         value={selectedStyle}
@@ -268,7 +279,7 @@ export const AIStylistModal: React.FC = () => {
 
                     {/* Color Palette Vibe */}
                     <div className="space-y-1.5">
-                      <label className="text-[10px] uppercase font-bold tracking-wider text-[#1A1A1A] block">Color Harmony</label>
+                      <label className="text-[10px] uppercase font-bold tracking-wider text-[#1A1A1A] block">{t.aiColorHarmony}</label>
                       <select
                         id="ai-color-vibe-select"
                         value={selectedColorVibe}
@@ -290,7 +301,7 @@ export const AIStylistModal: React.FC = () => {
                       type="text"
                       value={userCustomNote}
                       onChange={e => setUserCustomNote(e.target.value)}
-                      placeholder="Optional notes: e.g., '14x16 room with south-facing natural light, need a cozy reading corner'..."
+                      placeholder={t.aiCustomPlaceholder}
                       className="flex-1 bg-[#FAF9F6] border border-[#E5E4E2] rounded-sm px-3.5 py-2 text-xs text-[#1A1A1A] placeholder:text-[#7A7A7A] focus:outline-none focus:border-[#A08C75]"
                     />
                     <button
@@ -300,7 +311,7 @@ export const AIStylistModal: React.FC = () => {
                       className="px-4 py-2 rounded-sm bg-[#1A1A1A] hover:bg-black text-white text-[10px] uppercase font-bold tracking-widest flex items-center justify-center gap-2 shrink-0 transition-colors"
                     >
                       {isLoading ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Wand2 className="w-3.5 h-3.5" />}
-                      <span>{isLoading ? 'Composing...' : 'Generate Scheme'}</span>
+                      <span>{isLoading ? t.aiComposing : t.aiGenerateBtn}</span>
                     </button>
                   </div>
                 </div>
@@ -310,10 +321,10 @@ export const AIStylistModal: React.FC = () => {
                   <div className="py-12 text-center space-y-3">
                     <Loader2 className="w-8 h-8 animate-spin text-[#A08C75] mx-auto" />
                     <p className="font-serif italic text-base font-bold text-[#1A1A1A]">
-                      Curating harmonious furniture pairings...
+                      {t.aiCuratingPairings}
                     </p>
                     <p className="text-xs text-[#7A7A7A] font-light">
-                      Evaluating ergonomics, natural lighting, and tactile texture balances.
+                      {t.aiEvaluatingErgonomics}
                     </p>
                   </div>
                 ) : recommendation ? (
@@ -323,7 +334,7 @@ export const AIStylistModal: React.FC = () => {
                       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                         <div>
                           <div className="text-[9px] uppercase font-bold text-[#A08C75] tracking-widest">
-                            Style Profile
+                            {t.aiStyleProfile}
                           </div>
                           <h3 className="font-serif italic text-lg font-bold text-[#1A1A1A]">
                             {recommendation.styleProfile}
@@ -333,7 +344,7 @@ export const AIStylistModal: React.FC = () => {
                         {/* Palette swatches */}
                         {recommendation.colorPalette && recommendation.colorPalette.length > 0 && (
                           <div className="flex items-center gap-2">
-                            <span className="text-[10px] uppercase tracking-wider text-[#7A7A7A] font-medium">Harmonized Palette:</span>
+                            <span className="text-[10px] uppercase tracking-wider text-[#7A7A7A] font-medium">{t.aiHarmonizedPalette}:</span>
                             <div className="flex items-center gap-1.5">
                               {recommendation.colorPalette.map((col, idx) => (
                                 <div
@@ -362,7 +373,7 @@ export const AIStylistModal: React.FC = () => {
                         <div className="flex items-center gap-2">
                           <ShoppingBag className="w-4 h-4 text-[#A08C75]" />
                           <h4 className="font-serif italic text-base font-bold text-[#1A1A1A]">
-                            Recommended Furniture Ensemble
+                            {t.aiRecommendedEnsemble}
                           </h4>
                         </div>
                         {recommendedItems.length > 0 && (
@@ -372,7 +383,7 @@ export const AIStylistModal: React.FC = () => {
                             className="px-3 py-1.5 rounded-sm bg-[#1A1A1A] text-white text-[10px] uppercase font-bold tracking-wider hover:bg-black transition-colors flex items-center gap-1.5"
                           >
                             <ShoppingBag className="w-3.5 h-3.5" />
-                            <span>Add All to Bag</span>
+                            <span>{t.aiAddAllBag}</span>
                           </button>
                         )}
                       </div>
@@ -411,13 +422,13 @@ export const AIStylistModal: React.FC = () => {
 
                             <div className="pt-2 border-t border-[#E5E4E2] flex items-center justify-between">
                               <span className="text-xs font-bold text-[#1A1A1A] font-mono">
-                                ${prod.price.toLocaleString()}
+                                {formatCurrency(prod.price)}
                               </span>
                               <button
                                 id={`ai-rec-add-${prod.id}`}
                                 onClick={() => addToCart(prod)}
                                 className="p-1.5 rounded-sm bg-[#FAF9F6] border border-[#E5E4E2] hover:bg-[#1A1A1A] hover:text-white text-[#1A1A1A] text-xs transition-colors"
-                                title="Add piece to bag"
+                                title={t.cardQuickAdd}
                               >
                                 <ShoppingBag className="w-3.5 h-3.5" />
                               </button>
@@ -432,7 +443,7 @@ export const AIStylistModal: React.FC = () => {
                       <div className="p-4 rounded-sm bg-[#F5F2ED] border border-[#E5E4E2] space-y-2">
                         <div className="flex items-center gap-2 text-xs font-bold text-[#1A1A1A]">
                           <Lightbulb className="w-4 h-4 text-[#A08C75]" />
-                          <span className="text-[10px] uppercase font-bold tracking-wider">Spatial & Lighting Placement Rules</span>
+                          <span className="text-[10px] uppercase font-bold tracking-wider">{t.aiSpatialPlacement}</span>
                         </div>
                         <ul className="space-y-1.5 text-xs text-[#5A5A5A] font-light">
                           {recommendation.decorAdvice.map((tip, idx) => (
@@ -478,7 +489,7 @@ export const AIStylistModal: React.FC = () => {
                       <div className="w-7 h-7 rounded-full bg-[#F5F2ED] flex items-center justify-center text-[#A08C75]">
                         <Loader2 className="w-3.5 h-3.5 animate-spin" />
                       </div>
-                      <span className="font-light">Atelier Stylist is considering proportions & pairings...</span>
+                      <span className="font-light">{language === 'pt' ? 'O estilista Sarvicimobliaria está analisando proporções e harmonias...' : 'Sarvicimobliaria Stylist is considering proportions & pairings...'}</span>
                     </div>
                   )}
                 </div>
@@ -493,7 +504,7 @@ export const AIStylistModal: React.FC = () => {
                     type="text"
                     value={inputMessage}
                     onChange={e => setInputMessage(e.target.value)}
-                    placeholder="Ask about dimensions, rug clearance, lighting temperatures, or wood combinations..."
+                    placeholder={language === 'pt' ? 'Pergunte sobre dimensões, tapetes, temperaturas de luz ou madeiras...' : 'Ask about dimensions, rug clearance, lighting temperatures, or wood combinations...'}
                     className="flex-1 bg-white border border-[#E5E4E2] rounded-sm px-4 py-2.5 text-xs text-[#1A1A1A] placeholder:text-[#7A7A7A] focus:outline-none focus:border-[#A08C75]"
                   />
                   <button

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Product, ColorOption } from '../types';
 import { useShop } from '../context/ShopContext';
+import { useLanguage } from '../context/LanguageContext';
 import { Heart, ShoppingBag, Star, Eye, Sparkles } from 'lucide-react';
 import { motion } from 'motion/react';
 
@@ -11,6 +12,7 @@ interface ProductCardProps {
 
 export const ProductCard: React.FC<ProductCardProps> = ({ product, onOpenDetail }) => {
   const { addToCart, toggleWishlist, isInWishlist, openProductDetail, setIsAIStylistOpen } = useShop();
+  const { t, formatCurrency } = useLanguage();
 
   const [selectedColor, setSelectedColor] = useState<ColorOption>(product.colors[0]);
   const [isHovered, setIsHovered] = useState(false);
@@ -60,17 +62,17 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onOpenDetail 
         <div className="absolute top-3 left-3 z-10 flex flex-col gap-1.5 pointer-events-none">
           {product.isBestSeller && (
             <span className="px-2.5 py-0.5 rounded-xs text-[9px] font-bold uppercase tracking-[0.2em] bg-[#1A1A1A] text-white shadow-xs">
-              Signature
+              {t.cardSignature}
             </span>
           )}
           {product.discountPercentage && (
             <span className="px-2.5 py-0.5 rounded-xs text-[9px] font-bold uppercase tracking-[0.2em] bg-[#A08C75] text-white shadow-xs">
-              Save {product.discountPercentage}%
+              {t.cardSave} {product.discountPercentage}%
             </span>
           )}
           {product.isNew && !product.discountPercentage && (
             <span className="px-2.5 py-0.5 rounded-xs text-[9px] font-bold uppercase tracking-[0.2em] bg-white text-[#1A1A1A] border border-[#E5E4E2] shadow-xs">
-              New Arrival
+              {t.cardNewArrival}
             </span>
           )}
         </div>
@@ -111,7 +113,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onOpenDetail 
             }`}
           >
             <ShoppingBag className="w-3.5 h-3.5" />
-            <span>{isAdding ? 'Added to Bag' : 'Quick Add'}</span>
+            <span>{isAdding ? t.cardAddedToBag : t.cardQuickAdd}</span>
           </button>
 
           <button
@@ -168,7 +170,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onOpenDetail 
               />
             ))}
             <span className="text-[9px] uppercase tracking-wider text-[#7A7A7A] ml-1">
-              {product.colors.length} shades
+              {product.colors.length} {t.cardShades}
             </span>
           </div>
         )}
@@ -177,11 +179,11 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onOpenDetail 
         <div className="pt-2 border-t border-[#E5E4E2] flex items-center justify-between">
           <div className="flex items-baseline gap-1.5">
             <span className="text-sm font-bold text-[#1A1A1A] font-mono">
-              ${product.price.toLocaleString()}
+              {formatCurrency(product.price)}
             </span>
             {product.originalPrice && (
               <span className="text-[10px] text-[#7A7A7A] line-through font-mono">
-                ${product.originalPrice.toLocaleString()}
+                {formatCurrency(product.originalPrice)}
               </span>
             )}
           </div>
@@ -196,7 +198,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onOpenDetail 
             title="Get AI style pairing tips for this piece"
           >
             <Sparkles className="w-2.5 h-2.5 text-[#A08C75]" />
-            <span>Style AI</span>
+            <span>{t.cardStyleAi}</span>
           </button>
         </div>
       </div>

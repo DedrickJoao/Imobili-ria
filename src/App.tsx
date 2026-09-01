@@ -1,5 +1,6 @@
 import React, { useRef } from 'react';
 import { ShopProvider, useShop } from './context/ShopContext';
+import { LanguageProvider } from './context/LanguageContext';
 import { Navbar } from './components/Navbar';
 import { Hero } from './components/Hero';
 import { ProductGallery } from './components/ProductGallery';
@@ -66,9 +67,11 @@ const ShopContent: React.FC = () => {
 
 export function App() {
   return (
-    <ShopProvider>
-      <ShopContent />
-    </ShopProvider>
+    <LanguageProvider>
+      <ShopProvider>
+        <ShopContent />
+      </ShopProvider>
+    </LanguageProvider>
   );
 }
 

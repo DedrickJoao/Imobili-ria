@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useShop } from '../context/ShopContext';
+import { useLanguage } from '../context/LanguageContext';
 import { Sparkles, ArrowRight, Shield, Award, Truck, ChevronRight, Eye } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 
@@ -9,42 +10,43 @@ interface HeroProps {
 
 export const Hero: React.FC<HeroProps> = ({ onShopClick }) => {
   const { openProductDetail, addToCart, setIsAIStylistOpen, products } = useShop();
+  const { t, formatCurrency, language } = useLanguage();
 
   const heroItems = [
     {
       productId: 'sofa-solis-boucle',
-      tag: 'Iconic Design 2026',
-      title: 'The Solis Curved Bouclé Sofa',
-      tagline: 'Organic architectural form meets Italian tactile bouclé weave',
-      price: '$2,450',
+      tag: language === 'pt' ? 'Design Icônico 2026' : 'Iconic Design 2026',
+      title: language === 'pt' ? 'Sofá Curvo Bouclé Solis' : 'The Solis Curved Bouclé Sofa',
+      tagline: language === 'pt' ? 'Forma arquitetônica orgânica combinada ao tecido bouclé italiano' : 'Organic architectural form meets Italian tactile bouclé weave',
+      priceRaw: 2450,
       image: 'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?auto=format&fit=crop&w=1600&q=85',
       hotspots: [
-        { label: 'Tactile Bouclé Weave', x: '45%', y: '52%' },
-        { label: 'Kiln-Dried Solid Oak Frame', x: '72%', y: '68%' },
+        { label: language === 'pt' ? 'Tecido Bouclé Tátil' : 'Tactile Bouclé Weave', x: '45%', y: '52%' },
+        { label: language === 'pt' ? 'Estrutura em Carvalho Maciço' : 'Kiln-Dried Solid Oak Frame', x: '72%', y: '68%' },
       ],
     },
     {
       productId: 'table-travertine-arc',
-      tag: 'Natural Stone Edition',
-      title: 'Palazzo Roman Travertine Table',
-      tagline: 'Monolithic sculptural pedestals cut from ancient Italian quarries',
-      price: '$1,380',
+      tag: language === 'pt' ? 'Edição em Pedra Natural' : 'Natural Stone Edition',
+      title: language === 'pt' ? 'Mesa de Jantar Travertino Palazzo' : 'Palazzo Roman Travertine Table',
+      tagline: language === 'pt' ? 'Pedestais esculturais monolíticos talhados em jazidas italianas' : 'Monolithic sculptural pedestals cut from ancient Italian quarries',
+      priceRaw: 1380,
       image: 'https://images.unsplash.com/photo-1533090161767-e6ffed986c88?auto=format&fit=crop&w=1600&q=85',
       hotspots: [
-        { label: 'Honed Matte Finish', x: '50%', y: '48%' },
-        { label: 'Solid Cylindrical Pillars', x: '68%', y: '62%' },
+        { label: language === 'pt' ? 'Acabamento Fosco Acetinado' : 'Honed Matte Finish', x: '50%', y: '48%' },
+        { label: language === 'pt' ? 'Pilares Cilíndricos Maciços' : 'Solid Cylindrical Pillars', x: '68%', y: '62%' },
       ],
     },
     {
       productId: 'chair-kanso-lounge',
-      tag: 'Master Craftsmanship',
-      title: 'Kanso Minimalist Lounge Chair',
-      tagline: 'Smoked Japanese oak paired with vegetable-tanned saddle leather',
-      price: '$890',
+      tag: language === 'pt' ? 'Alta Marcenaria' : 'Master Craftsmanship',
+      title: language === 'pt' ? 'Poltrona Minimalista Kanso' : 'Kanso Minimalist Lounge Chair',
+      tagline: language === 'pt' ? 'Carvalho japonês defumado com couro soleta atanado natural' : 'Smoked Japanese oak paired with vegetable-tanned saddle leather',
+      priceRaw: 890,
       image: 'https://images.unsplash.com/photo-1567538096630-e0c55bd6374c?auto=format&fit=crop&w=1600&q=85',
       hotspots: [
-        { label: 'Full-Grain Saddle Leather', x: '42%', y: '40%' },
-        { label: 'Mortise & Tenon Joinery', x: '60%', y: '70%' },
+        { label: language === 'pt' ? 'Couro Soleta Flor Integral' : 'Full-Grain Saddle Leather', x: '42%', y: '40%' },
+        { label: language === 'pt' ? 'Encaixes Tradicionais de Marcenaria' : 'Mortise & Tenon Joinery', x: '60%', y: '70%' },
       ],
     },
   ];
@@ -67,10 +69,10 @@ export const Hero: React.FC<HeroProps> = ({ onShopClick }) => {
 
             <div className="space-y-3">
               <h1 className="font-serif italic text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight text-[#1A1A1A] leading-[1.12]">
-                Refined Spaces, Crafted for Life.
+                {t.heroHeadline}
               </h1>
               <p className="text-sm sm:text-base text-[#5A5A5A] leading-relaxed max-w-md">
-                Timeless furniture blending Scandinavian organic warmth with Italian architectural minimalism.
+                {t.heroSubhead}
               </p>
             </div>
 
@@ -78,13 +80,13 @@ export const Hero: React.FC<HeroProps> = ({ onShopClick }) => {
             <div className="p-4 rounded-sm bg-white border border-[#E5E4E2] shadow-xs flex items-center justify-between gap-4">
               <div className="min-w-0">
                 <div className="text-[10px] uppercase tracking-[0.2em] font-bold text-[#A08C75]">
-                  Spotlight Piece
+                  {t.heroSpotlight}
                 </div>
                 <div className="text-sm sm:text-base font-serif italic font-bold text-[#1A1A1A] truncate">
                   {currentHero.title}
                 </div>
                 <div className="text-xs text-[#7A7A7A] font-mono mt-0.5">
-                  {currentHero.price} · In Stock
+                  {formatCurrency(currentHero.priceRaw)} · {t.heroInStock}
                 </div>
               </div>
 
@@ -93,10 +95,10 @@ export const Hero: React.FC<HeroProps> = ({ onShopClick }) => {
                   id={`hero-quickview-${currentHero.productId}`}
                   onClick={() => openProductDetail(currentHero.productId)}
                   className="px-3 py-2 rounded-sm border border-[#E5E4E2] bg-[#F5F5F5] hover:bg-[#E5E4E2] text-[#1A1A1A] transition-colors text-[10px] uppercase font-bold tracking-tight flex items-center gap-1.5"
-                  title="View full specs"
+                  title={t.heroDetails}
                 >
                   <Eye className="w-3.5 h-3.5" />
-                  <span className="hidden sm:inline">Details</span>
+                  <span className="hidden sm:inline">{t.heroDetails}</span>
                 </button>
 
                 {activeProduct && (
@@ -105,7 +107,7 @@ export const Hero: React.FC<HeroProps> = ({ onShopClick }) => {
                     onClick={() => addToCart(activeProduct)}
                     className="px-4 py-2 rounded-sm bg-[#1A1A1A] hover:bg-black text-white transition-all text-[10px] uppercase tracking-wider font-bold"
                   >
-                    Add to Bag
+                    {t.heroAddToBag}
                   </button>
                 )}
               </div>
@@ -118,7 +120,7 @@ export const Hero: React.FC<HeroProps> = ({ onShopClick }) => {
                 onClick={onShopClick}
                 className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-sm bg-[#1A1A1A] text-white text-[10px] sm:text-xs uppercase tracking-widest font-bold hover:bg-black transition-all shadow-xs"
               >
-                <span>Explore Gallery</span>
+                <span>{t.heroExploreGallery}</span>
                 <ArrowRight className="w-3.5 h-3.5" />
               </button>
 
@@ -128,7 +130,7 @@ export const Hero: React.FC<HeroProps> = ({ onShopClick }) => {
                 className="inline-flex items-center justify-center gap-2 px-5 py-3 rounded-sm border border-[#1A1A1A] bg-transparent text-[#1A1A1A] text-[10px] sm:text-xs uppercase tracking-widest font-bold hover:bg-[#F5F2ED] transition-all"
               >
                 <Sparkles className="w-3.5 h-3.5 text-[#A08C75]" />
-                <span>AI Room Advisor</span>
+                <span>{t.heroAiAdvisor}</span>
               </button>
             </div>
 
@@ -191,11 +193,11 @@ export const Hero: React.FC<HeroProps> = ({ onShopClick }) => {
                     </div>
                   ))}
 
-                  {/* Overlay badge info - Artistic Flair style */}
+                  {/* Overlay badge info */}
                   <div className="absolute bottom-6 left-6 right-6 flex items-end justify-between pointer-events-auto">
                     <div className="text-white">
                       <span className="text-[10px] uppercase tracking-widest text-[#DEDCD7] mb-1 block">
-                        Featured Series
+                        {t.heroFeaturedSeries}
                       </span>
                       <h2 className="text-2xl sm:text-3xl font-serif italic mb-3">
                         {currentHero.title}
@@ -204,13 +206,13 @@ export const Hero: React.FC<HeroProps> = ({ onShopClick }) => {
                         onClick={() => openProductDetail(currentHero.productId)}
                         className="px-5 py-2 bg-white text-[#1A1A1A] text-[10px] uppercase tracking-widest font-bold rounded-sm hover:bg-[#FAF9F6] transition-colors"
                       >
-                        Explore Piece
+                        {t.heroExplorePiece}
                       </button>
                     </div>
 
                     <div className="bg-white/20 backdrop-blur-md px-3.5 py-1.5 rounded-full border border-white/30">
                       <span className="text-white text-[10px] uppercase tracking-wider font-bold">
-                        NEW ARRIVAL
+                        {t.heroNewArrival}
                       </span>
                     </div>
                   </div>
@@ -228,8 +230,8 @@ export const Hero: React.FC<HeroProps> = ({ onShopClick }) => {
               <Award className="w-4 h-4" />
             </div>
             <div>
-              <div className="text-xs font-bold uppercase tracking-wider text-[#1A1A1A]">Architectural Craft</div>
-              <div className="text-[11px] text-[#7A7A7A]">Solid hardwood & stone</div>
+              <div className="text-xs font-bold uppercase tracking-wider text-[#1A1A1A]">{t.vpCraftTitle}</div>
+              <div className="text-[11px] text-[#7A7A7A]">{t.vpCraftDesc}</div>
             </div>
           </div>
 
@@ -238,8 +240,8 @@ export const Hero: React.FC<HeroProps> = ({ onShopClick }) => {
               <Truck className="w-4 h-4" />
             </div>
             <div>
-              <div className="text-xs font-bold uppercase tracking-wider text-[#1A1A1A]">White-Glove Delivery</div>
-              <div className="text-[11px] text-[#7A7A7A]">Room placement & unboxing</div>
+              <div className="text-xs font-bold uppercase tracking-wider text-[#1A1A1A]">{t.vpDeliveryTitle}</div>
+              <div className="text-[11px] text-[#7A7A7A]">{t.vpDeliveryDesc}</div>
             </div>
           </div>
 
@@ -248,8 +250,8 @@ export const Hero: React.FC<HeroProps> = ({ onShopClick }) => {
               <Shield className="w-4 h-4" />
             </div>
             <div>
-              <div className="text-xs font-bold uppercase tracking-wider text-[#1A1A1A]">10-Year Warranty</div>
-              <div className="text-[11px] text-[#7A7A7A]">Guaranteed structural integrity</div>
+              <div className="text-xs font-bold uppercase tracking-wider text-[#1A1A1A]">{t.vpWarrantyTitle}</div>
+              <div className="text-[11px] text-[#7A7A7A]">{t.vpWarrantyDesc}</div>
             </div>
           </div>
 
@@ -258,8 +260,8 @@ export const Hero: React.FC<HeroProps> = ({ onShopClick }) => {
               <Sparkles className="w-4 h-4" />
             </div>
             <div>
-              <div className="text-xs font-bold uppercase tracking-wider text-[#1A1A1A]">AI Interior Stylist</div>
-              <div className="text-[11px] text-[#7A7A7A]">Tailored room harmonies</div>
+              <div className="text-xs font-bold uppercase tracking-wider text-[#1A1A1A]">{t.vpStylistTitle}</div>
+              <div className="text-[11px] text-[#7A7A7A]">{t.vpStylistDesc}</div>
             </div>
           </div>
         </div>

@@ -1,6 +1,6 @@
 {
-  "name": "Atelier Form - Modern Furniture",
-  "description": "A dynamic furniture e-commerce website with interactive gallery, smart filtering, seamless checkout, and AI interior styling recommendations.",
+  "name": "Sarvicimobliaria",
+  "description": "Sarvicimobliaria - Architecture, Real Estate & Fine Furniture. An interactive bilingual experience with curated collections, smart spatial filters, seamless checkout, and AI interior styling.",
   "requestFramePermissions": [],
   "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
 }
