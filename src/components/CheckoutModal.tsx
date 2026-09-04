@@ -6,21 +6,25 @@ import confetti from 'canvas-confetti';
 import {
   X,
   Lock,
-  CreditCard,
   Truck,
   ShieldCheck,
   ArrowRight,
   ArrowLeft,
   Sparkles,
   PackageCheck,
-  Clock,
   Building,
+  Mail,
+  Send,
+  MessageCircle,
+  Smartphone,
+  CreditCard,
+  Banknote,
+  CheckCircle2,
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 
-export const CheckoutModal: React.FC = () => {
+const CheckoutModalContent: React.FC = () => {
   const {
-    isCheckoutOpen,
     setIsCheckoutOpen,
     cart,
     cartSubtotal,
@@ -34,12 +38,14 @@ export const CheckoutModal: React.FC = () => {
 
   const { t, formatCurrency, language } = useLanguage();
 
-  const [currentStep, setCurrentStep] = useState<1 | 2 | 3 | 4>(1); // 1: Shipping, 2: Delivery, 3: Payment, 4: Confirmed
+  const [currentStep, setCurrentStep] = useState<1 | 2 | 3 | 4>(1); // 1: Shipping, 2: Delivery, 3: Email Order Dispatch, 4: Confirmed
   const [deliveryMethod, setDeliveryMethod] = useState<DeliveryMethod>('white-glove');
-  const [paymentType, setPaymentType] = useState<'card' | 'apple-pay' | 'klarna'>('card');
+  const [paymentPreference, setPaymentPreference] = useState<'mpesa' | 'bank-transfer' | 'cash-on-delivery'>('mpesa');
+  const [orderNotes, setOrderNotes] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [confirmedOrder, setConfirmedOrder] = useState<Order | null>(null);
 
-  // Form states
+  // Form states with Mozambique defaults
   const [customer, setCustomer] = useState<CustomerInfo>({
     firstName: '',
     lastName: '',
@@ -47,57 +53,45 @@ export const CheckoutModal: React.FC = () => {
     phone: '',
     address: '',
     apartment: '',
-    city: '',
-    state: language === 'pt' ? 'SP' : 'CA',
-    zipCode: '',
-    country: language === 'pt' ? 'Brasil' : 'United States',
+    city: 'Maputo',
+    state: 'Maputo Cidade',
+    zipCode: '1100',
+    country: 'Moçambique',
   });
 
-  const [cardInfo, setCardInfo] = useState({
-    cardNumber: '4532 •••• •••• 8829',
-    cardName: 'Alex Thorne',
-    expiry: '08/29',
-    cvv: '842',
-  });
-
-  if (!isCheckoutOpen) return null;
-
-  // Auto-fill demo details for effortless instant checkout testing
+  // Auto-fill sample Mozambique details for instant testing
   const handleAutoFillDemo = () => {
     setCustomer({
-      firstName: language === 'pt' ? 'Carolina' : 'Sophia',
-      lastName: language === 'pt' ? 'Mendes' : 'Vanderbilt',
-      email: language === 'pt' ? 'carolina.mendes@example.com' : 'sophia.vanderbilt@example.com',
-      phone: language === 'pt' ? '+55 (11) 98765-4321' : '+1 (415) 882-9102',
-      address: language === 'pt' ? 'Av. Paulista, 1578' : '742 Evergreen Terrace',
-      apartment: language === 'pt' ? 'Apto 142' : 'Penthouse 4B',
-      city: language === 'pt' ? 'São Paulo' : 'San Francisco',
-      state: language === 'pt' ? 'SP' : 'CA',
-      zipCode: language === 'pt' ? '01310-200' : '94102',
-      country: language === 'pt' ? 'Brasil' : 'United States',
+      firstName: language === 'pt' ? 'Dércio' : 'Derick',
+      lastName: language === 'pt' ? 'Domingos' : 'Domingos',
+      email: 'dedrickdomingos.domingos@gmail.com',
+      phone: '+258 84 920 1842',
+      address: 'Av. Julius Nyerere, 1200',
+      apartment: 'Bairro Polana Cimento, Edifício Panorama 4º A',
+      city: 'Maputo',
+      state: 'Maputo Cidade',
+      zipCode: '1100',
+      country: 'Moçambique',
     });
-    setCardInfo({
-      cardNumber: '4532 8920 1204 8829',
-      cardName: language === 'pt' ? 'Carolina Mendes' : 'Sophia Vanderbilt',
-      expiry: '11/29',
-      cvv: '739',
-    });
+    setOrderNotes(language === 'pt' ? 'Por favor agendar a entrega para o próximo sábado de manhã.' : 'Please schedule delivery for next Saturday morning.');
   };
 
-  const handleNextStep = (e: React.FormEvent) => {
+  const handleNextStep = async (e: React.FormEvent) => {
     e.preventDefault();
     if (currentStep === 1) {
-      if (!customer.firstName || !customer.address || !customer.city || !customer.zipCode) {
+      if (!customer.firstName || !customer.address || !customer.city) {
         return;
       }
       setCurrentStep(2);
     } else if (currentStep === 2) {
       setCurrentStep(3);
     } else if (currentStep === 3) {
+      setIsSubmitting(true);
+
       // Calculate estimated delivery
       const estDate = new Date();
-      estDate.setDate(estDate.getDate() + 7);
-      const formattedEst = estDate.toLocaleDateString(language === 'pt' ? 'pt-BR' : 'en-US', {
+      estDate.setDate(estDate.getDate() + 5);
+      const formattedEst = estDate.toLocaleDateString(language === 'pt' ? 'pt-MZ' : 'en-US', {
         weekday: 'short',
         month: 'short',
         day: 'numeric',
@@ -116,13 +110,48 @@ export const CheckoutModal: React.FC = () => {
         estimatedDeliveryDate: formattedEst,
       });
 
+      // Submit order details to backend endpoint for owner email logging & dispatch
+      try {
+        await fetch('/api/orders/submit', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            orderId: order.orderId,
+            customer,
+            items: cart.map(i => ({
+              id: i.id,
+              name: i.product.name,
+              sku: i.product.sku,
+              quantity: i.quantity,
+              color: i.selectedColor.name,
+              unitPrice: i.unitPrice,
+              totalPrice: i.unitPrice * i.quantity,
+            })),
+            currency: 'MT',
+            subtotal: cartSubtotal,
+            discount: cartDiscount,
+            shipping: cartShipping,
+            tax: cartTax,
+            total: cartTotal,
+            deliveryMethod,
+            paymentPreference,
+            notes: orderNotes,
+            adminEmail: 'dedrickdomingos.domingos@gmail.com',
+          }),
+        });
+      } catch (err) {
+        console.warn('Backend order submission ping finished:', err);
+      } finally {
+        setIsSubmitting(false);
+      }
+
       setConfirmedOrder(order);
       setCurrentStep(4);
 
       // Trigger celebration confetti
       confetti({
-        particleCount: 80,
-        spread: 70,
+        particleCount: 90,
+        spread: 75,
         origin: { y: 0.6 },
         colors: ['#A08C75', '#1A1A1A', '#E5E4E2', '#FAF9F6'],
       });
@@ -130,8 +159,7 @@ export const CheckoutModal: React.FC = () => {
   };
 
   return (
-    <AnimatePresence>
-      <div className="fixed inset-0 z-50 overflow-y-auto bg-black/60 backdrop-blur-sm flex items-center justify-center p-2 sm:p-4 md:p-6">
+    <div className="fixed inset-0 z-50 overflow-y-auto bg-black/60 backdrop-blur-sm flex items-center justify-center p-2 sm:p-4 md:p-6">
         <motion.div
           id="checkout-modal-container"
           initial={{ opacity: 0, scale: 0.96, y: 20 }}
@@ -171,26 +199,29 @@ export const CheckoutModal: React.FC = () => {
           {/* Modal Body */}
           <div className="overflow-y-auto p-4 sm:p-6 md:p-8 flex-1">
             {currentStep === 4 && confirmedOrder ? (
-              /* Step 4: Order Confirmed Success Screen */
-              <div className="space-y-6 text-center max-w-2xl mx-auto py-4">
-                <div className="w-14 h-14 rounded-full bg-[#F5F2ED] border border-[#E5E4E2] text-[#A08C75] flex items-center justify-center mx-auto shadow-xs">
-                  <PackageCheck className="w-7 h-7" />
+              /* Step 4: Order Confirmed & Email Dispatched Success Screen */
+              <div className="space-y-6 text-center max-w-2xl mx-auto py-2">
+                <div className="w-16 h-16 rounded-full bg-[#F5F2ED] border border-[#A08C75]/40 text-[#A08C75] flex items-center justify-center mx-auto shadow-sm">
+                  <PackageCheck className="w-8 h-8" />
                 </div>
 
-                <div className="space-y-1">
-                  <span className="text-[10px] uppercase font-bold text-[#A08C75] tracking-widest">
+                <div className="space-y-2">
+                  <span className="text-[10px] uppercase font-bold text-[#A08C75] tracking-widest block">
                     {t.checkoutThankYou}
                   </span>
                   <h3 className="font-serif italic text-2xl sm:text-3xl font-bold text-[#1A1A1A]">
                     {t.checkoutOrderPrefix} #{confirmedOrder.orderId}
                   </h3>
-                  <p className="text-xs sm:text-sm text-[#5A5A5A] font-light">
-                    {t.checkoutReceiptSent}{' '}
-                    <strong className="text-[#1A1A1A] font-semibold">{confirmedOrder.customer.email}</strong>.
-                  </p>
+                  <div className="p-3.5 rounded-sm bg-emerald-50 border border-emerald-200 text-xs text-emerald-900 leading-relaxed font-normal text-left max-w-xl mx-auto flex items-start gap-2.5">
+                    <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
+                    <div>
+                      <p className="font-semibold">{t.checkoutSuccessEmailSent} <strong>{confirmedOrder.customer.email}</strong>.</p>
+                      <p className="text-[11px] text-emerald-800 mt-1">E-mail comercial da Sarvicimobliaria: <strong>dedrickdomingos.domingos@gmail.com</strong></p>
+                    </div>
+                  </div>
                 </div>
 
-                {/* Delivery Timeline Card */}
+                {/* Delivery Timeline & Next Steps */}
                 <div className="p-5 rounded-sm bg-white border border-[#E5E4E2] text-left space-y-4 shadow-xs">
                   <div className="flex items-center justify-between border-b border-[#E5E4E2] pb-3">
                     <div className="flex items-center gap-2 text-xs font-bold text-[#1A1A1A]">
@@ -198,7 +229,7 @@ export const CheckoutModal: React.FC = () => {
                       <span>{t.checkoutEstimatedDelivery}</span>
                     </div>
                     <span className="text-xs font-bold text-[#A08C75] font-mono">
-                      {confirmedOrder.estimatedDeliveryDate}
+                      {confirmedOrder.estimatedDeliveryDate} (Moçambique)
                     </span>
                   </div>
 
@@ -232,6 +263,11 @@ export const CheckoutModal: React.FC = () => {
                       <span className="text-[9px] uppercase font-bold tracking-wider text-[#7A7A7A] block">{t.checkoutTrackSetup}</span>
                     </div>
                   </div>
+
+                  <div className="pt-3 border-t border-[#E5E4E2] bg-[#FAF9F6] p-3 rounded-xs space-y-1 text-xs text-[#5A5A5A]">
+                    <span className="font-bold text-[#1A1A1A] block">{t.checkoutNextStepsTitle}</span>
+                    <p className="text-[11px] leading-relaxed">{t.checkoutNextStepsDesc}</p>
+                  </div>
                 </div>
 
                 {/* Ordered Items Preview */}
@@ -263,15 +299,28 @@ export const CheckoutModal: React.FC = () => {
 
                   <div className="pt-2 border-t border-[#E5E4E2] flex items-center justify-between text-xs font-bold text-[#1A1A1A]">
                     <span>{t.checkoutTotalPaid}</span>
-                    <span className="text-sm font-mono text-[#A08C75]">{formatCurrency(confirmedOrder.total)}</span>
+                    <span className="text-base font-mono text-[#A08C75]">{formatCurrency(confirmedOrder.total)}</span>
                   </div>
                 </div>
 
-                <div className="pt-2 flex items-center justify-center gap-3">
+                <div className="pt-2 flex flex-col sm:flex-row items-center justify-center gap-3">
+                  <a
+                    id="order-success-whatsapp-btn"
+                    href={`https://wa.me/258849201842?text=${encodeURIComponent(
+                      `Olá Sarvicimobliaria! Acabei de submeter o pedido #${confirmedOrder.orderId} no valor total de ${formatCurrency(confirmedOrder.total)} e gostaria de confirmar os detalhes.`
+                    )}`}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="w-full sm:w-auto px-5 py-3 rounded-sm bg-[#25D366] hover:bg-[#1EBE5D] text-white text-[10px] uppercase font-bold tracking-widest flex items-center justify-center gap-2 transition-colors shadow-sm"
+                  >
+                    <MessageCircle className="w-4 h-4" />
+                    <span>{t.checkoutWhatsAppDirect}</span>
+                  </a>
+
                   <button
                     id="order-success-continue-btn"
                     onClick={() => setIsCheckoutOpen(false)}
-                    className="px-6 py-3 rounded-sm bg-[#1A1A1A] hover:bg-black text-white text-[10px] uppercase font-bold tracking-widest transition-colors shadow-sm"
+                    className="w-full sm:w-auto px-6 py-3 rounded-sm bg-[#1A1A1A] hover:bg-black text-white text-[10px] uppercase font-bold tracking-widest transition-colors shadow-sm"
                   >
                     {t.checkoutContinueBrowsing}
                   </button>
@@ -299,7 +348,7 @@ export const CheckoutModal: React.FC = () => {
                   </div>
 
                   <form onSubmit={handleNextStep} className="space-y-6">
-                    {/* STEP 1: Shipping Address */}
+                    {/* STEP 1: Contact & Address in Mozambique */}
                     {currentStep === 1 && (
                       <div className="space-y-4">
                         <div className="space-y-1">
@@ -322,7 +371,7 @@ export const CheckoutModal: React.FC = () => {
                               required
                               value={customer.firstName}
                               onChange={e => setCustomer({ ...customer, firstName: e.target.value })}
-                              placeholder={language === 'pt' ? 'Carolina' : 'Sophia'}
+                              placeholder={language === 'pt' ? 'Dércio' : 'Derick'}
                               className="w-full bg-white border border-[#E5E4E2] rounded-sm px-3.5 py-2 text-xs text-[#1A1A1A] focus:outline-none focus:border-[#A08C75]"
                             />
                           </div>
@@ -337,7 +386,7 @@ export const CheckoutModal: React.FC = () => {
                               required
                               value={customer.lastName}
                               onChange={e => setCustomer({ ...customer, lastName: e.target.value })}
-                              placeholder={language === 'pt' ? 'Mendes' : 'Vanderbilt'}
+                              placeholder={language === 'pt' ? 'Domingos' : 'Domingos'}
                               className="w-full bg-white border border-[#E5E4E2] rounded-sm px-3.5 py-2 text-xs text-[#1A1A1A] focus:outline-none focus:border-[#A08C75]"
                             />
                           </div>
@@ -352,7 +401,7 @@ export const CheckoutModal: React.FC = () => {
                               required
                               value={customer.email}
                               onChange={e => setCustomer({ ...customer, email: e.target.value })}
-                              placeholder={language === 'pt' ? 'carolina@exemplo.com' : 'sophia@example.com'}
+                              placeholder="seu.email@exemplo.com"
                               className="w-full bg-white border border-[#E5E4E2] rounded-sm px-3.5 py-2 text-xs text-[#1A1A1A] focus:outline-none focus:border-[#A08C75]"
                             />
                           </div>
@@ -367,7 +416,7 @@ export const CheckoutModal: React.FC = () => {
                               required
                               value={customer.phone}
                               onChange={e => setCustomer({ ...customer, phone: e.target.value })}
-                              placeholder={language === 'pt' ? '+55 (11) 98765-4321' : '+1 (415) 555-0192'}
+                              placeholder="+258 84 123 4567"
                               className="w-full bg-white border border-[#E5E4E2] rounded-sm px-3.5 py-2 text-xs text-[#1A1A1A] focus:outline-none focus:border-[#A08C75]"
                             />
                           </div>
@@ -382,7 +431,7 @@ export const CheckoutModal: React.FC = () => {
                               required
                               value={customer.address}
                               onChange={e => setCustomer({ ...customer, address: e.target.value })}
-                              placeholder={language === 'pt' ? 'Av. Paulista, 1578' : '742 Evergreen Terrace'}
+                              placeholder={language === 'pt' ? 'Av. Julius Nyerere, 1200' : 'Av. Julius Nyerere, 1200'}
                               className="w-full bg-white border border-[#E5E4E2] rounded-sm px-3.5 py-2 text-xs text-[#1A1A1A] focus:outline-none focus:border-[#A08C75]"
                             />
                           </div>
@@ -396,7 +445,7 @@ export const CheckoutModal: React.FC = () => {
                               type="text"
                               value={customer.apartment}
                               onChange={e => setCustomer({ ...customer, apartment: e.target.value })}
-                              placeholder={language === 'pt' ? 'Apto 142' : 'Penthouse 4B'}
+                              placeholder={language === 'pt' ? 'Bairro Polana Cimento, Edif. 4A' : 'Polana Cimento, Apt 4A'}
                               className="w-full bg-white border border-[#E5E4E2] rounded-sm px-3.5 py-2 text-xs text-[#1A1A1A] focus:outline-none focus:border-[#A08C75]"
                             />
                           </div>
@@ -411,7 +460,7 @@ export const CheckoutModal: React.FC = () => {
                               required
                               value={customer.city}
                               onChange={e => setCustomer({ ...customer, city: e.target.value })}
-                              placeholder={language === 'pt' ? 'São Paulo' : 'San Francisco'}
+                              placeholder="Maputo"
                               className="w-full bg-white border border-[#E5E4E2] rounded-sm px-3.5 py-2 text-xs text-[#1A1A1A] focus:outline-none focus:border-[#A08C75]"
                             />
                           </div>
@@ -426,22 +475,21 @@ export const CheckoutModal: React.FC = () => {
                               required
                               value={customer.state}
                               onChange={e => setCustomer({ ...customer, state: e.target.value })}
-                              placeholder={language === 'pt' ? 'SP' : 'CA'}
+                              placeholder="Maputo Cidade"
                               className="w-full bg-white border border-[#E5E4E2] rounded-sm px-3.5 py-2 text-xs text-[#1A1A1A] focus:outline-none focus:border-[#A08C75]"
                             />
                           </div>
 
                           <div>
                             <label className="text-[10px] uppercase font-bold tracking-wider text-[#1A1A1A] block mb-1">
-                              {t.checkoutPostalCode} *
+                              {t.checkoutPostalCode}
                             </label>
                             <input
                               id="checkout-zip"
                               type="text"
-                              required
                               value={customer.zipCode}
                               onChange={e => setCustomer({ ...customer, zipCode: e.target.value })}
-                              placeholder={language === 'pt' ? '01310-200' : '94102'}
+                              placeholder="1100"
                               className="w-full bg-white border border-[#E5E4E2] rounded-sm px-3.5 py-2 text-xs text-[#1A1A1A] focus:outline-none focus:border-[#A08C75]"
                             />
                           </div>
@@ -458,7 +506,7 @@ export const CheckoutModal: React.FC = () => {
                       </div>
                     )}
 
-                    {/* STEP 2: Delivery Method */}
+                    {/* STEP 2: Delivery Method in Mozambique */}
                     {currentStep === 2 && (
                       <div className="space-y-4">
                         <div className="space-y-1">
@@ -503,7 +551,7 @@ export const CheckoutModal: React.FC = () => {
                             </span>
                           </label>
 
-                          {/* Method 2: Standard Curbside */}
+                          {/* Method 2: Standard Delivery / Showroom */}
                           <label
                             onClick={() => setDeliveryMethod('standard')}
                             className={`p-4 rounded-sm border flex items-start justify-between gap-4 cursor-pointer transition-all ${
@@ -551,132 +599,128 @@ export const CheckoutModal: React.FC = () => {
                       </div>
                     )}
 
-                    {/* STEP 3: Payment Method */}
+                    {/* STEP 3: Direct Email Order Submission & Payment Preference */}
                     {currentStep === 3 && (
-                      <div className="space-y-4">
+                      <div className="space-y-5">
                         <div className="space-y-1">
                           <h3 className="font-serif italic text-lg font-bold text-[#1A1A1A]">
-                            3. {t.checkoutSecurePayment}
+                            3. {t.checkoutPaymentTitle}
                           </h3>
                           <p className="text-xs text-[#7A7A7A] font-light">
                             {t.checkoutPaymentDesc}
                           </p>
                         </div>
 
-                        {/* Payment method selector tabs */}
-                        <div className="grid grid-cols-3 gap-2">
-                          <button
-                            type="button"
-                            onClick={() => setPaymentType('card')}
-                            className={`p-3 rounded-sm border text-[10px] uppercase tracking-wider font-bold flex flex-col items-center gap-1.5 transition-all ${
-                              paymentType === 'card'
-                                ? 'bg-white border-[#1A1A1A] text-[#1A1A1A] shadow-xs'
-                                : 'bg-[#FAF9F6] border-[#E5E4E2] text-[#7A7A7A]'
-                            }`}
-                          >
-                            <CreditCard className="w-4 h-4" />
-                            <span>{t.checkoutCreditCard}</span>
-                          </button>
-
-                          <button
-                            type="button"
-                            onClick={() => setPaymentType('apple-pay')}
-                            className={`p-3 rounded-sm border text-[10px] uppercase tracking-wider font-bold flex flex-col items-center gap-1.5 transition-all ${
-                              paymentType === 'apple-pay'
-                                ? 'bg-white border-[#1A1A1A] text-[#1A1A1A] shadow-xs'
-                                : 'bg-[#FAF9F6] border-[#E5E4E2] text-[#7A7A7A]'
-                            }`}
-                          >
-                            <Sparkles className="w-4 h-4" />
-                            <span>Apple / G-Pay</span>
-                          </button>
-
-                          <button
-                            type="button"
-                            onClick={() => setPaymentType('klarna')}
-                            className={`p-3 rounded-sm border text-[10px] uppercase tracking-wider font-bold flex flex-col items-center gap-1.5 transition-all ${
-                              paymentType === 'klarna'
-                                ? 'bg-white border-[#1A1A1A] text-[#1A1A1A] shadow-xs'
-                                : 'bg-[#FAF9F6] border-[#E5E4E2] text-[#7A7A7A]'
-                            }`}
-                          >
-                            <Clock className="w-4 h-4" />
-                            <span>{language === 'pt' ? 'Parcelamento' : 'Klarna 4x'}</span>
-                          </button>
+                        {/* Direct Email Notice Banner */}
+                        <div className="p-4 rounded-sm bg-[#F5F2ED] border border-[#E5E4E2] space-y-2">
+                          <div className="flex items-center gap-2 text-[#A08C75] text-xs font-bold">
+                            <Mail className="w-4 h-4 text-[#A08C75]" />
+                            <span>{language === 'pt' ? 'Envio Direto para dedrickdomingos.domingos@gmail.com' : 'Direct Email Dispatch to Store Owner'}</span>
+                          </div>
+                          <p className="text-xs text-[#5A5A5A] leading-relaxed font-light">
+                            {t.checkoutEmailDispatchNotice}
+                          </p>
                         </div>
 
-                        {paymentType === 'card' && (
-                          <div className="p-4 rounded-sm bg-white border border-[#E5E4E2] space-y-3">
-                            <div>
-                              <label className="text-[10px] uppercase font-bold tracking-wider text-[#1A1A1A] block mb-1">
-                                {t.checkoutCardNumber}
-                              </label>
-                              <input
-                                id="checkout-card-number"
-                                type="text"
-                                value={cardInfo.cardNumber}
-                                onChange={e => setCardInfo({ ...cardInfo, cardNumber: e.target.value })}
-                                className="w-full bg-[#FAF9F6] border border-[#E5E4E2] rounded-sm px-3.5 py-2 text-xs font-mono text-[#1A1A1A] focus:outline-none focus:border-[#A08C75]"
-                              />
-                            </div>
+                        {/* Preferred Payment Method */}
+                        <div className="space-y-2">
+                          <label className="text-[10px] uppercase font-bold tracking-wider text-[#1A1A1A] block">
+                            {t.checkoutPaymentPrefTitle}
+                          </label>
+                          <p className="text-[11px] text-[#7A7A7A] font-light">
+                            {t.checkoutPaymentPrefDesc}
+                          </p>
 
-                            <div className="grid grid-cols-2 gap-3">
-                              <div>
-                                <label className="text-[10px] uppercase font-bold tracking-wider text-[#1A1A1A] block mb-1">
-                                  {t.checkoutExpiration}
-                                </label>
-                                <input
-                                  id="checkout-card-expiry"
-                                  type="text"
-                                  value={cardInfo.expiry}
-                                  onChange={e => setCardInfo({ ...cardInfo, expiry: e.target.value })}
-                                  placeholder="MM/YY"
-                                  className="w-full bg-[#FAF9F6] border border-[#E5E4E2] rounded-sm px-3.5 py-2 text-xs font-mono text-[#1A1A1A] focus:outline-none focus:border-[#A08C75]"
-                                />
+                          <div className="space-y-2 pt-1">
+                            <label
+                              onClick={() => setPaymentPreference('mpesa')}
+                              className={`p-3.5 rounded-sm border flex items-center justify-between gap-3 cursor-pointer transition-all ${
+                                paymentPreference === 'mpesa'
+                                  ? 'bg-white border-[#1A1A1A] ring-1 ring-[#1A1A1A] shadow-xs'
+                                  : 'bg-white border-[#E5E4E2] hover:border-[#A08C75]'
+                              }`}
+                            >
+                              <div className="flex items-center gap-3">
+                                <div className="w-7 h-7 rounded-xs bg-red-50 border border-red-200 text-red-600 flex items-center justify-center">
+                                  <Smartphone className="w-3.5 h-3.5" />
+                                </div>
+                                <div>
+                                  <span className="text-xs font-bold text-[#1A1A1A] block">{t.checkoutMpesa}</span>
+                                  <span className="text-[10px] text-[#7A7A7A]">Vodacom Moçambique</span>
+                                </div>
                               </div>
-                              <div>
-                                <label className="text-[10px] uppercase font-bold tracking-wider text-[#1A1A1A] block mb-1">
-                                  {t.checkoutCvv}
-                                </label>
-                                <input
-                                  id="checkout-card-cvv"
-                                  type="text"
-                                  value={cardInfo.cvv}
-                                  onChange={e => setCardInfo({ ...cardInfo, cvv: e.target.value })}
-                                  placeholder="123"
-                                  className="w-full bg-[#FAF9F6] border border-[#E5E4E2] rounded-sm px-3.5 py-2 text-xs font-mono text-[#1A1A1A] focus:outline-none focus:border-[#A08C75]"
-                                />
+                              <div className={`w-4 h-4 rounded-full border flex items-center justify-center ${paymentPreference === 'mpesa' ? 'border-[#1A1A1A] bg-[#1A1A1A]' : 'border-[#CCCCCC]'}`}>
+                                {paymentPreference === 'mpesa' && <div className="w-1.5 h-1.5 rounded-full bg-white" />}
                               </div>
-                            </div>
-                          </div>
-                        )}
+                            </label>
 
-                        {paymentType === 'apple-pay' && (
-                          <div className="p-4 rounded-sm bg-white border border-[#E5E4E2] text-center space-y-2">
-                            <span className="text-xs text-[#5A5A5A] font-light">
-                              {language === 'pt' ? 'Pagamento biométrico em 1 clique ativo para este dispositivo.' : 'Instant 1-Click Biometric Pay activated for your device.'}
-                            </span>
-                          </div>
-                        )}
+                            <label
+                              onClick={() => setPaymentPreference('bank-transfer')}
+                              className={`p-3.5 rounded-sm border flex items-center justify-between gap-3 cursor-pointer transition-all ${
+                                paymentPreference === 'bank-transfer'
+                                  ? 'bg-white border-[#1A1A1A] ring-1 ring-[#1A1A1A] shadow-xs'
+                                  : 'bg-white border-[#E5E4E2] hover:border-[#A08C75]'
+                              }`}
+                            >
+                              <div className="flex items-center gap-3">
+                                <div className="w-7 h-7 rounded-xs bg-blue-50 border border-blue-200 text-blue-600 flex items-center justify-center">
+                                  <Building className="w-3.5 h-3.5" />
+                                </div>
+                                <div>
+                                  <span className="text-xs font-bold text-[#1A1A1A] block">{t.checkoutBankTransfer}</span>
+                                  <span className="text-[10px] text-[#7A7A7A]">BCI / Millennium BIM / Standard Bank / Moza</span>
+                                </div>
+                              </div>
+                              <div className={`w-4 h-4 rounded-full border flex items-center justify-center ${paymentPreference === 'bank-transfer' ? 'border-[#1A1A1A] bg-[#1A1A1A]' : 'border-[#CCCCCC]'}`}>
+                                {paymentPreference === 'bank-transfer' && <div className="w-1.5 h-1.5 rounded-full bg-white" />}
+                              </div>
+                            </label>
 
-                        {paymentType === 'klarna' && (
-                          <div className="p-4 rounded-sm bg-[#F5F2ED] border border-[#E5E4E2] text-xs text-[#5A5A5A] space-y-1">
-                            <span className="font-bold text-[#1A1A1A] block font-mono">
-                              {language === 'pt' 
-                                ? `4x sem juros de ${formatCurrency(cartTotal / 4)}`
-                                : `4 interest-free payments of ${(cartTotal / 4).toFixed(2)}`}
-                            </span>
-                            <span className="font-light">
-                              {language === 'pt' ? 'Sem juros ou taxas adicionais no cartão.' : 'Due every 2 weeks. No hidden fees or credit score impact.'}
-                            </span>
+                            <label
+                              onClick={() => setPaymentPreference('cash-on-delivery')}
+                              className={`p-3.5 rounded-sm border flex items-center justify-between gap-3 cursor-pointer transition-all ${
+                                paymentPreference === 'cash-on-delivery'
+                                  ? 'bg-white border-[#1A1A1A] ring-1 ring-[#1A1A1A] shadow-xs'
+                                  : 'bg-white border-[#E5E4E2] hover:border-[#A08C75]'
+                              }`}
+                            >
+                              <div className="flex items-center gap-3">
+                                <div className="w-7 h-7 rounded-xs bg-amber-50 border border-amber-200 text-amber-700 flex items-center justify-center">
+                                  <Banknote className="w-3.5 h-3.5" />
+                                </div>
+                                <div>
+                                  <span className="text-xs font-bold text-[#1A1A1A] block">{t.checkoutCashOnDelivery}</span>
+                                  <span className="text-[10px] text-[#7A7A7A]">{language === 'pt' ? 'Pagamento no ato do recebimento' : 'Pay when you receive the furniture'}</span>
+                                </div>
+                              </div>
+                              <div className={`w-4 h-4 rounded-full border flex items-center justify-center ${paymentPreference === 'cash-on-delivery' ? 'border-[#1A1A1A] bg-[#1A1A1A]' : 'border-[#CCCCCC]'}`}>
+                                {paymentPreference === 'cash-on-delivery' && <div className="w-1.5 h-1.5 rounded-full bg-white" />}
+                              </div>
+                            </label>
                           </div>
-                        )}
+                        </div>
+
+                        {/* Order Notes / Landmark */}
+                        <div>
+                          <label className="text-[10px] uppercase font-bold tracking-wider text-[#1A1A1A] block mb-1">
+                            {t.checkoutOrderNotes}
+                          </label>
+                          <textarea
+                            id="checkout-order-notes"
+                            rows={2}
+                            value={orderNotes}
+                            onChange={e => setOrderNotes(e.target.value)}
+                            placeholder={t.checkoutNotesPlaceholder}
+                            className="w-full bg-white border border-[#E5E4E2] rounded-sm px-3.5 py-2 text-xs text-[#1A1A1A] focus:outline-none focus:border-[#A08C75]"
+                          />
+                        </div>
 
                         <div className="flex items-center gap-3 pt-2">
                           <button
                             type="button"
                             onClick={() => setCurrentStep(2)}
-                            className="py-3 px-4 rounded-sm border border-[#E5E4E2] text-[#1A1A1A] hover:bg-[#E5E4E2] text-[10px] uppercase font-bold tracking-wider flex items-center gap-1.5 transition-colors"
+                            disabled={isSubmitting}
+                            className="py-3 px-4 rounded-sm border border-[#E5E4E2] text-[#1A1A1A] hover:bg-[#E5E4E2] text-[10px] uppercase font-bold tracking-wider flex items-center gap-1.5 transition-colors disabled:opacity-50"
                           >
                             <ArrowLeft className="w-3.5 h-3.5" />
                             <span>{t.checkoutBack}</span>
@@ -685,10 +729,15 @@ export const CheckoutModal: React.FC = () => {
                           <button
                             id="complete-order-btn"
                             type="submit"
-                            className="flex-1 py-3.5 px-6 rounded-sm bg-[#A08C75] hover:bg-[#8e7a64] text-white text-[10px] uppercase font-bold tracking-widest flex items-center justify-center gap-2 transition-all shadow-sm active:scale-98"
+                            disabled={isSubmitting}
+                            className="flex-1 py-3.5 px-6 rounded-sm bg-[#A08C75] hover:bg-[#8e7a64] text-white text-[10px] uppercase font-bold tracking-widest flex items-center justify-center gap-2 transition-all shadow-sm active:scale-98 disabled:opacity-75 cursor-pointer"
                           >
-                            <ShieldCheck className="w-3.5 h-3.5" />
-                            <span>{t.checkoutAuthorize} • {formatCurrency(cartTotal)}</span>
+                            <Send className="w-3.5 h-3.5" />
+                            <span>
+                              {isSubmitting
+                                ? t.checkoutSubmittingOrder
+                                : `${t.checkoutSubmitOrderBtn} • ${formatCurrency(cartTotal)}`}
+                            </span>
                           </button>
                         </div>
                       </div>
@@ -699,7 +748,7 @@ export const CheckoutModal: React.FC = () => {
                 {/* Right Summary Sidebar (5 cols) */}
                 <div className="lg:col-span-5 p-5 rounded-sm bg-white border border-[#E5E4E2] space-y-4 h-fit shadow-xs">
                   <h4 className="font-serif italic text-sm font-bold text-[#1A1A1A]">
-                    {t.checkoutOrderSummary} ({cart.reduce((a, b) => a + b.quantity, 0)} {language === 'pt' ? 'itens' : 'items'})
+                    {t.checkoutOrderSummary} ({cart.reduce((a, b) => a + b.quantity, 0)} {language === 'pt' ? 'peças' : 'items'})
                   </h4>
 
                   <div className="max-h-60 overflow-y-auto space-y-3 pr-1 divide-y divide-[#E5E4E2]">
@@ -766,6 +815,15 @@ export const CheckoutModal: React.FC = () => {
           </div>
         </motion.div>
       </div>
+  );
+};
+
+export const CheckoutModal: React.FC = () => {
+  const { isCheckoutOpen } = useShop();
+
+  return (
+    <AnimatePresence>
+      {isCheckoutOpen && <CheckoutModalContent />}
     </AnimatePresence>
   );
 };

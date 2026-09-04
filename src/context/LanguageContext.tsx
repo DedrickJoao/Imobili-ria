@@ -41,19 +41,10 @@ export const LanguageProvider: React.FC<{ children: ReactNode }> = ({ children }
   const t = TRANSLATIONS[language];
 
   const formatCurrency = (amount: number): string => {
-    if (language === 'pt') {
-      // Formatted in R$ or localized format
-      return new Intl.NumberFormat('pt-BR', {
-        style: 'currency',
-        currency: 'BRL',
-        maximumFractionDigits: 0,
-      }).format(amount * 5.2); // realistic conversion rate representation
-    }
-    return new Intl.NumberFormat('en-US', {
-      style: 'currency',
-      currency: 'USD',
+    // Formatted in Mozambican Meticais (MT)
+    return `${new Intl.NumberFormat('pt-MZ', {
       maximumFractionDigits: 0,
-    }).format(amount);
+    }).format(amount)} MT`;
   };
 
   return (

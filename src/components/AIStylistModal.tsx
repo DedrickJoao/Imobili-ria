@@ -14,9 +14,8 @@ import {
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 
-export const AIStylistModal: React.FC = () => {
+const AIStylistModalContent: React.FC = () => {
   const {
-    isAIStylistOpen,
     setIsAIStylistOpen,
     aiContextProduct,
     recentlyViewed,
@@ -27,8 +26,6 @@ export const AIStylistModal: React.FC = () => {
   } = useShop();
 
   const { t, formatCurrency, language } = useLanguage();
-
-  if (!isAIStylistOpen) return null;
 
   const [activeTab, setActiveTab] = useState<'recommend' | 'chat'>('recommend');
 
@@ -147,8 +144,7 @@ export const AIStylistModal: React.FC = () => {
     : [];
 
   return (
-    <AnimatePresence>
-      <div className="fixed inset-0 z-50 overflow-y-auto bg-black/60 backdrop-blur-sm flex items-center justify-center p-2 sm:p-4 md:p-6">
+    <div className="fixed inset-0 z-50 overflow-y-auto bg-black/60 backdrop-blur-sm flex items-center justify-center p-2 sm:p-4 md:p-6">
         <motion.div
           id="ai-stylist-modal-card"
           initial={{ opacity: 0, scale: 0.96, y: 20 }}
@@ -522,6 +518,15 @@ export const AIStylistModal: React.FC = () => {
           </div>
         </motion.div>
       </div>
+  );
+};
+
+export const AIStylistModal: React.FC = () => {
+  const { isAIStylistOpen } = useShop();
+
+  return (
+    <AnimatePresence>
+      {isAIStylistOpen && <AIStylistModalContent />}
     </AnimatePresence>
   );
 };

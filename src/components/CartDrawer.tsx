@@ -14,9 +14,8 @@ import {
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 
-export const CartDrawer: React.FC = () => {
+const CartDrawerContent: React.FC = () => {
   const {
-    isCartOpen,
     setIsCartOpen,
     cart,
     updateCartQuantity,
@@ -38,8 +37,6 @@ export const CartDrawer: React.FC = () => {
   const [promoInput, setPromoInput] = useState('');
   const [promoMessage, setPromoMessage] = useState<{ text: string; success: boolean } | null>(null);
 
-  if (!isCartOpen) return null;
-
   const freeShippingThreshold = 1500;
   const progressPercent = Math.min(100, Math.round((cartSubtotal / freeShippingThreshold) * 100));
   const remainingForFreeShipping = Math.max(0, freeShippingThreshold - cartSubtotal);
@@ -58,8 +55,7 @@ export const CartDrawer: React.FC = () => {
   };
 
   return (
-    <AnimatePresence>
-      <div className="fixed inset-0 z-50 overflow-hidden">
+    <div className="fixed inset-0 z-50 overflow-hidden">
         {/* Backdrop */}
         <motion.div
           initial={{ opacity: 0 }}
@@ -333,6 +329,15 @@ export const CartDrawer: React.FC = () => {
           </motion.div>
         </div>
       </div>
+  );
+};
+
+export const CartDrawer: React.FC = () => {
+  const { isCartOpen } = useShop();
+
+  return (
+    <AnimatePresence>
+      {isCartOpen && <CartDrawerContent />}
     </AnimatePresence>
   );
 };

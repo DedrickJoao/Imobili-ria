@@ -323,8 +323,8 @@ export const ShopProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const placeOrder = (orderData: Omit<Order, 'orderId' | 'date' | 'status'>): Order => {
     const newOrder: Order = {
       ...orderData,
-      orderId: 'ATF-' + Math.floor(100000 + Math.random() * 900000),
-      date: new Date().toLocaleDateString('en-US', {
+      orderId: 'SVM-' + Math.floor(100000 + Math.random() * 900000),
+      date: new Date().toLocaleDateString('pt-MZ', {
         month: 'short',
         day: 'numeric',
         year: 'numeric',

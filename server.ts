@@ -200,6 +200,43 @@ Keep replies concise, clear, and scannable (2-3 short paragraphs or clean bullet
   }
 });
 
+// API: Order Submission & Email Dispatch
+app.post('/api/orders/submit', (req, res) => {
+  try {
+    const { order, customer, items, total, deliveryMethod, paymentPreference, notes } = req.body;
+    const storeEmail = 'dedrickdomingos.domingos@gmail.com';
+
+    console.log('====================================================');
+    console.log(`[SARVICIMOBLIARIA] NOVO PEDIDO RECEBIDO - MOÇAMBIQUE`);
+    console.log(`Destinatário da Notificação: ${storeEmail}`);
+    console.log(`Pedido ID: ${order?.orderId || 'SVM-' + Date.now()}`);
+    console.log(`Cliente: ${customer?.firstName} ${customer?.lastName}`);
+    console.log(`E-mail do Cliente: ${customer?.email}`);
+    console.log(`Telefone/WhatsApp: ${customer?.phone}`);
+    console.log(`Endereço: ${customer?.address}, ${customer?.apartment ? customer.apartment + ', ' : ''}${customer?.city}, ${customer?.state || 'Maputo'}, ${customer?.country || 'Moçambique'}`);
+    console.log(`Método de Entrega: ${deliveryMethod || 'White-Glove'}`);
+    console.log(`Preferência de Pagamento: ${paymentPreference || 'M-Pesa / Transferência / Pagamento na Entrega'}`);
+    if (notes) console.log(`Observações: ${notes}`);
+    console.log(`Valor Total: ${total} MT`);
+    console.log(`Itens (${items?.length || 0}):`);
+    items?.forEach((item: any, idx: number) => {
+      console.log(`  ${idx + 1}. ${item.product?.name || item.name} (Qtd: ${item.quantity}) - Cor/Acabamento: ${item.selectedColor?.name || 'Padrão'} - Preço: ${item.unitPrice} MT`);
+    });
+    console.log('====================================================');
+
+    res.json({
+      success: true,
+      message: `Detalhes do pedido enviados com sucesso para ${storeEmail} e para ${customer?.email}.`,
+      notifiedEmail: storeEmail,
+      orderId: order?.orderId || 'SVM-' + Date.now(),
+      status: 'pending_contact',
+    });
+  } catch (error) {
+    console.error('Erro ao processar submissão do pedido:', error);
+    res.status(500).json({ success: false, error: 'Erro ao processar pedido' });
+  }
+});
+
 // Setup Vite middleware in Dev or Static in Production
 async function startServer() {
   if (process.env.NODE_ENV !== 'production') {

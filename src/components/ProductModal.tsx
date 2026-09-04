@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useShop } from '../context/ShopContext';
 import { useLanguage } from '../context/LanguageContext';
-import { ColorOption } from '../types';
+import { ColorOption, Product } from '../types';
 import {
   X,
   Star,
@@ -21,9 +21,13 @@ import {
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 
-export const ProductModal: React.FC = () => {
+interface ProductModalContentProps {
+  product: Product;
+}
+
+const ProductModalContent: React.FC<ProductModalContentProps> = ({ product }) => {
+  const activeProduct = product;
   const {
-    activeProduct,
     setActiveProduct,
     addToCart,
     toggleWishlist,
@@ -35,10 +39,8 @@ export const ProductModal: React.FC = () => {
 
   const { t, formatCurrency } = useLanguage();
 
-  if (!activeProduct) return null;
-
-  const inWishlist = isInWishlist(activeProduct.id);
-  const [selectedColor, setSelectedColor] = useState<ColorOption>(activeProduct.colors[0]);
+  const inWishlist = isInWishlist(product.id);
+  const [selectedColor, setSelectedColor] = useState<ColorOption>(product.colors[0] || { name: 'Default', hex: '#1A1A1A', imageIndex: 0 });
   const [activeImageIndex, setActiveImageIndex] = useState(0);
   const [quantity, setQuantity] = useState(1);
   const [activeTab, setActiveTab] = useState<'details' | 'dimensions' | 'reviews' | 'care'>('details');
@@ -49,19 +51,19 @@ export const ProductModal: React.FC = () => {
   // Sync image when color is changed
   const handleColorChange = (color: ColorOption) => {
     setSelectedColor(color);
-    if (color.imageIndex < activeProduct.images.length) {
+    if (color.imageIndex < product.images.length) {
       setActiveImageIndex(color.imageIndex);
     }
   };
 
   const handleAddToCart = () => {
-    addToCart(activeProduct, selectedColor, quantity);
+    addToCart(product, selectedColor, quantity);
     setIsAdded(true);
     setTimeout(() => setIsAdded(false), 1200);
   };
 
   const handleBuyNow = () => {
-    addToCart(activeProduct, selectedColor, quantity);
+    addToCart(product, selectedColor, quantity);
     setActiveProduct(null);
     setIsCheckoutOpen(true);
   };
@@ -75,89 +77,88 @@ export const ProductModal: React.FC = () => {
   };
 
   // Related products
-  const relatedProducts = products.filter(p => activeProduct.relatedIds?.includes(p.id));
+  const relatedProducts = products.filter(p => product.relatedIds?.includes(p.id));
 
   return (
-    <AnimatePresence>
-      <div className="fixed inset-0 z-50 overflow-y-auto bg-black/60 backdrop-blur-sm flex items-center justify-center p-2 sm:p-4 md:p-6">
-        <motion.div
-          id="product-detail-modal"
-          initial={{ opacity: 0, scale: 0.96, y: 20 }}
-          animate={{ opacity: 1, scale: 1, y: 0 }}
-          exit={{ opacity: 0, scale: 0.96, y: 15 }}
-          transition={{ duration: 0.25, ease: 'easeOut' }}
-          className="relative w-full max-w-5xl bg-[#FAF9F6] rounded-sm shadow-2xl border border-[#E5E4E2] overflow-hidden my-auto max-h-[92vh] flex flex-col"
-        >
-          {/* Top Bar / Close */}
-          <div className="sticky top-0 z-30 flex items-center justify-between px-6 py-4 bg-[#FAF9F6]/95 backdrop-blur-md border-b border-[#E5E4E2]">
-            <div className="flex items-center gap-2 text-[10px] uppercase font-bold tracking-widest text-[#7A7A7A]">
-              <span className="capitalize">{activeProduct.category}</span>
-              <span>/</span>
-              <span className="text-[#1A1A1A]">{activeProduct.name}</span>
-            </div>
-
-            <button
-              id="close-product-modal-btn"
-              onClick={() => setActiveProduct(null)}
-              className="p-1.5 rounded-sm text-[#1A1A1A] hover:bg-[#E5E4E2] border border-transparent hover:border-[#E5E4E2] transition-colors"
-              aria-label="Close product view"
-            >
-              <X className="w-4 h-4" />
-            </button>
+    <div className="fixed inset-0 z-50 overflow-y-auto bg-black/60 backdrop-blur-sm flex items-center justify-center p-2 sm:p-4 md:p-6">
+      <motion.div
+        id="product-detail-modal"
+        initial={{ opacity: 0, scale: 0.96, y: 20 }}
+        animate={{ opacity: 1, scale: 1, y: 0 }}
+        exit={{ opacity: 0, scale: 0.96, y: 15 }}
+        transition={{ duration: 0.25, ease: 'easeOut' }}
+        className="relative w-full max-w-5xl bg-[#FAF9F6] rounded-sm shadow-2xl border border-[#E5E4E2] overflow-hidden my-auto max-h-[92vh] flex flex-col"
+      >
+        {/* Top Bar / Close */}
+        <div className="sticky top-0 z-30 flex items-center justify-between px-6 py-4 bg-[#FAF9F6]/95 backdrop-blur-md border-b border-[#E5E4E2]">
+          <div className="flex items-center gap-2 text-[10px] uppercase font-bold tracking-widest text-[#7A7A7A]">
+            <span className="capitalize">{product.category}</span>
+            <span>/</span>
+            <span className="text-[#1A1A1A]">{product.name}</span>
           </div>
 
-          {/* Modal Scrollable Body */}
-          <div className="overflow-y-auto p-4 sm:p-6 md:p-8 space-y-8">
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10">
-              
-              {/* Left Column: Interactive Image Gallery */}
-              <div className="lg:col-span-7 space-y-4">
-                {/* Main Large Image Stage with Zoom Magnifier */}
-                <div
-                  id="product-main-image-stage"
-                  onMouseEnter={() => setIsZoomed(true)}
-                  onMouseLeave={() => setIsZoomed(false)}
-                  onMouseMove={handleMouseMove}
-                  className="relative aspect-[4/3] rounded-sm overflow-hidden bg-[#F5F5F5] border border-[#E5E4E2] cursor-crosshair shadow-xs select-none"
-                >
-                  <img
-                    src={activeProduct.images[activeImageIndex] || activeProduct.images[0]}
-                    alt={activeProduct.name}
-                    className={`w-full h-full object-cover transition-transform duration-200 ${
-                      isZoomed ? 'scale-150' : 'scale-100'
-                    }`}
-                    style={
-                      isZoomed
-                        ? {
-                            transformOrigin: `${zoomPos.x}% ${zoomPos.y}%`,
-                          }
-                        : undefined
-                    }
-                    referrerPolicy="no-referrer"
-                  />
+          <button
+            id="close-product-modal-btn"
+            onClick={() => setActiveProduct(null)}
+            className="p-1.5 rounded-sm text-[#1A1A1A] hover:bg-[#E5E4E2] border border-transparent hover:border-[#E5E4E2] transition-colors"
+            aria-label="Close product view"
+          >
+            <X className="w-4 h-4" />
+          </button>
+        </div>
 
-                  {/* Navigation Arrows */}
-                  {activeProduct.images.length > 1 && (
-                    <>
-                      <button
-                        id="prev-image-btn"
-                        onClick={e => {
-                          e.stopPropagation();
-                          setActiveImageIndex(prev => (prev === 0 ? activeProduct.images.length - 1 : prev - 1));
-                        }}
-                        className="absolute left-3 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-white/80 hover:bg-white text-[#1A1A1A] flex items-center justify-center backdrop-blur-md shadow-xs transition-all border border-[#E5E4E2]"
-                        aria-label="Previous image"
-                      >
-                        <ChevronLeft className="w-4 h-4" />
-                      </button>
+        {/* Modal Scrollable Body */}
+        <div className="overflow-y-auto p-4 sm:p-6 md:p-8 space-y-8">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10">
+            
+            {/* Left Column: Interactive Image Gallery */}
+            <div className="lg:col-span-7 space-y-4">
+              {/* Main Large Image Stage with Zoom Magnifier */}
+              <div
+                id="product-main-image-stage"
+                onMouseEnter={() => setIsZoomed(true)}
+                onMouseLeave={() => setIsZoomed(false)}
+                onMouseMove={handleMouseMove}
+                className="relative aspect-[4/3] rounded-sm overflow-hidden bg-[#F5F5F5] border border-[#E5E4E2] cursor-crosshair shadow-xs select-none"
+              >
+                <img
+                  src={product.images[activeImageIndex] || product.images[0]}
+                  alt={product.name}
+                  className={`w-full h-full object-cover transition-transform duration-200 ${
+                    isZoomed ? 'scale-150' : 'scale-100'
+                  }`}
+                  style={
+                    isZoomed
+                      ? {
+                          transformOrigin: `${zoomPos.x}% ${zoomPos.y}%`,
+                        }
+                      : undefined
+                  }
+                  referrerPolicy="no-referrer"
+                />
 
-                      <button
-                        id="next-image-btn"
-                        onClick={e => {
-                          e.stopPropagation();
-                          setActiveImageIndex(prev => (prev === activeProduct.images.length - 1 ? 0 : prev + 1));
-                        }}
-                        className="absolute right-3 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-white/80 hover:bg-white text-[#1A1A1A] flex items-center justify-center backdrop-blur-md shadow-xs transition-all border border-[#E5E4E2]"
+                {/* Navigation Arrows */}
+                {product.images.length > 1 && (
+                  <>
+                    <button
+                      id="prev-image-btn"
+                      onClick={e => {
+                        e.stopPropagation();
+                        setActiveImageIndex(prev => (prev === 0 ? product.images.length - 1 : prev - 1));
+                      }}
+                      className="absolute left-3 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-white/80 hover:bg-white text-[#1A1A1A] flex items-center justify-center backdrop-blur-md shadow-xs transition-all border border-[#E5E4E2]"
+                      aria-label="Previous image"
+                    >
+                      <ChevronLeft className="w-4 h-4" />
+                    </button>
+
+                    <button
+                      id="next-image-btn"
+                      onClick={e => {
+                        e.stopPropagation();
+                        setActiveImageIndex(prev => (prev === product.images.length - 1 ? 0 : prev + 1));
+                      }}
+                      className="absolute right-3 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-white/80 hover:bg-white text-[#1A1A1A] flex items-center justify-center backdrop-blur-md shadow-xs transition-all border border-[#E5E4E2]"
                         aria-label="Next image"
                       >
                         <ChevronRight className="w-4 h-4" />
@@ -533,6 +534,15 @@ export const ProductModal: React.FC = () => {
           </div>
         </motion.div>
       </div>
+  );
+};
+
+export const ProductModal: React.FC = () => {
+  const { activeProduct } = useShop();
+
+  return (
+    <AnimatePresence>
+      {activeProduct && <ProductModalContent product={activeProduct} key={activeProduct.id} />}
     </AnimatePresence>
   );
 };
