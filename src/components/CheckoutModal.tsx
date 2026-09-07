@@ -371,7 +371,7 @@ const CheckoutModalContent: React.FC = () => {
                               required
                               value={customer.firstName}
                               onChange={e => setCustomer({ ...customer, firstName: e.target.value })}
-                              placeholder={language === 'pt' ? 'Dércio' : 'Derick'}
+                              placeholder="John"
                               className="w-full bg-white border border-[#E5E4E2] rounded-sm px-3.5 py-2 text-xs text-[#1A1A1A] focus:outline-none focus:border-[#A08C75]"
                             />
                           </div>
@@ -386,7 +386,7 @@ const CheckoutModalContent: React.FC = () => {
                               required
                               value={customer.lastName}
                               onChange={e => setCustomer({ ...customer, lastName: e.target.value })}
-                              placeholder={language === 'pt' ? 'Domingos' : 'Domingos'}
+                              placeholder="Myaden"
                               className="w-full bg-white border border-[#E5E4E2] rounded-sm px-3.5 py-2 text-xs text-[#1A1A1A] focus:outline-none focus:border-[#A08C75]"
                             />
                           </div>
@@ -401,7 +401,7 @@ const CheckoutModalContent: React.FC = () => {
                               required
                               value={customer.email}
                               onChange={e => setCustomer({ ...customer, email: e.target.value })}
-                              placeholder="seu.email@exemplo.com"
+                              placeholder="seu.email@gmail.com"
                               className="w-full bg-white border border-[#E5E4E2] rounded-sm px-3.5 py-2 text-xs text-[#1A1A1A] focus:outline-none focus:border-[#A08C75]"
                             />
                           </div>
