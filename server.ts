@@ -263,7 +263,7 @@ const buildItemsHtml = (items: any[]) => {
 app.post('/api/orders/submit', async (req, res) => {
   try {
     const { orderId, customer, items = [], deliveryMethod, paymentPreference, notes } = req.body;
-    const storeEmail = 'dedrickdomingos.domingos@gmail.com';
+    const storeEmail = 'bestfurniture79@gmail.com';
     const clientEmail = customer?.email;
     const safeOrderId = orderId || 'SVM-' + Date.now();
     const customerFullName = `${customer?.firstName || ''} ${customer?.lastName || ''}`.trim() || 'Cliente';
@@ -412,7 +412,7 @@ app.post('/api/orders/submit', async (req, res) => {
 
           <div style="background-color: #1A1A1A; padding: 18px; text-align: center; font-size: 11px; color: #DEDCD7;">
             <p style="margin: 0 0 4px; font-weight: bold; color: #FFFFFF;">Sarvicimobliaria Moçambique</p>
-            <p style="margin: 0;">E-mail: dedrickdomingos.domingos@gmail.com | WhatsApp: +258 84 920 1842</p>
+            <p style="margin: 0;">E-mail: bestfurniture79@gmail.com | WhatsApp: +258 84 920 1842</p>
           </div>
         </div>
       </div>

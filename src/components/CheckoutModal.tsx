@@ -216,7 +216,7 @@ const CheckoutModalContent: React.FC = () => {
                     <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
                     <div>
                       <p className="font-semibold">{t.checkoutSuccessEmailSent} <strong>{confirmedOrder.customer.email}</strong>.</p>
-                      <p className="text-[11px] text-emerald-800 mt-1">E-mail comercial da Sarvicimobliaria: <strong>dedrickdomingos.domingos@gmail.com</strong></p>
+                      <p className="text-[11px] text-emerald-800 mt-1">E-mail comercial da Sarvicimobliaria: <strong>bestfurniture79@gmail.com</strong></p>
                     </div>
                   </div>
                 </div>
