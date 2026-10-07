@@ -32,7 +32,7 @@ const CartDrawerContent: React.FC = () => {
     openProductDetail,
   } = useShop();
 
-  const { t, formatCurrency } = useLanguage();
+  const { t, formatCurrency, language } = useLanguage();
 
   const [promoInput, setPromoInput] = useState('');
   const [promoMessage, setPromoMessage] = useState<{ text: string; success: boolean } | null>(null);
@@ -92,28 +92,18 @@ const CartDrawerContent: React.FC = () => {
               </button>
             </div>
 
-            {/* Free Shipping Progress Indicator */}
+            {/* White Glove Service Indicator */}
             <div className="bg-[#F5F2ED] px-4 sm:px-6 py-3 border-b border-[#E5E4E2]">
-              <div className="flex items-center justify-between text-[11px] mb-1.5 font-medium text-[#5A5A5A]">
-                <div className="flex items-center gap-1.5">
-                  <Truck className="w-3.5 h-3.5 text-[#A08C75]" />
-                  {remainingForFreeShipping > 0 ? (
-                    <span>
-                      {t.cartFreeShippingRemaining} <strong className="font-mono text-[#1A1A1A]">{formatCurrency(remainingForFreeShipping)}</strong> {t.cartForFreeDelivery}
-                    </span>
-                  ) : (
-                    <span className="text-[#1A1A1A] font-bold">
-                      {t.cartDeliveryUnlocked}
-                    </span>
-                  )}
+              <div className="flex items-center justify-between text-[11px] font-medium text-[#5A5A5A]">
+                <div className="flex items-center gap-2">
+                  <Truck className="w-4 h-4 text-[#A08C75]" />
+                  <span className="text-[#1A1A1A] font-bold">
+                    {language === 'pt' ? 'Entrega White-Glove & Montagem Inclusa em Moçambique' : 'Complimentary White-Glove Delivery & Assembly in Mozambique'}
+                  </span>
                 </div>
-                <span className="font-mono font-bold text-[#A08C75] text-[10px]">{progressPercent}%</span>
-              </div>
-              <div className="w-full bg-[#E5E4E2] h-1 rounded-none overflow-hidden">
-                <div
-                  className="bg-[#A08C75] h-full transition-all duration-300"
-                  style={{ width: `${progressPercent}%` }}
-                />
+                <span className="text-[10px] uppercase font-bold tracking-wider text-[#A08C75] bg-white px-2 py-0.5 rounded-xs border border-[#E5E4E2]">
+                  {t.checkoutRecommended}
+                </span>
               </div>
             </div>
 
@@ -176,7 +166,7 @@ const CartDrawerContent: React.FC = () => {
                         </div>
                       </div>
 
-                      {/* Quantity and Price */}
+                      {/* Quantity & Item status */}
                       <div className="flex items-center justify-between mt-2 pt-2 border-t border-[#E5E4E2]">
                         <div className="flex items-center border border-[#E5E4E2] rounded-xs bg-[#FAF9F6] overflow-hidden">
                           <button
@@ -198,8 +188,8 @@ const CartDrawerContent: React.FC = () => {
                           </button>
                         </div>
 
-                        <span className="text-xs font-bold text-[#1A1A1A] font-mono">
-                          {formatCurrency(item.unitPrice * item.quantity)}
+                        <span className="text-[10px] uppercase font-bold text-[#A08C75] tracking-wider">
+                          {t.checkoutQty}: {item.quantity}
                         </span>
                       </div>
                     </div>
@@ -230,83 +220,15 @@ const CartDrawerContent: React.FC = () => {
             {/* Bottom Checkout & Summary Footer */}
             {cart.length > 0 && (
               <div className="p-4 sm:p-6 bg-white border-t border-[#E5E4E2] space-y-4">
-                {/* Promo Code input */}
-                <div className="space-y-1.5">
-                  {appliedPromo ? (
-                    <div className="flex items-center justify-between p-2.5 rounded-xs bg-[#F5F2ED] border border-[#E5E4E2] text-xs text-[#1A1A1A]">
-                      <div className="flex items-center gap-1.5">
-                        <Tag className="w-3.5 h-3.5 text-[#A08C75]" />
-                        <span>
-                          <strong className="font-mono">{appliedPromo.code}</strong> {t.cartPromoApplied} ({appliedPromo.name})
-                        </span>
-                      </div>
-                      <button
-                        id="remove-promo-btn"
-                        onClick={removePromoCode}
-                        className="text-[10px] uppercase tracking-wider font-bold text-[#A08C75] hover:text-[#1A1A1A]"
-                      >
-                        {t.cartPromoRemove}
-                      </button>
-                    </div>
-                  ) : (
-                    <form onSubmit={handleApplyPromo} className="flex gap-2">
-                      <input
-                        id="cart-promo-input"
-                        type="text"
-                        value={promoInput}
-                        onChange={e => setPromoInput(e.target.value)}
-                        placeholder={t.cartPromoPlaceholder}
-                        className="flex-1 bg-[#FAF9F6] border border-[#E5E4E2] rounded-sm px-3 py-2 text-xs uppercase text-[#1A1A1A] placeholder:text-[#7A7A7A] placeholder:normal-case focus:outline-none focus:border-[#A08C75]"
-                      />
-                      <button
-                        id="apply-promo-btn"
-                        type="submit"
-                        className="px-3 py-2 rounded-sm bg-[#1A1A1A] hover:bg-black text-[10px] uppercase tracking-wider font-bold text-white transition-colors"
-                      >
-                        {t.cartPromoApply}
-                      </button>
-                    </form>
-                  )}
-                  {promoMessage && (
-                    <p className={`text-[10px] uppercase tracking-wider font-bold ${promoMessage.success ? 'text-emerald-700' : 'text-red-600'}`}>
-                      {promoMessage.text}
-                    </p>
-                  )}
-                </div>
-
-                {/* Pricing Breakdown */}
-                <div className="space-y-1.5 text-xs text-[#5A5A5A] pt-2 border-t border-[#E5E4E2]">
-                  <div className="flex items-center justify-between">
-                    <span>{t.cartSubtotal}</span>
-                    <span className="font-bold text-[#1A1A1A] font-mono">{formatCurrency(cartSubtotal)}</span>
+                {/* Order specs summary */}
+                <div className="space-y-2 p-3.5 rounded-sm bg-[#FAF9F6] border border-[#E5E4E2] text-xs text-[#5A5A5A]">
+                  <div className="flex items-center justify-between text-[#1A1A1A] font-bold">
+                    <span>{t.checkoutSummaryPieces}</span>
+                    <span>{cart.reduce((a, b) => a + b.quantity, 0)} {language === 'pt' ? 'peças' : 'items'}</span>
                   </div>
-
-                  {cartDiscount > 0 && (
-                    <div className="flex items-center justify-between text-[#A08C75]">
-                      <span>{t.cartDiscount} ({appliedPromo?.code})</span>
-                      <span className="font-mono">-{formatCurrency(cartDiscount)}</span>
-                    </div>
-                  )}
-
-                  <div className="flex items-center justify-between">
+                  <div className="flex items-center justify-between text-[11px] text-[#7A7A7A]">
                     <span>{t.cartShipping}</span>
-                    <span>
-                      {cartShipping === 0 ? (
-                        <strong className="text-[#A08C75] text-[10px] uppercase font-bold tracking-wider">{t.cartFree}</strong>
-                      ) : (
-                        <span className="font-mono font-bold text-[#1A1A1A]">{formatCurrency(cartShipping)}</span>
-                      )}
-                    </span>
-                  </div>
-
-                  <div className="flex items-center justify-between">
-                    <span>{t.cartEstTax}</span>
-                    <span className="font-mono font-bold text-[#1A1A1A]">{formatCurrency(cartTax)}</span>
-                  </div>
-
-                  <div className="flex items-center justify-between text-sm font-bold text-[#1A1A1A] pt-2 border-t border-[#E5E4E2]">
-                    <span>{t.cartTotalAmount}</span>
-                    <span className="text-base font-mono">{formatCurrency(cartTotal)}</span>
+                    <span className="text-[#A08C75] uppercase font-bold text-[10px]">{t.cartFree}</span>
                   </div>
                 </div>
 

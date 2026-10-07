@@ -228,7 +228,7 @@ const AIStylistModalContent: React.FC = () => {
                           {t.aiFocalPiece}
                         </div>
                         <div className="font-serif italic font-bold text-xs text-[#1A1A1A] truncate">
-                          {aiContextProduct.name} ({formatCurrency(aiContextProduct.price)})
+                          {aiContextProduct.name}
                         </div>
                       </div>
                     </div>
@@ -417,8 +417,8 @@ const AIStylistModalContent: React.FC = () => {
                             </div>
 
                             <div className="pt-2 border-t border-[#E5E4E2] flex items-center justify-between">
-                              <span className="text-xs font-bold text-[#1A1A1A] font-mono">
-                                {formatCurrency(prod.price)}
+                              <span className="text-[10px] uppercase font-bold text-[#7A7A7A] tracking-wider">
+                                {prod.inStock ? t.heroInStock : 'Sob Encomenda'}
                               </span>
                               <button
                                 id={`ai-rec-add-${prod.id}`}

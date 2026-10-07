@@ -290,16 +290,41 @@ const CheckoutModalContent: React.FC = () => {
                             </span>
                           </div>
                         </div>
-                        <span className="font-bold text-[#1A1A1A] font-mono">
-                          {formatCurrency(it.unitPrice * it.quantity)}
+                        <span className="text-[10px] uppercase font-bold text-[#A08C75] tracking-wider">
+                          {t.checkoutQty}: {it.quantity}
                         </span>
                       </div>
                     ))}
                   </div>
 
-                  <div className="pt-2 border-t border-[#E5E4E2] flex items-center justify-between text-xs font-bold text-[#1A1A1A]">
-                    <span>{t.checkoutTotalPaid}</span>
-                    <span className="text-base font-mono text-[#A08C75]">{formatCurrency(confirmedOrder.total)}</span>
+                  {/* Customer and Delivery Specification Box */}
+                  <div className="pt-3 border-t border-[#E5E4E2] space-y-1.5 text-xs text-[#5A5A5A]">
+                    <div className="flex items-center justify-between">
+                      <span className="text-[#7A7A7A]">{t.checkoutFirstName} / {t.checkoutLastName}:</span>
+                      <span className="font-bold text-[#1A1A1A]">{confirmedOrder.customer.firstName} {confirmedOrder.customer.lastName}</span>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <span className="text-[#7A7A7A]">{t.checkoutEmail}:</span>
+                      <span className="text-[#1A1A1A]">{confirmedOrder.customer.email}</span>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <span className="text-[#7A7A7A]">{t.checkoutPhone}:</span>
+                      <span className="font-bold text-[#1A1A1A]">{confirmedOrder.customer.phone}</span>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <span className="text-[#7A7A7A]">{t.checkoutAddress}:</span>
+                      <span className="text-[#1A1A1A] text-right">{confirmedOrder.customer.address}, {confirmedOrder.customer.city}</span>
+                    </div>
+                    <div className="flex items-center justify-between pt-1 border-t border-[#E5E4E2]">
+                      <span className="text-[#7A7A7A]">{t.checkoutPaymentPrefTitle}:</span>
+                      <span className="font-bold text-[#A08C75]">
+                        {paymentPreference === 'cash-on-delivery'
+                          ? t.checkoutCashOnDelivery
+                          : paymentPreference === 'mpesa'
+                          ? t.checkoutMpesa
+                          : t.checkoutBankTransfer}
+                      </span>
+                    </div>
                   </div>
                 </div>
 
@@ -307,7 +332,7 @@ const CheckoutModalContent: React.FC = () => {
                   <a
                     id="order-success-whatsapp-btn"
                     href={`https://wa.me/258849201842?text=${encodeURIComponent(
-                      `Olá Sarvicimobliaria! Acabei de submeter o pedido #${confirmedOrder.orderId} no valor total de ${formatCurrency(confirmedOrder.total)} e gostaria de confirmar os detalhes.`
+                      `Olá Sarvicimobliaria! Submeti o pedido #${confirmedOrder.orderId} para ${confirmedOrder.customer.firstName} ${confirmedOrder.customer.lastName} (${confirmedOrder.items.length} itens) e gostaria de confirmar os detalhes do trabalho.`
                     )}`}
                     target="_blank"
                     rel="noreferrer"
@@ -546,8 +571,8 @@ const CheckoutModalContent: React.FC = () => {
                                 </p>
                               </div>
                             </div>
-                            <span className="text-xs font-bold text-[#A08C75] font-mono">
-                              {cartShipping === 0 ? t.cartFree : formatCurrency(cartShipping)}
+                            <span className="text-xs font-bold text-[#A08C75] uppercase tracking-wider">
+                              {t.cartFree}
                             </span>
                           </label>
 
@@ -573,7 +598,7 @@ const CheckoutModalContent: React.FC = () => {
                                 </p>
                               </div>
                             </div>
-                            <span className="text-xs font-bold text-[#1A1A1A] font-mono">{t.cartFree}</span>
+                            <span className="text-xs font-bold text-[#1A1A1A] uppercase tracking-wider">{t.cartFree}</span>
                           </label>
                         </div>
 
@@ -633,6 +658,28 @@ const CheckoutModalContent: React.FC = () => {
 
                           <div className="space-y-2 pt-1">
                             <label
+                              onClick={() => setPaymentPreference('cash-on-delivery')}
+                              className={`p-3.5 rounded-sm border flex items-center justify-between gap-3 cursor-pointer transition-all ${
+                                paymentPreference === 'cash-on-delivery'
+                                  ? 'bg-white border-[#1A1A1A] ring-1 ring-[#1A1A1A] shadow-xs'
+                                  : 'bg-white border-[#E5E4E2] hover:border-[#A08C75]'
+                              }`}
+                            >
+                              <div className="flex items-center gap-3">
+                                <div className="w-7 h-7 rounded-xs bg-amber-50 border border-amber-200 text-amber-700 flex items-center justify-center">
+                                  <Banknote className="w-3.5 h-3.5" />
+                                </div>
+                                <div>
+                                  <span className="text-xs font-bold text-[#1A1A1A] block">{t.checkoutCashOnDelivery}</span>
+                                  <span className="text-[10px] text-[#7A7A7A]">{language === 'pt' ? 'Pagamento efetuado diretamente no nosso escritório' : 'Payment arranged while ordering in the office'}</span>
+                                </div>
+                              </div>
+                              <div className={`w-4 h-4 rounded-full border flex items-center justify-center ${paymentPreference === 'cash-on-delivery' ? 'border-[#1A1A1A] bg-[#1A1A1A]' : 'border-[#CCCCCC]'}`}>
+                                {paymentPreference === 'cash-on-delivery' && <div className="w-1.5 h-1.5 rounded-full bg-white" />}
+                              </div>
+                            </label>
+
+                            <label
                               onClick={() => setPaymentPreference('mpesa')}
                               className={`p-3.5 rounded-sm border flex items-center justify-between gap-3 cursor-pointer transition-all ${
                                 paymentPreference === 'mpesa'
@@ -675,28 +722,6 @@ const CheckoutModalContent: React.FC = () => {
                                 {paymentPreference === 'bank-transfer' && <div className="w-1.5 h-1.5 rounded-full bg-white" />}
                               </div>
                             </label>
-
-                            <label
-                              onClick={() => setPaymentPreference('cash-on-delivery')}
-                              className={`p-3.5 rounded-sm border flex items-center justify-between gap-3 cursor-pointer transition-all ${
-                                paymentPreference === 'cash-on-delivery'
-                                  ? 'bg-white border-[#1A1A1A] ring-1 ring-[#1A1A1A] shadow-xs'
-                                  : 'bg-white border-[#E5E4E2] hover:border-[#A08C75]'
-                              }`}
-                            >
-                              <div className="flex items-center gap-3">
-                                <div className="w-7 h-7 rounded-xs bg-amber-50 border border-amber-200 text-amber-700 flex items-center justify-center">
-                                  <Banknote className="w-3.5 h-3.5" />
-                                </div>
-                                <div>
-                                  <span className="text-xs font-bold text-[#1A1A1A] block">{t.checkoutCashOnDelivery}</span>
-                                  <span className="text-[10px] text-[#7A7A7A]">{language === 'pt' ? 'Pagamento no ato do recebimento' : 'Pay when you receive the furniture'}</span>
-                                </div>
-                              </div>
-                              <div className={`w-4 h-4 rounded-full border flex items-center justify-center ${paymentPreference === 'cash-on-delivery' ? 'border-[#1A1A1A] bg-[#1A1A1A]' : 'border-[#CCCCCC]'}`}>
-                                {paymentPreference === 'cash-on-delivery' && <div className="w-1.5 h-1.5 rounded-full bg-white" />}
-                              </div>
-                            </label>
                           </div>
                         </div>
 
@@ -736,7 +761,7 @@ const CheckoutModalContent: React.FC = () => {
                             <span>
                               {isSubmitting
                                 ? t.checkoutSubmittingOrder
-                                : `${t.checkoutSubmitOrderBtn} • ${formatCurrency(cartTotal)}`}
+                                : t.checkoutSubmitOrderBtn}
                             </span>
                           </button>
                         </div>
@@ -768,8 +793,8 @@ const CheckoutModalContent: React.FC = () => {
                             {t.checkoutQty} {item.quantity} · {item.selectedColor.name}
                           </p>
                         </div>
-                        <span className="text-xs font-bold text-[#1A1A1A] font-mono">
-                          {formatCurrency(item.unitPrice * item.quantity)}
+                        <span className="text-[10px] font-bold text-[#A08C75] uppercase tracking-wider">
+                          {t.checkoutQty}: {item.quantity}
                         </span>
                       </div>
                     ))}
@@ -777,36 +802,18 @@ const CheckoutModalContent: React.FC = () => {
 
                   <div className="pt-3 border-t border-[#E5E4E2] space-y-2 text-xs text-[#5A5A5A]">
                     <div className="flex items-center justify-between">
-                      <span>{t.cartSubtotal}</span>
-                      <span className="font-bold text-[#1A1A1A] font-mono">{formatCurrency(cartSubtotal)}</span>
+                      <span>{t.checkoutSummaryPieces}</span>
+                      <span className="font-bold text-[#1A1A1A]">{cart.reduce((a, b) => a + b.quantity, 0)} {language === 'pt' ? 'peças' : 'pieces'}</span>
                     </div>
-
-                    {cartDiscount > 0 && (
-                      <div className="flex items-center justify-between text-[#A08C75]">
-                        <span>{t.cartDiscount} ({appliedPromo?.code})</span>
-                        <span className="font-mono">-{formatCurrency(cartDiscount)}</span>
-                      </div>
-                    )}
 
                     <div className="flex items-center justify-between">
                       <span>{t.cartShipping}</span>
-                      <span>
-                        {cartShipping === 0 ? (
-                          <strong className="text-[#A08C75] text-[10px] uppercase font-bold tracking-wider">{t.cartFree}</strong>
-                        ) : (
-                          <span className="font-mono font-bold text-[#1A1A1A]">{formatCurrency(cartShipping)}</span>
-                        )}
-                      </span>
+                      <strong className="text-[#A08C75] text-[10px] uppercase font-bold tracking-wider">{t.cartFree}</strong>
                     </div>
 
-                    <div className="flex items-center justify-between">
-                      <span>{t.cartEstTax}</span>
-                      <span className="font-mono font-bold text-[#1A1A1A]">{formatCurrency(cartTax)}</span>
-                    </div>
-
-                    <div className="flex items-center justify-between text-sm font-bold text-[#1A1A1A] pt-2 border-t border-[#E5E4E2]">
-                      <span>{t.checkoutGrandTotal}</span>
-                      <span className="text-base font-mono text-[#A08C75]">{formatCurrency(cartTotal)}</span>
+                    <div className="flex items-center justify-between text-xs text-[#7A7A7A] pt-2 border-t border-[#E5E4E2]">
+                      <span>{language === 'pt' ? 'Montagem no Quarto / Sala' : 'In-Room Setup'}</span>
+                      <span className="text-[#1A1A1A] font-medium">{language === 'pt' ? 'Inclusa' : 'Included'}</span>
                     </div>
                   </div>
                 </div>

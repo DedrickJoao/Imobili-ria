@@ -85,8 +85,8 @@ export const Hero: React.FC<HeroProps> = ({ onShopClick }) => {
                 <div className="text-sm sm:text-base font-serif italic font-bold text-[#1A1A1A] truncate">
                   {currentHero.title}
                 </div>
-                <div className="text-xs text-[#7A7A7A] font-mono mt-0.5">
-                  {formatCurrency(currentHero.priceRaw)} · {t.heroInStock}
+                <div className="text-xs text-[#7A7A7A] mt-0.5 uppercase tracking-wider font-bold">
+                  {t.heroInStock} · {activeProduct?.designer || 'Studio Varde'}
                 </div>
               </div>
 

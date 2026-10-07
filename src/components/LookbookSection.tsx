@@ -99,8 +99,8 @@ export const LookbookSection: React.FC = () => {
                             {prod.name}
                           </div>
                           <div className="flex items-center justify-between mt-2 pt-1.5 border-t border-[#E5E4E2]">
-                            <span className="text-xs font-bold text-[#1A1A1A] font-mono">
-                              {formatCurrency(prod.price)}
+                            <span className="text-[10px] text-[#7A7A7A] uppercase font-bold tracking-wider">
+                              {prod.inStock ? t.heroInStock : 'Sob Encomenda'}
                             </span>
                             <span className="text-[10px] font-bold uppercase tracking-wider text-[#A08C75] underline">
                               {t.lookbookViewPiece}
@@ -172,8 +172,8 @@ export const LookbookSection: React.FC = () => {
                         <p className="text-[10px] text-[#7A7A7A] truncate font-light">
                           {prod.materials[0]}
                         </p>
-                        <span className="text-xs font-bold text-[#1A1A1A] font-mono mt-0.5 block">
-                          {formatCurrency(prod.price)}
+                        <span className="text-[10px] uppercase tracking-wider text-[#A08C75] font-bold mt-0.5 block">
+                          {t.lookbookViewPiece}
                         </span>
                       </div>
                     </div>

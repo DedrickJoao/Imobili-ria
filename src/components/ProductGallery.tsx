@@ -82,12 +82,6 @@ export const ProductGallery: React.FC = () => {
     });
   };
 
-  // Price range slider change
-  const handlePriceChange = (val: number) => {
-    setMaxPrice(val);
-    setFilter(prev => ({ ...prev, priceRange: [prev.priceRange[0], val] }));
-  };
-
   // Filtered and Sorted products
   const filteredProducts = useMemo(() => {
     return products
@@ -99,11 +93,6 @@ export const ProductGallery: React.FC = () => {
 
         // Room filter
         if (activeFilter.room !== 'all' && product.room !== activeFilter.room) {
-          return false;
-        }
-
-        // Price range
-        if (product.price < activeFilter.priceRange[0] || product.price > activeFilter.priceRange[1]) {
           return false;
         }
 
@@ -145,8 +134,6 @@ export const ProductGallery: React.FC = () => {
         return true;
       })
       .sort((a, b) => {
-        if (activeFilter.sortBy === 'price-asc') return a.price - b.price;
-        if (activeFilter.sortBy === 'price-desc') return b.price - a.price;
         if (activeFilter.sortBy === 'rating') return b.rating - a.rating;
         if (activeFilter.sortBy === 'newest') return (b.isNew ? 1 : 0) - (a.isNew ? 1 : 0);
         return 0; // featured order default
@@ -157,7 +144,6 @@ export const ProductGallery: React.FC = () => {
   const activeFiltersCount =
     (activeFilter.category !== 'all' ? 1 : 0) +
     (activeFilter.room !== 'all' ? 1 : 0) +
-    (activeFilter.priceRange[1] < 4500 ? 1 : 0) +
     activeFilter.materials.length +
     activeFilter.colors.length +
     (activeFilter.inStockOnly ? 1 : 0) +
@@ -333,8 +319,6 @@ export const ProductGallery: React.FC = () => {
                 className="bg-[#FAF9F6] border border-[#E5E4E2] text-[#1A1A1A] text-[10px] uppercase font-bold tracking-wider rounded-sm px-3 py-2 pr-8 focus:outline-none focus:border-[#A08C75] cursor-pointer"
               >
                 <option value="featured">{t.gallerySortFeatured}</option>
-                <option value="price-asc">{t.gallerySortPriceAsc}</option>
-                <option value="price-desc">{t.gallerySortPriceDesc}</option>
                 <option value="rating">{t.gallerySortRating}</option>
                 <option value="newest">{t.gallerySortNewest}</option>
               </select>
@@ -370,26 +354,23 @@ export const ProductGallery: React.FC = () => {
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                {/* 1. Price Range Slider */}
-                <div className="space-y-2.5">
-                  <div className="flex items-center justify-between text-xs font-bold text-[#1A1A1A]">
-                    <span className="text-[10px] uppercase tracking-wider text-[#7A7A7A]">{t.galleryPriceRange}</span>
-                    <span className="text-[#A08C75] font-mono">{formatCurrency(activeFilter.priceRange[0])} - {formatCurrency(maxPrice)}</span>
-                  </div>
-                  <input
-                    id="price-range-slider"
-                    type="range"
-                    min="300"
-                    max="4500"
-                    step="50"
-                    value={maxPrice}
-                    onChange={e => handlePriceChange(Number(e.target.value))}
-                    className="w-full h-1 bg-[#E5E4E2] rounded-none appearance-none cursor-pointer accent-[#A08C75]"
-                  />
-                  <div className="flex items-center justify-between text-[10px] text-[#7A7A7A] font-mono">
-                    <span>{formatCurrency(300)}</span>
-                    <span>{formatCurrency(2500)}</span>
-                    <span>{formatCurrency(4500)}</span>
+                {/* 1. Curated Room Ambience */}
+                <div className="space-y-2">
+                  <span className="text-[10px] uppercase tracking-wider text-[#7A7A7A] font-bold block">{t.roomAll}</span>
+                  <div className="flex flex-wrap gap-1.5">
+                    {(['all', 'living', 'dining', 'bedroom', 'workspace'] as RoomCategory[]).map(room => (
+                      <button
+                        key={room}
+                        onClick={() => handleRoomSelect(room)}
+                        className={`px-3 py-1 rounded-full text-[10px] uppercase font-bold tracking-wider transition-colors border ${
+                          activeFilter.room === room
+                            ? 'bg-[#1A1A1A] text-white border-[#1A1A1A]'
+                            : 'bg-[#F5F5F5] text-[#5A5A5A] border-[#E5E4E2] hover:border-[#1A1A1A]'
+                        }`}
+                      >
+                        {getLocalizedRoomLabel(room)}
+                      </button>
+                    ))}
                   </div>
                 </div>
 

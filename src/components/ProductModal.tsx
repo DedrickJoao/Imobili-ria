@@ -243,21 +243,14 @@ const ProductModalContent: React.FC<ProductModalContentProps> = ({ product }) =>
                     </p>
                   </div>
 
-                  {/* Pricing */}
-                  <div className="flex items-baseline gap-3 pb-3 border-b border-[#E5E4E2]">
-                    <span className="text-2xl font-bold text-[#1A1A1A] font-mono">
-                      {formatCurrency(activeProduct.price)}
+                  {/* Lead details badge */}
+                  <div className="flex items-center gap-3 pb-3 border-b border-[#E5E4E2]">
+                    <span className="text-xs font-bold text-[#1A1A1A] uppercase tracking-wider font-mono">
+                      {activeProduct.inStock ? t.heroInStock : 'Sob Encomenda Especial'}
                     </span>
-                    {activeProduct.originalPrice && (
-                      <span className="text-sm text-[#7A7A7A] line-through font-mono">
-                        {formatCurrency(activeProduct.originalPrice)}
-                      </span>
-                    )}
-                    {activeProduct.discountPercentage && (
-                      <span className="px-2 py-0.5 rounded-xs text-[9px] font-bold uppercase tracking-[0.2em] bg-[#A08C75] text-white">
-                        {t.cardSave} {activeProduct.discountPercentage}%
-                      </span>
-                    )}
+                    <span className="text-[10px] text-[#7A7A7A] uppercase tracking-wider">
+                      {activeProduct.designer}
+                    </span>
                   </div>
 
                   {/* Color Finish Selection */}
@@ -320,7 +313,7 @@ const ProductModalContent: React.FC<ProductModalContentProps> = ({ product }) =>
                         className="flex-1 py-3 px-5 rounded-sm bg-[#1A1A1A] hover:bg-black text-white text-[10px] uppercase font-bold tracking-widest flex items-center justify-center gap-2 shadow-sm transition-all active:scale-98"
                       >
                         <ShoppingBag className="w-3.5 h-3.5" />
-                        <span>{isAdded ? t.modalAddedToBag : `${t.heroAddToBag} • ${formatCurrency(activeProduct.price * quantity)}`}</span>
+                        <span>{isAdded ? t.modalAddedToBag : t.modalAddBag}</span>
                       </button>
                     </div>
 
@@ -521,8 +514,8 @@ const ProductModalContent: React.FC<ProductModalContentProps> = ({ product }) =>
                         <p className="text-[10px] text-[#7A7A7A] truncate font-light">
                           {rel.materials[0]}
                         </p>
-                        <span className="text-xs font-bold text-[#1A1A1A] font-mono mt-0.5 block">
-                          {formatCurrency(rel.price)}
+                        <span className="text-[10px] uppercase tracking-wider text-[#A08C75] font-bold mt-0.5 block">
+                          {t.lookbookViewPiece}
                         </span>
                       </div>
                     </div>

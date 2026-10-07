@@ -148,8 +148,8 @@ export const SearchBar: React.FC<SearchBarProps> = ({ isMobile, onCloseMobile })
                           </p>
                         </div>
                         <div className="text-right shrink-0">
-                          <span className="text-xs font-bold text-[#1A1A1A] font-mono">
-                            {formatCurrency(product.price)}
+                          <span className="text-[10px] uppercase font-bold text-[#A08C75] tracking-wider">
+                            {product.category}
                           </span>
                         </div>
                       </div>

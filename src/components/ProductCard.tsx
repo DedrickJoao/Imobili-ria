@@ -65,13 +65,8 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onOpenDetail 
               {t.cardSignature}
             </span>
           )}
-          {product.discountPercentage && (
+          {product.isNew && (
             <span className="px-2.5 py-0.5 rounded-xs text-[9px] font-bold uppercase tracking-[0.2em] bg-[#A08C75] text-white shadow-xs">
-              {t.cardSave} {product.discountPercentage}%
-            </span>
-          )}
-          {product.isNew && !product.discountPercentage && (
-            <span className="px-2.5 py-0.5 rounded-xs text-[9px] font-bold uppercase tracking-[0.2em] bg-white text-[#1A1A1A] border border-[#E5E4E2] shadow-xs">
               {t.cardNewArrival}
             </span>
           )}
@@ -175,17 +170,10 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onOpenDetail 
           </div>
         )}
 
-        {/* Price and styling trigger */}
+        {/* Card footer details & styling trigger */}
         <div className="pt-2 border-t border-[#E5E4E2] flex items-center justify-between">
-          <div className="flex items-baseline gap-1.5">
-            <span className="text-sm font-bold text-[#1A1A1A] font-mono">
-              {formatCurrency(product.price)}
-            </span>
-            {product.originalPrice && (
-              <span className="text-[10px] text-[#7A7A7A] line-through font-mono">
-                {formatCurrency(product.originalPrice)}
-              </span>
-            )}
+          <div className="flex items-center gap-1.5 text-[10px] uppercase font-bold tracking-wider text-[#7A7A7A]">
+            <span>{product.inStock ? t.heroInStock : 'Sob Encomenda'}</span>
           </div>
 
           <button

@@ -102,8 +102,8 @@ const WishlistDrawerContent: React.FC = () => {
                     </div>
 
                     <div className="flex items-center justify-between mt-2 pt-2 border-t border-[#E5E4E2]">
-                      <span className="text-xs font-bold text-[#1A1A1A] font-mono">
-                        {formatCurrency(prod.price)}
+                      <span className="text-[10px] uppercase font-bold text-[#7A7A7A] tracking-wider">
+                        {prod.inStock ? t.heroInStock : 'Sob Encomenda'}
                       </span>
 
                       <button
