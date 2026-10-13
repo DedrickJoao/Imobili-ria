@@ -37,7 +37,7 @@ const ProductModalContent: React.FC<ProductModalContentProps> = ({ product }) =>
     products,
   } = useShop();
 
-  const { t, formatCurrency } = useLanguage();
+  const { t, formatCurrency, language } = useLanguage();
 
   const inWishlist = isInWishlist(product.id);
   const [selectedColor, setSelectedColor] = useState<ColorOption>(product.colors[0] || { name: 'Default', hex: '#1A1A1A', imageIndex: 0 });
@@ -244,20 +244,31 @@ const ProductModalContent: React.FC<ProductModalContentProps> = ({ product }) =>
                   </div>
 
                   {/* Lead details badge */}
-                  <div className="flex items-center gap-3 pb-3 border-b border-[#E5E4E2]">
-                    <span className="text-xs font-bold text-[#1A1A1A] uppercase tracking-wider font-mono">
+                  <div className="flex items-center gap-3 pb-3 border-b border-[#E2E8F0]">
+                    <span className="text-xs font-bold text-[#0B192C] uppercase tracking-wider font-mono">
                       {activeProduct.inStock ? t.heroInStock : 'Sob Encomenda Especial'}
                     </span>
-                    <span className="text-[10px] text-[#7A7A7A] uppercase tracking-wider">
+                    <span className="text-[10px] text-[#64748B] uppercase tracking-wider">
                       {activeProduct.designer}
+                    </span>
+                  </div>
+
+                  {/* Professional Price Status */}
+                  <div className="flex items-center justify-between p-3 rounded-xs bg-[#F0F9FF] border border-[#BAE6FD]">
+                    <div className="flex items-center gap-1.5 text-xs text-[#0369A1] font-bold">
+                      <Sparkles className="w-3.5 h-3.5 text-[#0284C7]" />
+                      <span>{language === 'pt' ? 'Preço sob Consulta' : 'Price on Request'}</span>
+                    </div>
+                    <span className="text-[10px] uppercase font-bold text-[#0284C7] tracking-wider">
+                      {language === 'pt' ? 'Cotação Imediata por E-mail' : 'Direct Email Quotation'}
                     </span>
                   </div>
 
                   {/* Color Finish Selection */}
                   <div className="space-y-2">
                     <div className="flex items-center justify-between text-xs">
-                      <span className="text-[10px] uppercase tracking-wider text-[#7A7A7A] font-bold">
-                        {t.modalColorFinish}: <strong className="text-[#1A1A1A] font-bold">{selectedColor.name}</strong>
+                      <span className="text-[10px] uppercase tracking-wider text-[#64748B] font-bold">
+                        {t.modalColorFinish}: <strong className="text-[#0C4A6E] font-bold">{selectedColor.name}</strong>
                       </span>
                     </div>
                     <div className="flex items-center gap-2">
@@ -269,13 +280,13 @@ const ProductModalContent: React.FC<ProductModalContentProps> = ({ product }) =>
                           style={{ backgroundColor: color.hex }}
                           className={`w-6 h-6 rounded-full border transition-all flex items-center justify-center ${
                             selectedColor.name === color.name
-                              ? 'ring-1 ring-[#1A1A1A] ring-offset-2 scale-110 border-transparent shadow-xs'
-                              : 'border-[#E5E4E2] hover:scale-105'
+                              ? 'ring-1 ring-[#0284C7] ring-offset-2 scale-110 border-transparent shadow-xs'
+                              : 'border-[#CBD5E1] hover:scale-105'
                           }`}
                           title={color.name}
                         >
                           {selectedColor.name === color.name && (
-                            <Check className="w-3 h-3 text-[#1A1A1A]" />
+                            <Check className="w-3 h-3 text-[#0C4A6E]" />
                           )}
                         </button>
                       ))}
@@ -286,21 +297,21 @@ const ProductModalContent: React.FC<ProductModalContentProps> = ({ product }) =>
                   <div className="space-y-3 pt-2">
                     <div className="flex items-center gap-3">
                       {/* Quantity input */}
-                      <div className="flex items-center border border-[#E5E4E2] bg-white rounded-sm overflow-hidden">
+                      <div className="flex items-center border border-[#E0F2FE] bg-white rounded-sm overflow-hidden">
                         <button
                           id="qty-decrease-btn"
                           onClick={() => setQuantity(q => Math.max(1, q - 1))}
-                          className="px-3 py-2 text-[#1A1A1A] hover:bg-[#FAF9F6] font-semibold text-xs transition-colors"
+                          className="px-3 py-2 text-[#0C4A6E] hover:bg-[#F0F9FF] font-semibold text-xs transition-colors"
                         >
                           -
                         </button>
-                        <span className="px-3 text-xs font-bold text-[#1A1A1A] select-none min-w-[2rem] text-center font-mono">
+                        <span className="px-3 text-xs font-bold text-[#0C4A6E] select-none min-w-[2rem] text-center font-mono">
                           {quantity}
                         </span>
                         <button
                           id="qty-increase-btn"
                           onClick={() => setQuantity(q => q + 1)}
-                          className="px-3 py-2 text-[#1A1A1A] hover:bg-[#FAF9F6] font-semibold text-xs transition-colors"
+                          className="px-3 py-2 text-[#0C4A6E] hover:bg-[#F0F9FF] font-semibold text-xs transition-colors"
                         >
                           +
                         </button>
@@ -310,21 +321,21 @@ const ProductModalContent: React.FC<ProductModalContentProps> = ({ product }) =>
                       <button
                         id="modal-add-to-cart-btn"
                         onClick={handleAddToCart}
-                        className="flex-1 py-3 px-5 rounded-sm bg-[#1A1A1A] hover:bg-black text-white text-[10px] uppercase font-bold tracking-widest flex items-center justify-center gap-2 shadow-sm transition-all active:scale-98"
+                        className="flex-1 py-3 px-5 rounded-sm bg-[#0284C7] hover:bg-[#0369A1] text-white text-[10px] uppercase font-bold tracking-widest flex items-center justify-center gap-2 shadow-xs transition-all active:scale-98"
                       >
                         <ShoppingBag className="w-3.5 h-3.5" />
                         <span>{isAdded ? t.modalAddedToBag : t.modalAddBag}</span>
                       </button>
                     </div>
 
-                    {/* Instant Buy Now Button */}
+                    {/* Instant Buy Now / Request Quote Button */}
                     <button
                       id="modal-buy-now-btn"
                       onClick={handleBuyNow}
-                      className="w-full py-3 px-5 rounded-sm bg-[#A08C75] hover:bg-[#8e7a64] text-white text-[10px] uppercase font-bold tracking-widest flex items-center justify-center gap-2 shadow-xs transition-all active:scale-98"
+                      className="w-full py-3 px-5 rounded-sm bg-[#0EA5E9] hover:bg-[#0284C7] text-white text-[10px] uppercase font-bold tracking-widest flex items-center justify-center gap-2 shadow-xs transition-all active:scale-98"
                     >
                       <Zap className="w-3.5 h-3.5 fill-current" />
-                      <span>{t.modalInstantCheckout}</span>
+                      <span>{language === 'pt' ? 'Consultar Preço & Pedir Orçamento' : 'Check Price & Request Quote'}</span>
                     </button>
                   </div>
 

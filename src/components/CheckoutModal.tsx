@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useShop } from '../context/ShopContext';
 import { useLanguage } from '../context/LanguageContext';
 import { CustomerInfo, DeliveryMethod, Order } from '../types';
+import { BrandLogo } from './BrandLogo';
 import confetti from 'canvas-confetti';
 import {
   X,
@@ -20,6 +21,7 @@ import {
   CreditCard,
   Banknote,
   CheckCircle2,
+  Tag,
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 
@@ -136,7 +138,7 @@ const CheckoutModalContent: React.FC = () => {
             deliveryMethod,
             paymentPreference,
             notes: orderNotes,
-            adminEmail: 'dedrickdomingos.domingos@gmail.com',
+            adminEmail: 'bestfurniture79@gmail.com',
           }),
         });
       } catch (err) {
@@ -153,7 +155,7 @@ const CheckoutModalContent: React.FC = () => {
         particleCount: 90,
         spread: 75,
         origin: { y: 0.6 },
-        colors: ['#A08C75', '#1A1A1A', '#E5E4E2', '#FAF9F6'],
+        colors: ['#2563EB', '#0B192C', '#60A5FA', '#FFFFFF'],
       });
     }
   };
@@ -168,28 +170,32 @@ const CheckoutModalContent: React.FC = () => {
           className="relative w-full max-w-4xl bg-[#FAF9F6] rounded-sm shadow-2xl border border-[#E5E4E2] overflow-hidden my-auto max-h-[94vh] flex flex-col"
         >
           {/* Header */}
-          <div className="sticky top-0 z-30 flex items-center justify-between px-6 py-4 bg-[#FAF9F6]/95 backdrop-blur-md border-b border-[#E5E4E2]">
-            <div className="flex items-center gap-2">
-              <Lock className="w-4 h-4 text-[#A08C75]" />
-              <h2 className="font-serif italic text-base sm:text-lg font-bold text-[#1A1A1A]">
-                {currentStep === 4 ? t.checkoutSuccessTitle : t.checkoutTitle}
-              </h2>
+          <div className="sticky top-0 z-30 flex items-center justify-between px-6 py-4 bg-white/95 backdrop-blur-md border-b border-[#E2E8F0]">
+            <div className="flex items-center gap-3">
+              <BrandLogo variant="dark" size="sm" showTagline={false} />
+              <div className="h-4 w-px bg-[#CBD5E1]" />
+              <div className="flex items-center gap-1.5">
+                <Lock className="w-3.5 h-3.5 text-[#2563EB]" />
+                <h2 className="font-serif italic text-base sm:text-lg font-bold text-[#0B192C]">
+                  {currentStep === 4 ? t.checkoutSuccessTitle : t.checkoutTitle}
+                </h2>
+              </div>
             </div>
 
             {currentStep < 4 && (
-              <div className="hidden sm:flex items-center gap-4 text-[10px] uppercase font-bold tracking-widest text-[#7A7A7A]">
-                <span className={currentStep === 1 ? 'text-[#1A1A1A] underline underline-offset-4 decoration-[#A08C75]' : ''}>1. {t.checkoutStep1}</span>
+              <div className="hidden sm:flex items-center gap-4 text-[10px] uppercase font-bold tracking-widest text-[#64748B]">
+                <span className={currentStep === 1 ? 'text-[#2563EB] underline underline-offset-4 decoration-[#2563EB]' : ''}>1. {t.checkoutStep1}</span>
                 <span>•</span>
-                <span className={currentStep === 2 ? 'text-[#1A1A1A] underline underline-offset-4 decoration-[#A08C75]' : ''}>2. {t.checkoutStep2}</span>
+                <span className={currentStep === 2 ? 'text-[#2563EB] underline underline-offset-4 decoration-[#2563EB]' : ''}>2. {t.checkoutStep2}</span>
                 <span>•</span>
-                <span className={currentStep === 3 ? 'text-[#1A1A1A] underline underline-offset-4 decoration-[#A08C75]' : ''}>3. {t.checkoutStep3}</span>
+                <span className={currentStep === 3 ? 'text-[#2563EB] underline underline-offset-4 decoration-[#2563EB]' : ''}>3. {t.checkoutStep3}</span>
               </div>
             )}
 
             <button
               id="close-checkout-btn"
               onClick={() => setIsCheckoutOpen(false)}
-              className="p-1.5 rounded-sm text-[#1A1A1A] hover:bg-[#E5E4E2] transition-colors"
+              className="p-1.5 rounded-sm text-[#0B192C] hover:bg-[#F1F5F9] transition-colors"
               aria-label="Close checkout"
             >
               <X className="w-4 h-4" />
@@ -201,22 +207,22 @@ const CheckoutModalContent: React.FC = () => {
             {currentStep === 4 && confirmedOrder ? (
               /* Step 4: Order Confirmed & Email Dispatched Success Screen */
               <div className="space-y-6 text-center max-w-2xl mx-auto py-2">
-                <div className="w-16 h-16 rounded-full bg-[#F5F2ED] border border-[#A08C75]/40 text-[#A08C75] flex items-center justify-center mx-auto shadow-sm">
+                <div className="w-16 h-16 rounded-full bg-[#EFF6FF] border border-[#BFDBFE] text-[#2563EB] flex items-center justify-center mx-auto shadow-sm">
                   <PackageCheck className="w-8 h-8" />
                 </div>
 
                 <div className="space-y-2">
-                  <span className="text-[10px] uppercase font-bold text-[#A08C75] tracking-widest block">
+                  <span className="text-[10px] uppercase font-bold text-[#2563EB] tracking-widest block">
                     {t.checkoutThankYou}
                   </span>
-                  <h3 className="font-serif italic text-2xl sm:text-3xl font-bold text-[#1A1A1A]">
+                  <h3 className="font-serif italic text-2xl sm:text-3xl font-bold text-[#0B192C]">
                     {t.checkoutOrderPrefix} #{confirmedOrder.orderId}
                   </h3>
                   <div className="p-3.5 rounded-sm bg-emerald-50 border border-emerald-200 text-xs text-emerald-900 leading-relaxed font-normal text-left max-w-xl mx-auto flex items-start gap-2.5">
                     <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
                     <div>
                       <p className="font-semibold">{t.checkoutSuccessEmailSent} <strong>{confirmedOrder.customer.email}</strong>.</p>
-                      <p className="text-[11px] text-emerald-800 mt-1">E-mail comercial da Sarvicimobliaria: <strong>bestfurniture79@gmail.com</strong></p>
+                      <p className="text-[11px] text-emerald-800 mt-1">E-mail comercial da SARVIC: <strong>bestfurniture79@gmail.com</strong></p>
                     </div>
                   </div>
                 </div>
@@ -523,7 +529,7 @@ const CheckoutModalContent: React.FC = () => {
                         <button
                           id="step1-continue-btn"
                           type="submit"
-                          className="w-full py-3.5 px-6 rounded-sm bg-[#1A1A1A] hover:bg-black text-white text-[10px] uppercase font-bold tracking-widest flex items-center justify-center gap-2 transition-colors mt-4"
+                          className="w-full py-3.5 px-6 rounded-sm bg-[#0284C7] hover:bg-[#0369A1] text-white text-[10px] uppercase font-bold tracking-widest flex items-center justify-center gap-2 transition-colors mt-4 shadow-xs"
                         >
                           <span>{t.checkoutContinueDelivery}</span>
                           <ArrowRight className="w-3.5 h-3.5" />
@@ -615,7 +621,7 @@ const CheckoutModalContent: React.FC = () => {
                           <button
                             id="step2-continue-btn"
                             type="submit"
-                            className="flex-1 py-3.5 px-6 rounded-sm bg-[#1A1A1A] hover:bg-black text-white text-[10px] uppercase font-bold tracking-widest flex items-center justify-center gap-2 transition-colors"
+                            className="flex-1 py-3.5 px-6 rounded-sm bg-[#0284C7] hover:bg-[#0369A1] text-white text-[10px] uppercase font-bold tracking-widest flex items-center justify-center gap-2 transition-colors shadow-xs"
                           >
                             <span>{t.checkoutContinuePayment}</span>
                             <ArrowRight className="w-3.5 h-3.5" />
@@ -637,22 +643,42 @@ const CheckoutModalContent: React.FC = () => {
                         </div>
 
                         {/* Direct Email Notice Banner */}
-                        <div className="p-4 rounded-sm bg-[#F5F2ED] border border-[#E5E4E2] space-y-2">
-                          <div className="flex items-center gap-2 text-[#A08C75] text-xs font-bold">
-                            <Mail className="w-4 h-4 text-[#A08C75]" />
-                            <span>{language === 'pt' ? 'Envio Direto para dedrickdomingos.domingos@gmail.com' : 'Direct Email Dispatch to Store Owner'}</span>
+                        <div className="p-4 rounded-sm bg-[#F0F9FF] border border-[#BAE6FD] space-y-2">
+                          <div className="flex items-center justify-between">
+                            <div className="flex items-center gap-2 text-[#0369A1] text-xs font-bold">
+                              <Mail className="w-4 h-4 text-[#0284C7]" />
+                              <span>{language === 'pt' ? 'Envio Direto para bestfurniture79@gmail.com' : 'Direct Dispatch to bestfurniture79@gmail.com'}</span>
+                            </div>
+                            <span className="px-2 py-0.5 rounded-xs text-[9px] uppercase font-bold tracking-wider bg-[#0284C7] text-white">
+                              {language === 'pt' ? 'Preço sob Consulta' : 'Price on Request'}
+                            </span>
                           </div>
-                          <p className="text-xs text-[#5A5A5A] leading-relaxed font-light">
+                          <p className="text-xs text-[#334155] leading-relaxed font-light">
                             {t.checkoutEmailDispatchNotice}
+                          </p>
+                        </div>
+
+                        {/* Professional "Check the Price" Quotation Card */}
+                        <div className="p-4 rounded-sm bg-white border border-[#BAE6FD] shadow-xs space-y-2.5">
+                          <div className="flex items-center gap-2 text-[#0C4A6E]">
+                            <Tag className="w-4 h-4 text-[#0284C7]" />
+                            <h4 className="text-xs font-bold uppercase tracking-wider">
+                              {language === 'pt' ? 'Verificação de Preço & Cotação de Fábrica' : 'Price Verification & Atelier Quotation'}
+                            </h4>
+                          </div>
+                          <p className="text-xs text-[#475569] leading-relaxed font-light">
+                            {language === 'pt'
+                              ? 'Todas as peças selecionadas do catálogo SARVIC são orçadas sob medida com condições especiais de fabricação. Ao clicar em "Confirmar Pedido & Consultar Preço", a discriminação formal dos valores e opções de entrega é enviada instantaneamente para o seu e-mail e confirmada pelo nosso atendimento via WhatsApp.'
+                              : 'All selected items from the SARVIC collection are custom quoted with exclusive atelier pricing. Upon clicking "Check Pricing & Confirm Order", a detailed price sheet and delivery schedule will be dispatched to your email and verified via WhatsApp.'}
                           </p>
                         </div>
 
                         {/* Preferred Payment Method */}
                         <div className="space-y-2">
-                          <label className="text-[10px] uppercase font-bold tracking-wider text-[#1A1A1A] block">
+                          <label className="text-[10px] uppercase font-bold tracking-wider text-[#0B192C] block">
                             {t.checkoutPaymentPrefTitle}
                           </label>
-                          <p className="text-[11px] text-[#7A7A7A] font-light">
+                          <p className="text-[11px] text-[#64748B] font-light">
                             {t.checkoutPaymentPrefDesc}
                           </p>
 
@@ -661,8 +687,8 @@ const CheckoutModalContent: React.FC = () => {
                               onClick={() => setPaymentPreference('cash-on-delivery')}
                               className={`p-3.5 rounded-sm border flex items-center justify-between gap-3 cursor-pointer transition-all ${
                                 paymentPreference === 'cash-on-delivery'
-                                  ? 'bg-white border-[#1A1A1A] ring-1 ring-[#1A1A1A] shadow-xs'
-                                  : 'bg-white border-[#E5E4E2] hover:border-[#A08C75]'
+                                  ? 'bg-white border-[#2563EB] ring-1 ring-[#2563EB] shadow-xs'
+                                  : 'bg-white border-[#E2E8F0] hover:border-[#2563EB]'
                               }`}
                             >
                               <div className="flex items-center gap-3">
@@ -670,11 +696,11 @@ const CheckoutModalContent: React.FC = () => {
                                   <Banknote className="w-3.5 h-3.5" />
                                 </div>
                                 <div>
-                                  <span className="text-xs font-bold text-[#1A1A1A] block">{t.checkoutCashOnDelivery}</span>
-                                  <span className="text-[10px] text-[#7A7A7A]">{language === 'pt' ? 'Pagamento efetuado diretamente no nosso escritório' : 'Payment arranged while ordering in the office'}</span>
+                                  <span className="text-xs font-bold text-[#0B192C] block">{t.checkoutCashOnDelivery}</span>
+                                  <span className="text-[10px] text-[#64748B]">{language === 'pt' ? 'Pagamento efetuado diretamente no nosso escritório' : 'Payment arranged while ordering in the office'}</span>
                                 </div>
                               </div>
-                              <div className={`w-4 h-4 rounded-full border flex items-center justify-center ${paymentPreference === 'cash-on-delivery' ? 'border-[#1A1A1A] bg-[#1A1A1A]' : 'border-[#CCCCCC]'}`}>
+                              <div className={`w-4 h-4 rounded-full border flex items-center justify-center ${paymentPreference === 'cash-on-delivery' ? 'border-[#2563EB] bg-[#2563EB]' : 'border-[#CCCCCC]'}`}>
                                 {paymentPreference === 'cash-on-delivery' && <div className="w-1.5 h-1.5 rounded-full bg-white" />}
                               </div>
                             </label>
@@ -683,8 +709,8 @@ const CheckoutModalContent: React.FC = () => {
                               onClick={() => setPaymentPreference('mpesa')}
                               className={`p-3.5 rounded-sm border flex items-center justify-between gap-3 cursor-pointer transition-all ${
                                 paymentPreference === 'mpesa'
-                                  ? 'bg-white border-[#1A1A1A] ring-1 ring-[#1A1A1A] shadow-xs'
-                                  : 'bg-white border-[#E5E4E2] hover:border-[#A08C75]'
+                                  ? 'bg-white border-[#2563EB] ring-1 ring-[#2563EB] shadow-xs'
+                                  : 'bg-white border-[#E2E8F0] hover:border-[#2563EB]'
                               }`}
                             >
                               <div className="flex items-center gap-3">
@@ -692,11 +718,11 @@ const CheckoutModalContent: React.FC = () => {
                                   <Smartphone className="w-3.5 h-3.5" />
                                 </div>
                                 <div>
-                                  <span className="text-xs font-bold text-[#1A1A1A] block">{t.checkoutMpesa}</span>
-                                  <span className="text-[10px] text-[#7A7A7A]">Vodacom Moçambique</span>
+                                  <span className="text-xs font-bold text-[#0B192C] block">{t.checkoutMpesa}</span>
+                                  <span className="text-[10px] text-[#64748B]">Vodacom Moçambique</span>
                                 </div>
                               </div>
-                              <div className={`w-4 h-4 rounded-full border flex items-center justify-center ${paymentPreference === 'mpesa' ? 'border-[#1A1A1A] bg-[#1A1A1A]' : 'border-[#CCCCCC]'}`}>
+                              <div className={`w-4 h-4 rounded-full border flex items-center justify-center ${paymentPreference === 'mpesa' ? 'border-[#2563EB] bg-[#2563EB]' : 'border-[#CCCCCC]'}`}>
                                 {paymentPreference === 'mpesa' && <div className="w-1.5 h-1.5 rounded-full bg-white" />}
                               </div>
                             </label>
@@ -705,8 +731,8 @@ const CheckoutModalContent: React.FC = () => {
                               onClick={() => setPaymentPreference('bank-transfer')}
                               className={`p-3.5 rounded-sm border flex items-center justify-between gap-3 cursor-pointer transition-all ${
                                 paymentPreference === 'bank-transfer'
-                                  ? 'bg-white border-[#1A1A1A] ring-1 ring-[#1A1A1A] shadow-xs'
-                                  : 'bg-white border-[#E5E4E2] hover:border-[#A08C75]'
+                                  ? 'bg-white border-[#2563EB] ring-1 ring-[#2563EB] shadow-xs'
+                                  : 'bg-white border-[#E2E8F0] hover:border-[#2563EB]'
                               }`}
                             >
                               <div className="flex items-center gap-3">
@@ -714,11 +740,11 @@ const CheckoutModalContent: React.FC = () => {
                                   <Building className="w-3.5 h-3.5" />
                                 </div>
                                 <div>
-                                  <span className="text-xs font-bold text-[#1A1A1A] block">{t.checkoutBankTransfer}</span>
-                                  <span className="text-[10px] text-[#7A7A7A]">BCI / Millennium BIM / Standard Bank / Moza</span>
+                                  <span className="text-xs font-bold text-[#0B192C] block">{t.checkoutBankTransfer}</span>
+                                  <span className="text-[10px] text-[#64748B]">BCI / Millennium BIM / Standard Bank / Moza</span>
                                 </div>
                               </div>
-                              <div className={`w-4 h-4 rounded-full border flex items-center justify-center ${paymentPreference === 'bank-transfer' ? 'border-[#1A1A1A] bg-[#1A1A1A]' : 'border-[#CCCCCC]'}`}>
+                              <div className={`w-4 h-4 rounded-full border flex items-center justify-center ${paymentPreference === 'bank-transfer' ? 'border-[#2563EB] bg-[#2563EB]' : 'border-[#CCCCCC]'}`}>
                                 {paymentPreference === 'bank-transfer' && <div className="w-1.5 h-1.5 rounded-full bg-white" />}
                               </div>
                             </label>
@@ -727,7 +753,7 @@ const CheckoutModalContent: React.FC = () => {
 
                         {/* Order Notes / Landmark */}
                         <div>
-                          <label className="text-[10px] uppercase font-bold tracking-wider text-[#1A1A1A] block mb-1">
+                          <label className="text-[10px] uppercase font-bold tracking-wider text-[#0B192C] block mb-1">
                             {t.checkoutOrderNotes}
                           </label>
                           <textarea
@@ -736,7 +762,7 @@ const CheckoutModalContent: React.FC = () => {
                             value={orderNotes}
                             onChange={e => setOrderNotes(e.target.value)}
                             placeholder={t.checkoutNotesPlaceholder}
-                            className="w-full bg-white border border-[#E5E4E2] rounded-sm px-3.5 py-2 text-xs text-[#1A1A1A] focus:outline-none focus:border-[#A08C75]"
+                            className="w-full bg-white border border-[#CBD5E1] rounded-sm px-3.5 py-2 text-xs text-[#0B192C] focus:outline-none focus:border-[#2563EB]"
                           />
                         </div>
 
@@ -745,7 +771,7 @@ const CheckoutModalContent: React.FC = () => {
                             type="button"
                             onClick={() => setCurrentStep(2)}
                             disabled={isSubmitting}
-                            className="py-3 px-4 rounded-sm border border-[#E5E4E2] text-[#1A1A1A] hover:bg-[#E5E4E2] text-[10px] uppercase font-bold tracking-wider flex items-center gap-1.5 transition-colors disabled:opacity-50"
+                            className="py-3 px-4 rounded-sm border border-[#CBD5E1] text-[#0B192C] hover:bg-[#F1F5F9] text-[10px] uppercase font-bold tracking-wider flex items-center gap-1.5 transition-colors disabled:opacity-50"
                           >
                             <ArrowLeft className="w-3.5 h-3.5" />
                             <span>{t.checkoutBack}</span>
@@ -755,7 +781,7 @@ const CheckoutModalContent: React.FC = () => {
                             id="complete-order-btn"
                             type="submit"
                             disabled={isSubmitting}
-                            className="flex-1 py-3.5 px-6 rounded-sm bg-[#A08C75] hover:bg-[#8e7a64] text-white text-[10px] uppercase font-bold tracking-widest flex items-center justify-center gap-2 transition-all shadow-sm active:scale-98 disabled:opacity-75 cursor-pointer"
+                            className="flex-1 py-3.5 px-6 rounded-sm bg-[#0284C7] hover:bg-[#0369A1] text-white text-[10px] uppercase font-bold tracking-widest flex items-center justify-center gap-2 transition-all shadow-sm active:scale-98 disabled:opacity-75 cursor-pointer"
                           >
                             <Send className="w-3.5 h-3.5" />
                             <span>
@@ -771,49 +797,64 @@ const CheckoutModalContent: React.FC = () => {
                 </div>
 
                 {/* Right Summary Sidebar (5 cols) */}
-                <div className="lg:col-span-5 p-5 rounded-sm bg-white border border-[#E5E4E2] space-y-4 h-fit shadow-xs">
-                  <h4 className="font-serif italic text-sm font-bold text-[#1A1A1A]">
+                <div className="lg:col-span-5 p-5 rounded-sm bg-white border border-[#E0F2FE] space-y-4 h-fit shadow-xs">
+                  <h4 className="font-serif italic text-sm font-bold text-[#0C4A6E]">
                     {t.checkoutOrderSummary} ({cart.reduce((a, b) => a + b.quantity, 0)} {language === 'pt' ? 'peças' : 'items'})
                   </h4>
 
-                  <div className="max-h-60 overflow-y-auto space-y-3 pr-1 divide-y divide-[#E5E4E2]">
+                  <div className="max-h-60 overflow-y-auto space-y-3 pr-1 divide-y divide-[#E0F2FE]">
                     {cart.map(item => (
                       <div key={item.id} className="pt-2.5 first:pt-0 flex items-center gap-3">
                         <img
                           src={item.product.images[item.selectedColor.imageIndex] || item.product.images[0]}
                           alt={item.product.name}
-                          className="w-12 h-12 rounded-xs object-cover bg-[#F5F5F5] shrink-0"
+                          className="w-12 h-12 rounded-xs object-cover bg-[#F0F9FF] shrink-0"
                           referrerPolicy="no-referrer"
                         />
                         <div className="min-w-0 flex-1">
-                          <h5 className="font-serif italic font-bold text-xs text-[#1A1A1A] truncate">
+                          <h5 className="font-serif italic font-bold text-xs text-[#0C4A6E] truncate">
                             {item.product.name}
                           </h5>
-                          <p className="text-[10px] uppercase tracking-wider text-[#7A7A7A]">
+                          <p className="text-[10px] uppercase tracking-wider text-[#64748B]">
                             {t.checkoutQty} {item.quantity} · {item.selectedColor.name}
                           </p>
                         </div>
-                        <span className="text-[10px] font-bold text-[#A08C75] uppercase tracking-wider">
+                        <span className="text-[10px] font-bold text-[#0284C7] uppercase tracking-wider">
                           {t.checkoutQty}: {item.quantity}
                         </span>
                       </div>
                     ))}
                   </div>
 
-                  <div className="pt-3 border-t border-[#E5E4E2] space-y-2 text-xs text-[#5A5A5A]">
+                  <div className="pt-3 border-t border-[#E0F2FE] space-y-2 text-xs text-[#475569]">
                     <div className="flex items-center justify-between">
                       <span>{t.checkoutSummaryPieces}</span>
-                      <span className="font-bold text-[#1A1A1A]">{cart.reduce((a, b) => a + b.quantity, 0)} {language === 'pt' ? 'peças' : 'pieces'}</span>
+                      <span className="font-bold text-[#0C4A6E]">{cart.reduce((a, b) => a + b.quantity, 0)} {language === 'pt' ? 'peças' : 'pieces'}</span>
                     </div>
 
                     <div className="flex items-center justify-between">
                       <span>{t.cartShipping}</span>
-                      <strong className="text-[#A08C75] text-[10px] uppercase font-bold tracking-wider">{t.cartFree}</strong>
+                      <strong className="text-[#0284C7] text-[10px] uppercase font-bold tracking-wider">{t.cartFree}</strong>
                     </div>
 
-                    <div className="flex items-center justify-between text-xs text-[#7A7A7A] pt-2 border-t border-[#E5E4E2]">
+                    <div className="flex items-center justify-between text-xs text-[#64748B] pt-2 border-t border-[#E0F2FE]">
                       <span>{language === 'pt' ? 'Montagem no Quarto / Sala' : 'In-Room Setup'}</span>
-                      <span className="text-[#1A1A1A] font-medium">{language === 'pt' ? 'Inclusa' : 'Included'}</span>
+                      <span className="text-[#0C4A6E] font-medium">{language === 'pt' ? 'Inclusa' : 'Included'}</span>
+                    </div>
+
+                    {/* Official Price Status Line */}
+                    <div className="pt-2.5 border-t border-[#E0F2FE] space-y-1">
+                      <div className="flex items-center justify-between text-xs">
+                        <span className="font-bold text-[#0C4A6E]">{language === 'pt' ? 'Valor do Pedido' : 'Order Pricing'}</span>
+                        <span className="text-xs font-bold text-[#0284C7] bg-[#F0F9FF] px-2.5 py-1 rounded-xs border border-[#BAE6FD]">
+                          {language === 'pt' ? 'Preço sob Consulta' : 'Price on Request'}
+                        </span>
+                      </div>
+                      <p className="text-[10px] text-[#64748B] italic">
+                        {language === 'pt'
+                          ? 'Cotação formal com condições de fábrica enviada diretamente para o seu e-mail'
+                          : 'Itemized factory quotation sent directly to your email inbox'}
+                      </p>
                     </div>
                   </div>
                 </div>

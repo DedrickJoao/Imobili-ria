@@ -3,8 +3,9 @@ import { ShopProvider, useShop } from './context/ShopContext';
 import { LanguageProvider } from './context/LanguageContext';
 import { Navbar } from './components/Navbar';
 import { Hero } from './components/Hero';
-import { ProductGallery } from './components/ProductGallery';
+import { ModernCatalogsSection } from './components/ModernCatalogsSection';
 import { LookbookSection } from './components/LookbookSection';
+import { ProductGallery } from './components/ProductGallery';
 import { ProductModal } from './components/ProductModal';
 import { AIStylistModal } from './components/AIStylistModal';
 import { CartDrawer } from './components/CartDrawer';
@@ -14,8 +15,10 @@ import { ToastContainer } from './components/Toast';
 import { Footer } from './components/Footer';
 
 const ShopContent: React.FC = () => {
+  const { setIsCheckoutOpen } = useShop();
   const galleryRef = useRef<HTMLDivElement>(null);
   const lookbookRef = useRef<HTMLDivElement>(null);
+  const catalogsRef = useRef<HTMLDivElement>(null);
 
   const scrollToGallery = () => {
     galleryRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -25,8 +28,12 @@ const ShopContent: React.FC = () => {
     lookbookRef.current?.scrollIntoView({ behavior: 'smooth' });
   };
 
+  const scrollToCatalogs = () => {
+    catalogsRef.current?.scrollIntoView({ behavior: 'smooth' });
+  };
+
   return (
-    <div className="min-h-screen bg-[#FAF9F6] text-[#1A1A1A] flex flex-col font-sans selection:bg-[#A08C75]/25 selection:text-[#1A1A1A]">
+    <div className="min-h-screen bg-[#F8FAFC] text-[#0F172A] flex flex-col font-sans selection:bg-[#DBEAFE] selection:text-[#1E40AF]">
       {/* Toast notifications */}
       <ToastContainer />
 
@@ -34,12 +41,18 @@ const ShopContent: React.FC = () => {
       <Navbar
         onNavigateToGallery={scrollToGallery}
         onNavigateToLookbook={scrollToLookbook}
+        onNavigateToCatalogs={scrollToCatalogs}
       />
 
       {/* Main Content Areas */}
       <main className="flex-1">
         {/* Editorial Hero Section */}
         <Hero onShopClick={scrollToGallery} />
+
+        {/* Modern Interactive Catalogs 2026 */}
+        <div ref={catalogsRef}>
+          <ModernCatalogsSection onRequestQuote={() => setIsCheckoutOpen(true)} />
+        </div>
 
         {/* Curated Architectural Room Lookbooks */}
         <div ref={lookbookRef}>
@@ -60,7 +73,7 @@ const ShopContent: React.FC = () => {
       <CheckoutModal />
 
       {/* Footer */}
-      <Footer />
+      <Footer onNavigateToCatalogs={scrollToCatalogs} />
     </div>
   );
 };

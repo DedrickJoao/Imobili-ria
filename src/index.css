@@ -3,21 +3,26 @@
 @theme {
   --font-serif: 'Playfair Display', Georgia, serif;
   --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
-  --color-canvas: #FAF9F6;
-  --color-charcoal: #1A1A1A;
-  --color-bronze: #A08C75;
-  --color-border: #E5E4E2;
-  --color-tint-light: #F5F5F5;
-  --color-tint-warm: #F5F2ED;
-  --color-tint-stone: #DEDCD7;
-  --color-tint-alabaster: #E9E7E4;
-  --color-muted: #7A7A7A;
+  --color-canvas: #FFFFFF;
+  --color-charcoal: #0C4A6E;
+  --color-brand-navy: #0369A1;
+  --color-brand-blue: #0284C7;
+  --color-brand-blue-hover: #0369A1;
+  --color-brand-blue-light: #F0F9FF;
+  --color-brand-blue-border: #BAE6FD;
+  --color-bronze: #0284C7;
+  --color-border: #E0F2FE;
+  --color-tint-light: #F8FAFC;
+  --color-tint-warm: #F0F9FF;
+  --color-tint-stone: #E2E8F0;
+  --color-tint-alabaster: #F8FAFC;
+  --color-muted: #64748B;
 }
 
 body {
   font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
-  background-color: #FAF9F6;
-  color: #1A1A1A;
+  background-color: #F8FAFC;
+  color: #0F172A;
   overflow-x: hidden;
 }
 
@@ -29,22 +34,21 @@ body {
   font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
 }
 
-/* Custom subtle architectural scrollbar */
+/* Custom subtle architectural scrollbar with lighter sky blue accent */
 ::-webkit-scrollbar {
-  width: 5px;
-  height: 5px;
+  width: 6px;
+  height: 6px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #FAF9F6;
+  background: #F8FAFC;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #DEDCD7;
-  border-radius: 2px;
+  background: #BAE6FD;
+  border-radius: 3px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #A08C75;
+  background: #38BDF8;
 }
-

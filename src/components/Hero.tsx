@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useShop } from '../context/ShopContext';
 import { useLanguage } from '../context/LanguageContext';
-import { Sparkles, ArrowRight, Shield, Award, Truck, ChevronRight, Eye } from 'lucide-react';
+import { Sparkles, ArrowRight, Shield, Award, Truck, Eye } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 
 interface HeroProps {
@@ -10,7 +10,7 @@ interface HeroProps {
 
 export const Hero: React.FC<HeroProps> = ({ onShopClick }) => {
   const { openProductDetail, addToCart, setIsAIStylistOpen, products } = useShop();
-  const { t, formatCurrency, language } = useLanguage();
+  const { t, language } = useLanguage();
 
   const heroItems = [
     {
@@ -56,36 +56,36 @@ export const Hero: React.FC<HeroProps> = ({ onShopClick }) => {
   const activeProduct = products.find(p => p.id === currentHero.productId);
 
   return (
-    <section className="relative overflow-hidden bg-[#FAF9F6] border-b border-[#E5E4E2]">
+    <section className="relative overflow-hidden bg-white border-b border-[#E2E8F0]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-14">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-center">
           
           {/* Left Column: Editorial Headline & Actions */}
           <div className="lg:col-span-5 flex flex-col justify-center space-y-6 z-10">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-[#E5E4E2] bg-white text-[10px] uppercase tracking-[0.2em] font-bold text-[#A08C75] w-fit shadow-xs">
-              <Sparkles className="w-3 h-3 text-[#A08C75]" />
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-[#BAE6FD] bg-[#F0F9FF] text-[10px] uppercase tracking-[0.2em] font-bold text-[#0284C7] w-fit shadow-xs">
+              <Sparkles className="w-3 h-3 text-[#0EA5E9]" />
               <span>{currentHero.tag}</span>
             </div>
 
             <div className="space-y-3">
-              <h1 className="font-serif italic text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight text-[#1A1A1A] leading-[1.12]">
+              <h1 className="font-serif italic text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight text-[#0C4A6E] leading-[1.12]">
                 {t.heroHeadline}
               </h1>
-              <p className="text-sm sm:text-base text-[#5A5A5A] leading-relaxed max-w-md">
+              <p className="text-sm sm:text-base text-[#475569] leading-relaxed max-w-md font-light">
                 {t.heroSubhead}
               </p>
             </div>
 
             {/* Quick Hero Featured Card preview */}
-            <div className="p-4 rounded-sm bg-white border border-[#E5E4E2] shadow-xs flex items-center justify-between gap-4">
+            <div className="p-4 rounded-sm bg-[#F0F9FF] border border-[#BAE6FD] shadow-xs flex items-center justify-between gap-4">
               <div className="min-w-0">
-                <div className="text-[10px] uppercase tracking-[0.2em] font-bold text-[#A08C75]">
+                <div className="text-[10px] uppercase tracking-[0.2em] font-bold text-[#0284C7]">
                   {t.heroSpotlight}
                 </div>
-                <div className="text-sm sm:text-base font-serif italic font-bold text-[#1A1A1A] truncate">
+                <div className="text-sm sm:text-base font-serif italic font-bold text-[#0C4A6E] truncate">
                   {currentHero.title}
                 </div>
-                <div className="text-xs text-[#7A7A7A] mt-0.5 uppercase tracking-wider font-bold">
+                <div className="text-xs text-[#64748B] mt-0.5 uppercase tracking-wider font-bold">
                   {t.heroInStock} · {activeProduct?.designer || 'Studio Varde'}
                 </div>
               </div>
@@ -94,7 +94,7 @@ export const Hero: React.FC<HeroProps> = ({ onShopClick }) => {
                 <button
                   id={`hero-quickview-${currentHero.productId}`}
                   onClick={() => openProductDetail(currentHero.productId)}
-                  className="px-3 py-2 rounded-sm border border-[#E5E4E2] bg-[#F5F5F5] hover:bg-[#E5E4E2] text-[#1A1A1A] transition-colors text-[10px] uppercase font-bold tracking-tight flex items-center gap-1.5"
+                  className="px-3 py-2 rounded-sm border border-[#BAE6FD] bg-white hover:bg-[#F0F9FF] text-[#0C4A6E] transition-colors text-[10px] uppercase font-bold tracking-tight flex items-center gap-1.5"
                   title={t.heroDetails}
                 >
                   <Eye className="w-3.5 h-3.5" />
@@ -105,7 +105,7 @@ export const Hero: React.FC<HeroProps> = ({ onShopClick }) => {
                   <button
                     id={`hero-quickadd-${currentHero.productId}`}
                     onClick={() => addToCart(activeProduct)}
-                    className="px-4 py-2 rounded-sm bg-[#1A1A1A] hover:bg-black text-white transition-all text-[10px] uppercase tracking-wider font-bold"
+                    className="px-4 py-2 rounded-sm bg-[#0284C7] hover:bg-[#0369A1] text-white transition-all text-[10px] uppercase tracking-wider font-bold shadow-xs"
                   >
                     {t.heroAddToBag}
                   </button>
@@ -118,7 +118,7 @@ export const Hero: React.FC<HeroProps> = ({ onShopClick }) => {
               <button
                 id="hero-explore-collection-btn"
                 onClick={onShopClick}
-                className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-sm bg-[#1A1A1A] text-white text-[10px] sm:text-xs uppercase tracking-widest font-bold hover:bg-black transition-all shadow-xs"
+                className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-sm bg-[#0284C7] text-white text-[10px] sm:text-xs uppercase tracking-widest font-bold hover:bg-[#0369A1] transition-all shadow-sm"
               >
                 <span>{t.heroExploreGallery}</span>
                 <ArrowRight className="w-3.5 h-3.5" />
@@ -127,9 +127,9 @@ export const Hero: React.FC<HeroProps> = ({ onShopClick }) => {
               <button
                 id="hero-ai-stylist-btn"
                 onClick={() => setIsAIStylistOpen(true)}
-                className="inline-flex items-center justify-center gap-2 px-5 py-3 rounded-sm border border-[#1A1A1A] bg-transparent text-[#1A1A1A] text-[10px] sm:text-xs uppercase tracking-widest font-bold hover:bg-[#F5F2ED] transition-all"
+                className="inline-flex items-center justify-center gap-2 px-5 py-3 rounded-sm border border-[#0284C7] bg-[#F0F9FF] text-[#0284C7] text-[10px] sm:text-xs uppercase tracking-widest font-bold hover:bg-[#E0F2FE] hover:border-[#0369A1] hover:text-[#0369A1] transition-all"
               >
-                <Sparkles className="w-3.5 h-3.5 text-[#A08C75]" />
+                <Sparkles className="w-3.5 h-3.5 text-[#0EA5E9]" />
                 <span>{t.heroAiAdvisor}</span>
               </button>
             </div>
@@ -142,7 +142,7 @@ export const Hero: React.FC<HeroProps> = ({ onShopClick }) => {
                   id={`hero-slide-btn-${idx}`}
                   onClick={() => setActiveIndex(idx)}
                   className={`h-1.5 rounded-full transition-all ${
-                    activeIndex === idx ? 'w-8 bg-[#1A1A1A]' : 'w-2 bg-[#E5E4E2] hover:bg-[#A08C75]'
+                    activeIndex === idx ? 'w-8 bg-[#0284C7]' : 'w-2 bg-[#BAE6FD] hover:bg-[#0EA5E9]'
                   }`}
                   aria-label={`View hero slide ${idx + 1}`}
                 />
@@ -152,7 +152,7 @@ export const Hero: React.FC<HeroProps> = ({ onShopClick }) => {
 
           {/* Right Column: Large Dynamic Visual Stage with interactive hotspots */}
           <div className="lg:col-span-7 relative">
-            <div className="relative aspect-[4/3] sm:aspect-[16/10] md:aspect-[16/11] rounded-sm overflow-hidden shadow-xl border border-[#E5E4E2] bg-[#E5E4E2] group">
+            <div className="relative aspect-[4/3] sm:aspect-[16/10] md:aspect-[16/11] rounded-sm overflow-hidden shadow-xl border border-[#CBD5E1] bg-[#0B192C] group">
               <AnimatePresence mode="wait">
                 <motion.div
                   key={currentHero.productId}
@@ -180,14 +180,14 @@ export const Hero: React.FC<HeroProps> = ({ onShopClick }) => {
                       <button
                         id={`hero-hotspot-${sIdx}`}
                         onClick={() => openProductDetail(currentHero.productId)}
-                        className="relative flex items-center justify-center w-7 h-7 rounded-full bg-white/90 text-[#1A1A1A] backdrop-blur-md shadow-lg border border-white hover:scale-110 transition-transform"
+                        className="relative flex items-center justify-center w-7 h-7 rounded-full bg-white/95 text-[#0B192C] backdrop-blur-md shadow-lg border border-white hover:scale-110 transition-transform"
                       >
-                        <span className="w-2 h-2 rounded-full bg-[#A08C75] animate-ping absolute" />
-                        <span className="w-2 h-2 rounded-full bg-[#A08C75]" />
+                        <span className="w-2 h-2 rounded-full bg-[#2563EB] animate-ping absolute" />
+                        <span className="w-2 h-2 rounded-full bg-[#2563EB]" />
                       </button>
 
                       {/* Hotspot tooltip */}
-                      <div className="absolute left-1/2 bottom-full mb-2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap bg-[#1A1A1A] text-white text-[10px] uppercase font-bold tracking-wider px-2.5 py-1 rounded-sm shadow-md">
+                      <div className="absolute left-1/2 bottom-full mb-2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap bg-[#0B192C] text-white text-[10px] uppercase font-bold tracking-wider px-2.5 py-1 rounded-sm shadow-md">
                         {spot.label}
                       </div>
                     </div>
@@ -196,7 +196,7 @@ export const Hero: React.FC<HeroProps> = ({ onShopClick }) => {
                   {/* Overlay badge info */}
                   <div className="absolute bottom-6 left-6 right-6 flex items-end justify-between pointer-events-auto">
                     <div className="text-white">
-                      <span className="text-[10px] uppercase tracking-widest text-[#DEDCD7] mb-1 block">
+                      <span className="text-[10px] uppercase tracking-widest text-slate-200 mb-1 block">
                         {t.heroFeaturedSeries}
                       </span>
                       <h2 className="text-2xl sm:text-3xl font-serif italic mb-3">
@@ -204,13 +204,13 @@ export const Hero: React.FC<HeroProps> = ({ onShopClick }) => {
                       </h2>
                       <button
                         onClick={() => openProductDetail(currentHero.productId)}
-                        className="px-5 py-2 bg-white text-[#1A1A1A] text-[10px] uppercase tracking-widest font-bold rounded-sm hover:bg-[#FAF9F6] transition-colors"
+                        className="px-5 py-2 bg-white text-[#0B192C] hover:text-[#2563EB] text-[10px] uppercase tracking-widest font-bold rounded-sm hover:bg-[#F8FAFC] transition-colors"
                       >
                         {t.heroExplorePiece}
                       </button>
                     </div>
 
-                    <div className="bg-white/20 backdrop-blur-md px-3.5 py-1.5 rounded-full border border-white/30">
+                    <div className="bg-black/30 backdrop-blur-md px-3.5 py-1.5 rounded-full border border-white/30">
                       <span className="text-white text-[10px] uppercase tracking-wider font-bold">
                         {t.heroNewArrival}
                       </span>
@@ -224,44 +224,44 @@ export const Hero: React.FC<HeroProps> = ({ onShopClick }) => {
         </div>
 
         {/* Value props bar */}
-        <div className="mt-10 pt-8 border-t border-[#E5E4E2] grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6">
+        <div className="mt-10 pt-8 border-t border-[#E2E8F0] grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-full bg-white border border-[#E5E4E2] flex items-center justify-center text-[#A08C75] shrink-0">
+            <div className="w-10 h-10 rounded-full bg-[#EFF6FF] border border-[#BFDBFE] flex items-center justify-center text-[#2563EB] shrink-0">
               <Award className="w-4 h-4" />
             </div>
             <div>
-              <div className="text-xs font-bold uppercase tracking-wider text-[#1A1A1A]">{t.vpCraftTitle}</div>
-              <div className="text-[11px] text-[#7A7A7A]">{t.vpCraftDesc}</div>
+              <div className="text-xs font-bold uppercase tracking-wider text-[#0B192C]">{t.vpCraftTitle}</div>
+              <div className="text-[11px] text-[#64748B]">{t.vpCraftDesc}</div>
             </div>
           </div>
 
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-full bg-white border border-[#E5E4E2] flex items-center justify-center text-[#A08C75] shrink-0">
+            <div className="w-10 h-10 rounded-full bg-[#EFF6FF] border border-[#BFDBFE] flex items-center justify-center text-[#2563EB] shrink-0">
               <Truck className="w-4 h-4" />
             </div>
             <div>
-              <div className="text-xs font-bold uppercase tracking-wider text-[#1A1A1A]">{t.vpDeliveryTitle}</div>
-              <div className="text-[11px] text-[#7A7A7A]">{t.vpDeliveryDesc}</div>
+              <div className="text-xs font-bold uppercase tracking-wider text-[#0B192C]">{t.vpDeliveryTitle}</div>
+              <div className="text-[11px] text-[#64748B]">{t.vpDeliveryDesc}</div>
             </div>
           </div>
 
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-full bg-white border border-[#E5E4E2] flex items-center justify-center text-[#A08C75] shrink-0">
+            <div className="w-10 h-10 rounded-full bg-[#EFF6FF] border border-[#BFDBFE] flex items-center justify-center text-[#2563EB] shrink-0">
               <Shield className="w-4 h-4" />
             </div>
             <div>
-              <div className="text-xs font-bold uppercase tracking-wider text-[#1A1A1A]">{t.vpWarrantyTitle}</div>
-              <div className="text-[11px] text-[#7A7A7A]">{t.vpWarrantyDesc}</div>
+              <div className="text-xs font-bold uppercase tracking-wider text-[#0B192C]">{t.vpWarrantyTitle}</div>
+              <div className="text-[11px] text-[#64748B]">{t.vpWarrantyDesc}</div>
             </div>
           </div>
 
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-full bg-white border border-[#E5E4E2] flex items-center justify-center text-[#A08C75] shrink-0">
+            <div className="w-10 h-10 rounded-full bg-[#EFF6FF] border border-[#BFDBFE] flex items-center justify-center text-[#2563EB] shrink-0">
               <Sparkles className="w-4 h-4" />
             </div>
             <div>
-              <div className="text-xs font-bold uppercase tracking-wider text-[#1A1A1A]">{t.vpStylistTitle}</div>
-              <div className="text-[11px] text-[#7A7A7A]">{t.vpStylistDesc}</div>
+              <div className="text-xs font-bold uppercase tracking-wider text-[#0B192C]">{t.vpStylistTitle}</div>
+              <div className="text-[11px] text-[#64748B]">{t.vpStylistDesc}</div>
             </div>
           </div>
         </div>
@@ -270,3 +270,4 @@ export const Hero: React.FC<HeroProps> = ({ onShopClick }) => {
     </section>
   );
 };
+export default Hero;

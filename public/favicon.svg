@@ -1,0 +1,25 @@
+<svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="sarvicCobalt" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stopColor="#3B82F6" />
+      <stop offset="50%" stopColor="#2563EB" />
+      <stop offset="100%" stopColor="#1D4ED8" />
+    </linearGradient>
+    <linearGradient id="sarvicNavy" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stopColor="#1E3A8A" />
+      <stop offset="100%" stopColor="#0B192C" />
+    </linearGradient>
+    <linearGradient id="sarvicCyan" x1="0%" y1="100%" x2="100%" y2="0%">
+      <stop offset="0%" stopColor="#2563EB" />
+      <stop offset="100%" stopColor="#60A5FA" />
+    </linearGradient>
+  </defs>
+  <rect x="4" y="4" width="92" height="92" rx="18" fill="#F0F5FF" stroke="#DBEAFE" stroke-width="2"/>
+  <polygon points="18,80 18,24 34,24 34,80" fill="url(#sarvicNavy)" />
+  <polygon points="18,24 34,24 50,48 40,56" fill="url(#sarvicCobalt)" />
+  <polygon points="40,56 50,48 60,56 50,70" fill="url(#sarvicCyan)" />
+  <polygon points="66,24 82,24 60,56 50,48" fill="url(#sarvicCobalt)" />
+  <polygon points="66,80 66,24 82,24 82,80" fill="url(#sarvicNavy)" />
+  <polygon points="50,48 34,24 66,24" fill="#1E40AF" opacity="0.85" />
+  <rect x="24" y="74" width="52" height="5" rx="2.5" fill="url(#sarvicCobalt)" />
+</svg>

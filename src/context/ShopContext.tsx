@@ -251,14 +251,17 @@ export const ShopProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
   const setFilter = (updater: Partial<FilterState> | ((prev: FilterState) => FilterState)) => {
     if (typeof updater === 'function') {
-      setActiveFilter(updater);
+      setActiveFilter(prev => {
+        const next = updater(prev || initialFilterState);
+        return { ...initialFilterState, ...(next || {}) };
+      });
     } else {
-      setActiveFilter(prev => ({ ...prev, ...updater }));
+      setActiveFilter(prev => ({ ...(prev || initialFilterState), ...(updater || {}) }));
     }
   };
 
   const resetFilters = () => {
-    setActiveFilter(initialFilterState);
+    setActiveFilter({ ...initialFilterState });
   };
 
   const applyPromoCode = (code: string) => {

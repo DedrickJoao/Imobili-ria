@@ -84,22 +84,31 @@ export const ProductGallery: React.FC = () => {
 
   // Filtered and Sorted products
   const filteredProducts = useMemo(() => {
+    const curCategory = activeFilter?.category || 'all';
+    const curRoom = activeFilter?.room || 'all';
+    const curMaterials = activeFilter?.materials || [];
+    const curColors = activeFilter?.colors || [];
+    const curPriceRange = activeFilter?.priceRange || [0, 4500];
+    const curQuery = (activeFilter?.searchQuery || '').trim().toLowerCase();
+    const curSort = activeFilter?.sortBy || 'featured';
+    const curInStock = !!activeFilter?.inStockOnly;
+
     return products
       .filter(product => {
         // Category filter
-        if (activeFilter.category !== 'all' && product.category !== activeFilter.category) {
+        if (curCategory !== 'all' && product.category !== curCategory) {
           return false;
         }
 
         // Room filter
-        if (activeFilter.room !== 'all' && product.room !== activeFilter.room) {
+        if (curRoom !== 'all' && product.room !== curRoom) {
           return false;
         }
 
         // Materials filter
-        if (activeFilter.materials.length > 0) {
+        if (curMaterials.length > 0) {
           const hasMaterial = product.materials.some(m =>
-            activeFilter.materials.some(selectedMat => m.toLowerCase().includes(selectedMat.toLowerCase()))
+            curMaterials.some(selectedMat => m.toLowerCase().includes(selectedMat.toLowerCase()))
           );
           if (!hasMaterial) return false;
         }
@@ -142,12 +151,12 @@ export const ProductGallery: React.FC = () => {
 
   // Active filters count
   const activeFiltersCount =
-    (activeFilter.category !== 'all' ? 1 : 0) +
-    (activeFilter.room !== 'all' ? 1 : 0) +
-    activeFilter.materials.length +
-    activeFilter.colors.length +
-    (activeFilter.inStockOnly ? 1 : 0) +
-    (activeFilter.searchQuery ? 1 : 0);
+    ((activeFilter?.category && activeFilter.category !== 'all') ? 1 : 0) +
+    ((activeFilter?.room && activeFilter.room !== 'all') ? 1 : 0) +
+    (activeFilter?.materials?.length || 0) +
+    (activeFilter?.colors?.length || 0) +
+    (activeFilter?.inStockOnly ? 1 : 0) +
+    (activeFilter?.searchQuery ? 1 : 0);
 
   return (
     <section id="product-gallery-section" className="py-12 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -155,24 +164,24 @@ export const ProductGallery: React.FC = () => {
       <div className="space-y-6">
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
           <div>
-            <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#A08C75]">
+            <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#0284C7]">
               {t.gallerySubTitle}
             </span>
-            <h2 className="font-serif italic text-2xl sm:text-3xl md:text-4xl font-bold text-[#1A1A1A] mt-1">
+            <h2 className="font-serif italic text-2xl sm:text-3xl md:text-4xl font-bold text-[#0B192C] mt-1">
               {t.galleryMainTitle}
             </h2>
           </div>
 
           <div className="flex items-center gap-3">
             {/* View Mode Toggle: Grid Columns */}
-            <div className="hidden sm:flex items-center p-1 bg-[#F5F5F5] rounded-sm border border-[#E5E4E2]">
+            <div className="hidden sm:flex items-center p-1 bg-[#F5F5F5] rounded-sm border border-[#E2E8F0]">
               <button
                 id="view-grid-2-cols"
                 onClick={() => setFilter({ gridColumns: 2, viewMode: 'grid' })}
                 className={`p-1.5 rounded-xs transition-colors ${
                   activeFilter.gridColumns === 2 && activeFilter.viewMode === 'grid'
-                    ? 'bg-white shadow-xs text-[#1A1A1A]'
-                    : 'text-[#7A7A7A] hover:text-[#1A1A1A]'
+                    ? 'bg-white shadow-xs text-[#0B192C]'
+                    : 'text-[#64748B] hover:text-[#0B192C]'
                 }`}
                 title="2 Columns View"
               >
@@ -184,8 +193,8 @@ export const ProductGallery: React.FC = () => {
                 onClick={() => setFilter({ gridColumns: 3, viewMode: 'grid' })}
                 className={`p-1.5 rounded-xs transition-colors ${
                   activeFilter.gridColumns === 3 && activeFilter.viewMode === 'grid'
-                    ? 'bg-white shadow-xs text-[#1A1A1A]'
-                    : 'text-[#7A7A7A] hover:text-[#1A1A1A]'
+                    ? 'bg-white shadow-xs text-[#0B192C]'
+                    : 'text-[#64748B] hover:text-[#0B192C]'
                 }`}
                 title="3 Columns View"
               >
@@ -197,8 +206,8 @@ export const ProductGallery: React.FC = () => {
                 onClick={() => setFilter({ gridColumns: 4, viewMode: 'grid' })}
                 className={`p-1.5 rounded-xs transition-colors ${
                   activeFilter.gridColumns === 4 && activeFilter.viewMode === 'grid'
-                    ? 'bg-white shadow-xs text-[#1A1A1A]'
-                    : 'text-[#7A7A7A] hover:text-[#1A1A1A]'
+                    ? 'bg-white shadow-xs text-[#0B192C]'
+                    : 'text-[#64748B] hover:text-[#0B192C]'
                 }`}
                 title="4 Columns View"
               >
@@ -210,9 +219,9 @@ export const ProductGallery: React.FC = () => {
             <button
               id="gallery-open-ai-stylist"
               onClick={() => setIsAIStylistOpen(true)}
-              className="flex items-center gap-2 px-3.5 py-2 rounded-sm bg-[#F5F2ED] border border-[#E5E4E2] text-[10px] uppercase tracking-wider font-bold text-[#1A1A1A] hover:border-[#A08C75] transition-all"
+              className="flex items-center gap-2 px-3.5 py-2 rounded-sm bg-[#EFF6FF] border border-[#E2E8F0] text-[10px] uppercase tracking-wider font-bold text-[#0B192C] hover:border-[#0284C7] transition-all"
             >
-              <Sparkles className="w-3.5 h-3.5 text-[#A08C75]" />
+              <Sparkles className="w-3.5 h-3.5 text-[#0284C7]" />
               <span>{t.galleryAiRec}</span>
             </button>
           </div>
@@ -222,34 +231,35 @@ export const ProductGallery: React.FC = () => {
         <div className="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-none">
           {CATEGORIES_LIST.map(cat => {
             const label = getLocalizedCategoryLabel(cat.id, cat.label);
-            return (
-              <button
-                key={cat.id}
-                id={`gallery-cat-tab-${cat.id}`}
-                onClick={() => handleCategorySelect(cat.id as FurnitureCategory)}
-                className={`px-3.5 py-1.5 rounded-full text-[10px] uppercase font-bold tracking-wider whitespace-nowrap transition-all flex items-center gap-2 border ${
-                  activeFilter.category === cat.id
-                    ? 'bg-[#1A1A1A] text-white border-[#1A1A1A] shadow-xs'
-                    : 'bg-white text-[#7A7A7A] border-[#E5E4E2] hover:border-[#1A1A1A] hover:text-[#1A1A1A]'
-                }`}
-              >
-                <span>{label}</span>
-                <span
-                  className={`text-[9px] px-1.5 py-0.2 rounded-full ${
-                    activeFilter.category === cat.id
-                      ? 'bg-white/20 text-white'
-                      : 'bg-[#F5F5F5] text-[#7A7A7A]'
+              const isSelected = (activeFilter?.category || 'all') === cat.id;
+              return (
+                <button
+                  key={cat.id}
+                  id={`gallery-cat-tab-${cat.id}`}
+                  onClick={() => handleCategorySelect(cat.id as FurnitureCategory)}
+                  className={`px-3.5 py-1.5 rounded-full text-[10px] uppercase font-bold tracking-wider whitespace-nowrap transition-all flex items-center gap-2 border ${
+                    isSelected
+                      ? 'bg-[#0284C7] text-white border-[#0284C7] shadow-xs'
+                      : 'bg-white text-[#64748B] border-[#BAE6FD]/70 hover:border-[#0284C7] hover:text-[#0284C7]'
                   }`}
                 >
-                  {cat.count}
-                </span>
-              </button>
-            );
+                  <span>{label}</span>
+                  <span
+                    className={`text-[9px] px-1.5 py-0.2 rounded-full ${
+                      isSelected
+                        ? 'bg-white/20 text-white'
+                        : 'bg-[#F0F9FF] text-[#0369A1]'
+                    }`}
+                  >
+                    {cat.count}
+                  </span>
+                </button>
+              );
           })}
         </div>
 
         {/* Toolbar: Filter Toggles & Sort */}
-        <div className="p-3 bg-white rounded-sm border border-[#E5E4E2] flex flex-wrap items-center justify-between gap-3 shadow-xs">
+        <div className="p-3 bg-white rounded-sm border border-[#E2E8F0] flex flex-wrap items-center justify-between gap-3 shadow-xs">
           <div className="flex items-center gap-2 flex-wrap">
             {/* Filter Toggle Button */}
             <button
@@ -257,14 +267,14 @@ export const ProductGallery: React.FC = () => {
               onClick={() => setIsFilterDrawerOpen(!isFilterDrawerOpen)}
               className={`flex items-center gap-2 px-3 py-1.5 rounded-sm text-[10px] uppercase font-bold tracking-wider border transition-all ${
                 isFilterDrawerOpen || activeFiltersCount > 0
-                  ? 'bg-[#1A1A1A] text-white border-[#1A1A1A]'
-                  : 'bg-[#FAF9F6] text-[#1A1A1A] border-[#E5E4E2] hover:border-[#1A1A1A]'
+                  ? 'bg-[#0B192C] text-white border-[#0B192C]'
+                  : 'bg-[#F8FAFC] text-[#0B192C] border-[#E2E8F0] hover:border-[#0B192C]'
               }`}
             >
-              <SlidersHorizontal className="w-3 h-3 text-[#A08C75]" />
+              <SlidersHorizontal className="w-3 h-3 text-[#0284C7]" />
               <span>{t.gallerySmartFilters}</span>
               {activeFiltersCount > 0 && (
-                <span className="w-3.5 h-3.5 rounded-full bg-[#A08C75] text-white text-[9px] flex items-center justify-center font-bold">
+                <span className="w-3.5 h-3.5 rounded-full bg-[#0284C7] text-white text-[9px] flex items-center justify-center font-bold">
                   {activeFiltersCount}
                 </span>
               )}
@@ -279,8 +289,8 @@ export const ProductGallery: React.FC = () => {
                   onClick={() => handleRoomSelect(room)}
                   className={`px-3 py-1 rounded-full text-[10px] uppercase font-bold tracking-wider transition-colors border ${
                     activeFilter.room === room
-                      ? 'bg-[#1A1A1A] text-white border-[#1A1A1A]'
-                      : 'bg-white border-[#E5E4E2] text-[#7A7A7A] hover:text-[#1A1A1A] hover:border-[#1A1A1A]'
+                      ? 'bg-[#0B192C] text-white border-[#0B192C]'
+                      : 'bg-white border-[#E2E8F0] text-[#64748B] hover:text-[#0B192C] hover:border-[#0B192C]'
                   }`}
                 >
                   {getLocalizedRoomLabel(room)}
@@ -289,13 +299,13 @@ export const ProductGallery: React.FC = () => {
             </div>
 
             {/* In stock toggle */}
-            <label className="flex items-center gap-2 px-3 py-1.5 bg-[#FAF9F6] rounded-sm border border-[#E5E4E2] text-[10px] uppercase font-bold tracking-wider text-[#5A5A5A] cursor-pointer hover:border-[#1A1A1A]">
+            <label className="flex items-center gap-2 px-3 py-1.5 bg-[#F8FAFC] rounded-sm border border-[#E2E8F0] text-[10px] uppercase font-bold tracking-wider text-[#475569] cursor-pointer hover:border-[#0B192C]">
               <input
                 id="instock-only-checkbox"
                 type="checkbox"
                 checked={activeFilter.inStockOnly}
                 onChange={e => setFilter({ inStockOnly: e.target.checked })}
-                className="w-3.5 h-3.5 accent-[#A08C75] rounded-xs"
+                className="w-3.5 h-3.5 accent-[#0284C7] rounded-xs"
               />
               <span>{t.galleryInStockOnly}</span>
             </label>
@@ -303,7 +313,7 @@ export const ProductGallery: React.FC = () => {
 
           {/* Right side: Result Count & Sort Dropdown */}
           <div className="flex items-center gap-3">
-            <span className="text-[11px] text-[#7A7A7A] hidden md:inline">
+            <span className="text-[11px] text-[#64748B] hidden md:inline">
               {t.galleryShowing} <strong>{filteredProducts.length}</strong> {t.galleryOf} {products.length} {t.galleryPieces}
             </span>
 
@@ -316,13 +326,13 @@ export const ProductGallery: React.FC = () => {
                     sortBy: e.target.value as FilterState['sortBy'],
                   })
                 }
-                className="bg-[#FAF9F6] border border-[#E5E4E2] text-[#1A1A1A] text-[10px] uppercase font-bold tracking-wider rounded-sm px-3 py-2 pr-8 focus:outline-none focus:border-[#A08C75] cursor-pointer"
+                className="bg-[#F8FAFC] border border-[#E2E8F0] text-[#0B192C] text-[10px] uppercase font-bold tracking-wider rounded-sm px-3 py-2 pr-8 focus:outline-none focus:border-[#0284C7] cursor-pointer"
               >
                 <option value="featured">{t.gallerySortFeatured}</option>
                 <option value="rating">{t.gallerySortRating}</option>
                 <option value="newest">{t.gallerySortNewest}</option>
               </select>
-              <ChevronDown className="w-3 h-3 text-[#7A7A7A] absolute right-2.5 pointer-events-none" />
+              <ChevronDown className="w-3 h-3 text-[#64748B] absolute right-2.5 pointer-events-none" />
             </div>
           </div>
         </div>
@@ -335,18 +345,18 @@ export const ProductGallery: React.FC = () => {
               initial={{ opacity: 0, height: 0 }}
               animate={{ opacity: 1, height: 'auto' }}
               exit={{ opacity: 0, height: 0 }}
-              className="bg-white p-5 sm:p-6 rounded-sm border border-[#E5E4E2] shadow-lg overflow-hidden space-y-6"
+              className="bg-white p-5 sm:p-6 rounded-sm border border-[#E2E8F0] shadow-lg overflow-hidden space-y-6"
             >
-              <div className="flex items-center justify-between pb-3 border-b border-[#E5E4E2]">
+              <div className="flex items-center justify-between pb-3 border-b border-[#E2E8F0]">
                 <div className="flex items-center gap-2">
-                  <SlidersHorizontal className="w-3.5 h-3.5 text-[#A08C75]" />
-                  <h3 className="font-serif italic text-base font-bold text-[#1A1A1A]">{t.galleryRefineTitle}</h3>
+                  <SlidersHorizontal className="w-3.5 h-3.5 text-[#0284C7]" />
+                  <h3 className="font-serif italic text-base font-bold text-[#0B192C]">{t.galleryRefineTitle}</h3>
                 </div>
                 {activeFiltersCount > 0 && (
                   <button
                     id="reset-all-filters-btn"
                     onClick={resetFilters}
-                    className="text-[10px] uppercase tracking-wider font-bold text-[#A08C75] hover:text-[#1A1A1A] flex items-center gap-1 border-b border-[#A08C75]"
+                    className="text-[10px] uppercase tracking-wider font-bold text-[#0284C7] hover:text-[#0B192C] flex items-center gap-1 border-b border-[#0284C7]"
                   >
                     <RotateCcw className="w-3 h-3" /> {t.galleryResetAll}
                   </button>
@@ -356,7 +366,7 @@ export const ProductGallery: React.FC = () => {
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
                 {/* 1. Curated Room Ambience */}
                 <div className="space-y-2">
-                  <span className="text-[10px] uppercase tracking-wider text-[#7A7A7A] font-bold block">{t.roomAll}</span>
+                  <span className="text-[10px] uppercase tracking-wider text-[#64748B] font-bold block">{t.roomAll}</span>
                   <div className="flex flex-wrap gap-1.5">
                     {(['all', 'living', 'dining', 'bedroom', 'workspace'] as RoomCategory[]).map(room => (
                       <button
@@ -364,8 +374,8 @@ export const ProductGallery: React.FC = () => {
                         onClick={() => handleRoomSelect(room)}
                         className={`px-3 py-1 rounded-full text-[10px] uppercase font-bold tracking-wider transition-colors border ${
                           activeFilter.room === room
-                            ? 'bg-[#1A1A1A] text-white border-[#1A1A1A]'
-                            : 'bg-[#F5F5F5] text-[#5A5A5A] border-[#E5E4E2] hover:border-[#1A1A1A]'
+                            ? 'bg-[#0B192C] text-white border-[#0B192C]'
+                            : 'bg-[#F5F5F5] text-[#475569] border-[#E2E8F0] hover:border-[#0B192C]'
                         }`}
                       >
                         {getLocalizedRoomLabel(room)}
@@ -376,7 +386,7 @@ export const ProductGallery: React.FC = () => {
 
                 {/* 2. Materials */}
                 <div className="space-y-2">
-                  <span className="text-[10px] uppercase tracking-wider text-[#7A7A7A] font-bold block">{t.galleryMaterials}</span>
+                  <span className="text-[10px] uppercase tracking-wider text-[#64748B] font-bold block">{t.galleryMaterials}</span>
                   <div className="flex flex-wrap gap-1.5">
                     {MATERIALS_LIST.map(material => {
                       const selected = activeFilter.materials.includes(material);
@@ -387,8 +397,8 @@ export const ProductGallery: React.FC = () => {
                           onClick={() => toggleMaterial(material)}
                           className={`px-3 py-1 rounded-full text-[10px] uppercase font-bold tracking-wider transition-colors border flex items-center gap-1 ${
                             selected
-                              ? 'bg-[#1A1A1A] text-white border-[#1A1A1A]'
-                              : 'bg-[#F5F5F5] text-[#5A5A5A] border-[#E5E4E2] hover:border-[#1A1A1A]'
+                              ? 'bg-[#0B192C] text-white border-[#0B192C]'
+                              : 'bg-[#F5F5F5] text-[#475569] border-[#E2E8F0] hover:border-[#0B192C]'
                           }`}
                         >
                           {selected && <Check className="w-2.5 h-2.5" />}
@@ -401,7 +411,7 @@ export const ProductGallery: React.FC = () => {
 
                 {/* 3. Color Swatches */}
                 <div className="space-y-2">
-                  <span className="text-[10px] uppercase tracking-wider text-[#7A7A7A] font-bold block">{t.galleryColorFamily}</span>
+                  <span className="text-[10px] uppercase tracking-wider text-[#64748B] font-bold block">{t.galleryColorFamily}</span>
                   <div className="flex flex-wrap gap-2">
                     {COLORS_LIST.map(color => {
                       const selected = activeFilter.colors.includes(color.name);
@@ -413,12 +423,12 @@ export const ProductGallery: React.FC = () => {
                           style={{ backgroundColor: color.hex }}
                           className={`w-5 h-5 rounded-full border flex items-center justify-center transition-transform ${
                             selected
-                              ? 'ring-1 ring-[#1A1A1A] ring-offset-2 scale-110 border-transparent'
-                              : 'border-[#E5E4E2] hover:scale-105'
+                              ? 'ring-1 ring-[#0B192C] ring-offset-2 scale-110 border-transparent'
+                              : 'border-[#E2E8F0] hover:scale-105'
                           }`}
                           title={color.name}
                         >
-                          {selected && <Check className="w-3 h-3 text-[#1A1A1A]" />}
+                          {selected && <Check className="w-3 h-3 text-[#0B192C]" />}
                         </button>
                       );
                     })}
@@ -426,20 +436,20 @@ export const ProductGallery: React.FC = () => {
                 </div>
 
                 {/* 4. AI Designer Quick Prompt */}
-                <div className="p-3.5 rounded-sm bg-[#F5F2ED] border border-[#E5E4E2] flex flex-col justify-between space-y-2">
+                <div className="p-3.5 rounded-sm bg-[#EFF6FF] border border-[#E2E8F0] flex flex-col justify-between space-y-2">
                   <div className="space-y-1">
-                    <div className="flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wider text-[#A08C75]">
-                      <Sparkles className="w-3 h-3 text-[#A08C75]" />
+                    <div className="flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wider text-[#0284C7]">
+                      <Sparkles className="w-3 h-3 text-[#0284C7]" />
                       <span>{t.galleryAiPromptTitle}</span>
                     </div>
-                    <p className="text-[11px] text-[#5A5A5A] leading-snug">
+                    <p className="text-[11px] text-[#475569] leading-snug">
                       {t.galleryAiPromptDesc}
                     </p>
                   </div>
                   <button
                     id="filter-launch-ai-advisor"
                     onClick={() => setIsAIStylistOpen(true)}
-                    className="w-full py-1.5 px-3 rounded-sm bg-[#1A1A1A] text-white text-[10px] uppercase tracking-widest font-bold hover:bg-black transition-colors"
+                    className="w-full py-1.5 px-3 rounded-sm bg-[#0B192C] text-white text-[10px] uppercase tracking-widest font-bold hover:bg-black transition-colors"
                   >
                     {t.galleryOpenAdvisor}
                   </button>
@@ -452,28 +462,28 @@ export const ProductGallery: React.FC = () => {
         {/* Active Filter Badges */}
         {activeFiltersCount > 0 && (
           <div className="flex flex-wrap items-center gap-2 pt-1">
-            <span className="text-[10px] uppercase tracking-wider text-[#7A7A7A] font-bold">{t.galleryActiveFilters}</span>
+            <span className="text-[10px] uppercase tracking-wider text-[#64748B] font-bold">{t.galleryActiveFilters}</span>
 
-            {activeFilter.category !== 'all' && (
-              <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-white border border-[#E5E4E2] text-[10px] uppercase font-bold text-[#1A1A1A]">
+            {activeFilter?.category && activeFilter.category !== 'all' && (
+              <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-white border border-[#BAE6FD] text-[10px] uppercase font-bold text-[#0C4A6E]">
                 {t.navCategories}: {getLocalizedCategoryLabel(activeFilter.category, activeFilter.category)}
                 <button
                   id="remove-cat-filter-btn"
                   onClick={() => setFilter({ category: 'all' })}
-                  className="hover:text-[#A08C75]"
+                  className="hover:text-[#0284C7]"
                 >
                   <X className="w-3 h-3" />
                 </button>
               </span>
             )}
 
-            {activeFilter.room !== 'all' && (
-              <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-white border border-[#E5E4E2] text-[10px] uppercase font-bold text-[#1A1A1A] capitalize">
+            {activeFilter?.room && activeFilter.room !== 'all' && (
+              <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-white border border-[#BAE6FD] text-[10px] uppercase font-bold text-[#0C4A6E] capitalize">
                 {getLocalizedRoomLabel(activeFilter.room)}
                 <button
                   id="remove-room-filter-btn"
                   onClick={() => setFilter({ room: 'all' })}
-                  className="hover:text-[#A08C75]"
+                  className="hover:text-[#0284C7]"
                 >
                   <X className="w-3 h-3" />
                 </button>
@@ -481,12 +491,12 @@ export const ProductGallery: React.FC = () => {
             )}
 
             {activeFilter.searchQuery && (
-              <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-white border border-[#E5E4E2] text-[10px] uppercase font-bold text-[#1A1A1A]">
+              <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-white border border-[#E2E8F0] text-[10px] uppercase font-bold text-[#0B192C]">
                 "{activeFilter.searchQuery}"
                 <button
                   id="remove-search-filter-btn"
                   onClick={() => setFilter({ searchQuery: '' })}
-                  className="hover:text-[#A08C75]"
+                  className="hover:text-[#0284C7]"
                 >
                   <X className="w-3 h-3" />
                 </button>
@@ -496,13 +506,13 @@ export const ProductGallery: React.FC = () => {
             {activeFilter.materials.map(mat => (
               <span
                 key={mat}
-                className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-white border border-[#E5E4E2] text-[10px] uppercase font-bold text-[#1A1A1A]"
+                className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-white border border-[#E2E8F0] text-[10px] uppercase font-bold text-[#0B192C]"
               >
                 {mat}
                 <button
                   id={`remove-mat-${mat}`}
                   onClick={() => toggleMaterial(mat)}
-                  className="hover:text-[#A08C75]"
+                  className="hover:text-[#0284C7]"
                 >
                   <X className="w-3 h-3" />
                 </button>
@@ -512,13 +522,13 @@ export const ProductGallery: React.FC = () => {
             {activeFilter.colors.map(col => (
               <span
                 key={col}
-                className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-white border border-[#E5E4E2] text-[10px] uppercase font-bold text-[#1A1A1A]"
+                className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-white border border-[#E2E8F0] text-[10px] uppercase font-bold text-[#0B192C]"
               >
                 {col}
                 <button
                   id={`remove-col-${col}`}
                   onClick={() => toggleColor(col)}
-                  className="hover:text-[#A08C75]"
+                  className="hover:text-[#0284C7]"
                 >
                   <X className="w-3 h-3" />
                 </button>
@@ -528,7 +538,7 @@ export const ProductGallery: React.FC = () => {
             <button
               id="clear-all-filters-btn"
               onClick={resetFilters}
-              className="text-[10px] uppercase tracking-wider font-bold text-[#A08C75] hover:text-[#1A1A1A] border-b border-[#A08C75] ml-2"
+              className="text-[10px] uppercase tracking-wider font-bold text-[#0284C7] hover:text-[#0B192C] border-b border-[#0284C7] ml-2"
             >
               {t.galleryClearAll}
             </button>
@@ -553,13 +563,13 @@ export const ProductGallery: React.FC = () => {
             ))}
           </div>
         ) : (
-          <div className="py-16 text-center bg-white rounded-sm border border-[#E5E4E2] p-8 max-w-lg mx-auto space-y-4 shadow-sm">
-            <div className="w-12 h-12 rounded-full bg-[#FAF9F6] border border-[#E5E4E2] flex items-center justify-center mx-auto text-[#A08C75]">
+          <div className="py-16 text-center bg-white rounded-sm border border-[#E2E8F0] p-8 max-w-lg mx-auto space-y-4 shadow-sm">
+            <div className="w-12 h-12 rounded-full bg-[#F8FAFC] border border-[#E2E8F0] flex items-center justify-center mx-auto text-[#0284C7]">
               <SlidersHorizontal className="w-5 h-5" />
             </div>
             <div className="space-y-1">
-              <h3 className="font-serif italic text-xl font-bold text-[#1A1A1A]">{t.galleryNoMatchingTitle}</h3>
-              <p className="text-xs text-[#7A7A7A]">
+              <h3 className="font-serif italic text-xl font-bold text-[#0B192C]">{t.galleryNoMatchingTitle}</h3>
+              <p className="text-xs text-[#64748B]">
                 {t.galleryNoMatchingDesc}
               </p>
             </div>
@@ -567,16 +577,16 @@ export const ProductGallery: React.FC = () => {
               <button
                 id="empty-reset-filters-btn"
                 onClick={resetFilters}
-                className="px-5 py-2.5 rounded-sm bg-[#1A1A1A] text-white text-[10px] uppercase tracking-widest font-bold hover:bg-black transition-colors"
+                className="px-5 py-2.5 rounded-sm bg-[#0B192C] text-white text-[10px] uppercase tracking-widest font-bold hover:bg-black transition-colors"
               >
                 {t.galleryResetFiltersBtn}
               </button>
               <button
                 id="empty-ask-ai-btn"
                 onClick={() => setIsAIStylistOpen(true)}
-                className="px-5 py-2.5 rounded-sm bg-[#F5F2ED] text-[#1A1A1A] border border-[#E5E4E2] text-[10px] uppercase tracking-wider font-bold hover:border-[#A08C75] transition-colors flex items-center gap-1.5"
+                className="px-5 py-2.5 rounded-sm bg-[#EFF6FF] text-[#0B192C] border border-[#E2E8F0] text-[10px] uppercase tracking-wider font-bold hover:border-[#0284C7] transition-colors flex items-center gap-1.5"
               >
-                <Sparkles className="w-3.5 h-3.5 text-[#A08C75]" />
+                <Sparkles className="w-3.5 h-3.5 text-[#0284C7]" />
                 <span>{t.galleryAskStylistBtn}</span>
               </button>
             </div>

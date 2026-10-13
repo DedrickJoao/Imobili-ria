@@ -69,7 +69,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({ isMobile, onCloseMobile })
   return (
     <div ref={containerRef} className="relative w-full">
       <div className="relative flex items-center">
-        <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-[#7A7A7A] pointer-events-none" />
+        <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-[#64748B] pointer-events-none" />
         <input
           id="global-search-input"
           type="text"
@@ -77,13 +77,13 @@ export const SearchBar: React.FC<SearchBarProps> = ({ isMobile, onCloseMobile })
           onChange={e => handleSearchChange(e.target.value)}
           onFocus={() => setIsOpen(true)}
           placeholder={t.searchPlaceholder}
-          className="w-full bg-[#F5F5F5] border-none text-[#1A1A1A] placeholder:text-[#7A7A7A] text-xs pl-9 pr-8 py-2.5 rounded-sm focus:ring-1 focus:ring-[#A08C75] transition-all outline-none"
+          className="w-full bg-[#F5F5F5] border-none text-[#0C4A6E] placeholder:text-[#64748B] text-xs pl-9 pr-8 py-2.5 rounded-sm focus:ring-1 focus:ring-[#0284C7] transition-all outline-none"
         />
         {query && (
           <button
             id="clear-search-btn"
             onClick={handleClear}
-            className="absolute right-3 top-1/2 -translate-y-1/2 text-[#7A7A7A] hover:text-[#1A1A1A] p-0.5 rounded-sm"
+            className="absolute right-3 top-1/2 -translate-y-1/2 text-[#64748B] hover:text-[#0C4A6E] p-0.5 rounded-sm"
             aria-label="Clear search query"
           >
             <X className="w-3.5 h-3.5" />
@@ -99,13 +99,13 @@ export const SearchBar: React.FC<SearchBarProps> = ({ isMobile, onCloseMobile })
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 4 }}
             transition={{ duration: 0.15 }}
-            className="absolute top-full left-0 right-0 mt-2 bg-white border border-[#E5E4E2] rounded-sm shadow-xl p-4 z-50 overflow-hidden"
+            className="absolute top-full left-0 right-0 mt-2 bg-white border border-[#E0F2FE] rounded-sm shadow-xl p-4 z-50 overflow-hidden"
           >
             {/* If query has matches */}
             {query.trim().length > 0 ? (
               <div>
-                <div className="flex items-center justify-between pb-2 border-b border-[#E5E4E2] mb-3">
-                  <span className="text-[10px] uppercase tracking-[0.2em] font-bold text-[#A08C75]">
+                <div className="flex items-center justify-between pb-2 border-b border-[#E0F2FE] mb-3">
+                  <span className="text-[10px] uppercase tracking-[0.2em] font-bold text-[#0284C7]">
                     {t.searchMatchingPieces} ({matchingProducts.length})
                   </span>
                   <button
@@ -114,7 +114,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({ isMobile, onCloseMobile })
                       setIsOpen(false);
                       onCloseMobile?.();
                     }}
-                    className="text-[10px] uppercase tracking-wider font-bold text-[#1A1A1A] hover:text-[#A08C75] flex items-center gap-1 border-b border-[#1A1A1A]"
+                    className="text-[10px] uppercase tracking-wider font-bold text-[#0C4A6E] hover:text-[#0284C7] flex items-center gap-1 border-b border-[#0C4A6E]"
                   >
                     {t.searchViewInGallery} <ArrowRight className="w-3 h-3" />
                   </button>
@@ -131,7 +131,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({ isMobile, onCloseMobile })
                           setIsOpen(false);
                           onCloseMobile?.();
                         }}
-                        className="flex items-center gap-3 p-2 rounded-sm hover:bg-[#F5F5F5] cursor-pointer group transition-colors border border-transparent hover:border-[#E5E4E2]"
+                        className="flex items-center gap-3 p-2 rounded-sm hover:bg-[#F5F5F5] cursor-pointer group transition-colors border border-transparent hover:border-[#E2E8F0]"
                       >
                         <img
                           src={product.images[0]}
@@ -140,15 +140,15 @@ export const SearchBar: React.FC<SearchBarProps> = ({ isMobile, onCloseMobile })
                           referrerPolicy="no-referrer"
                         />
                         <div className="flex-1 min-w-0">
-                          <h4 className="text-xs font-semibold text-[#1A1A1A] group-hover:text-[#A08C75] truncate transition-colors font-serif italic">
+                          <h4 className="text-xs font-semibold text-[#0B192C] group-hover:text-[#2563EB] truncate transition-colors font-serif italic">
                             {product.name}
                           </h4>
-                          <p className="text-[10px] text-[#7A7A7A] truncate font-light">
+                          <p className="text-[10px] text-[#64748B] truncate font-light">
                             {product.materials.join(' · ')}
                           </p>
                         </div>
                         <div className="text-right shrink-0">
-                          <span className="text-[10px] uppercase font-bold text-[#A08C75] tracking-wider">
+                          <span className="text-[10px] uppercase font-bold text-[#2563EB] tracking-wider">
                             {product.category}
                           </span>
                         </div>
@@ -157,7 +157,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({ isMobile, onCloseMobile })
                   </div>
                 ) : (
                   <div className="py-6 text-center">
-                    <p className="text-xs text-[#7A7A7A]">{t.searchNoExact} "{query}".</p>
+                    <p className="text-xs text-[#64748B]">{t.searchNoExact} "{query}".</p>
                     <button
                       id="search-ai-recommend-btn"
                       onClick={() => {
@@ -165,16 +165,16 @@ export const SearchBar: React.FC<SearchBarProps> = ({ isMobile, onCloseMobile })
                         setIsOpen(false);
                         onCloseMobile?.();
                       }}
-                      className="mt-3 inline-flex items-center gap-2 px-3 py-1.5 rounded-sm bg-[#FAF9F6] text-[10px] uppercase tracking-wider font-bold text-[#A08C75] border border-[#E5E4E2] hover:bg-[#F5F2ED] transition-colors"
+                      className="mt-3 inline-flex items-center gap-2 px-3 py-1.5 rounded-sm bg-[#F8FAFC] text-[10px] uppercase tracking-wider font-bold text-[#2563EB] border border-[#E2E8F0] hover:bg-[#EFF6FF] transition-colors"
                     >
-                      <Sparkles className="w-3.5 h-3.5 text-[#A08C75]" /> {t.searchAskAi}
+                      <Sparkles className="w-3.5 h-3.5 text-[#2563EB]" /> {t.searchAskAi}
                     </button>
                   </div>
                 )}
               </div>
             ) : (
               <div>
-                <span className="text-[10px] uppercase tracking-[0.2em] font-bold text-[#A08C75] block mb-2.5">
+                <span className="text-[10px] uppercase tracking-[0.2em] font-bold text-[#2563EB] block mb-2.5">
                   {t.searchPopular}
                 </span>
                 <div className="flex flex-wrap gap-1.5 mb-3">
@@ -187,16 +187,16 @@ export const SearchBar: React.FC<SearchBarProps> = ({ isMobile, onCloseMobile })
                         setIsOpen(false);
                         onCloseMobile?.();
                       }}
-                      className="px-3 py-1 text-[10px] uppercase font-bold rounded-full border border-[#E5E4E2] bg-white text-[#1A1A1A] hover:bg-[#F5F5F5] transition-colors"
+                      className="px-3 py-1 text-[10px] uppercase font-bold rounded-full border border-[#E2E8F0] bg-white text-[#0B192C] hover:bg-[#F5F5F5] transition-colors"
                     >
                       {keyword}
                     </button>
                   ))}
                 </div>
 
-                <div className="pt-3 border-t border-[#E5E4E2] flex items-center justify-between">
-                  <div className="flex items-center gap-2 text-[10px] text-[#7A7A7A]">
-                    <Sparkles className="w-3.5 h-3.5 text-[#A08C75]" />
+                <div className="pt-3 border-t border-[#E2E8F0] flex items-center justify-between">
+                  <div className="flex items-center gap-2 text-[10px] text-[#64748B]">
+                    <Sparkles className="w-3.5 h-3.5 text-[#2563EB]" />
                     <span>{t.searchRoomAdvice}</span>
                   </div>
                   <button
@@ -206,7 +206,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({ isMobile, onCloseMobile })
                       setIsOpen(false);
                       onCloseMobile?.();
                     }}
-                    className="text-[10px] uppercase tracking-wider font-bold text-[#A08C75] hover:text-[#1A1A1A] border-b border-[#A08C75]"
+                    className="text-[10px] uppercase tracking-wider font-bold text-[#2563EB] hover:text-[#0B192C] border-b border-[#2563EB]"
                   >
                     {t.searchLaunchAi}
                   </button>

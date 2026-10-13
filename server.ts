@@ -100,7 +100,7 @@ app.post('/api/ai/recommend', async (req, res) => {
       });
     }
 
-    const systemPrompt = `You are the Master Interior Stylist at 'Sarvicimobliaria', a luxury modern architectural furniture studio. 
+    const systemPrompt = `You are the Master Interior Stylist at 'SARVIC', a luxury modern architectural furniture studio. 
 Your catalog includes:
 - 'sofa-solis-boucle' (Solis Curved Bouclé Sofa)
 - 'table-travertine-arc' (Palazzo Travertine Coffee Table)
@@ -201,7 +201,7 @@ app.post('/api/ai/stylist-chat', async (req, res) => {
       });
     }
 
-    const systemInstruction = `You are the personal interior design architect and stylist for Sarvicimobliaria modern furniture studio.
+    const systemInstruction = `You are the personal interior design architect and stylist for SARVIC modern furniture studio.
 You possess deep knowledge of architectural interior design, proportions, ergonomics, lighting color temperatures, Scandinavian, Japandi, Mid-Century Modern, and Bauhaus aesthetics.
 Respond in the language requested by the user or match their language (Portuguese if Portuguese, English if English).
 Speak with an elegant, warm, sophisticated, yet approachable tone.
@@ -243,14 +243,14 @@ const buildItemsHtml = (items: any[]) => {
     .map(
       (item, idx) => `
     <tr style="border-bottom: 1px solid #E5E4E2;">
-      <td style="padding: 12px 8px; font-family: 'Georgia', serif; font-style: italic; color: #1A1A1A; font-size: 14px;">
+      <td style="padding: 12px 8px; font-family: 'Georgia', serif; font-style: italic; color: #0B192C; font-size: 14px;">
         <strong>${idx + 1}. ${item.name || item.product?.name}</strong>
         ${item.sku ? `<div style="font-size: 11px; color: #7A7A7A; font-family: sans-serif; font-style: normal;">SKU: ${item.sku}</div>` : ''}
       </td>
       <td style="padding: 12px 8px; color: #5A5A5A; font-size: 13px; font-family: sans-serif;">
         ${item.color || item.selectedColor?.name || 'Acabamento Padrão'}
       </td>
-      <td style="padding: 12px 8px; color: #1A1A1A; font-weight: bold; text-align: center; font-size: 13px; font-family: sans-serif;">
+      <td style="padding: 12px 8px; color: #0B192C; font-weight: bold; text-align: center; font-size: 13px; font-family: sans-serif;">
         ${item.quantity || 1}
       </td>
     </tr>
@@ -288,7 +288,7 @@ app.post('/api/orders/submit', async (req, res) => {
         : 'Entrega Padrão ao Domicílio / Levantamento no Showroom';
 
     console.log('====================================================');
-    console.log(`[SARVICIMOBLIARIA] NOVO PEDIDO RECEBIDO - MOÇAMBIQUE`);
+    console.log(`[SARVIC] NOVO PEDIDO RECEBIDO - MOÇAMBIQUE`);
     console.log(`Destinatário Notificação Loja: ${storeEmail}`);
     console.log(`Destinatário Cliente: ${clientEmail}`);
     console.log(`Pedido ID: ${safeOrderId}`);
@@ -306,34 +306,34 @@ app.post('/api/orders/submit', async (req, res) => {
 
     // Generate HTML for Store Administrator Email
     const adminEmailHtml = `
-      <div style="background-color: #FAF9F6; padding: 24px; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; color: #1A1A1A;">
+      <div style="background-color: #F8FAFC; padding: 24px; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; color: #0B192C;">
         <div style="max-width: 600px; margin: 0 auto; background: #FFFFFF; border: 1px solid #E5E4E2; border-radius: 4px; overflow: hidden;">
-          <div style="background-color: #1A1A1A; padding: 24px; text-align: center; color: #FFFFFF;">
-            <h1 style="font-family: 'Georgia', serif; font-style: italic; font-size: 22px; margin: 0; letter-spacing: 2px;">SARVICIMOBLIARIA</h1>
-            <p style="font-size: 11px; text-transform: uppercase; letter-spacing: 2px; color: #A08C75; margin: 6px 0 0;">Novo Pedido de Mobiliário / Trabalho</p>
+          <div style="background-color: #0B192C; padding: 24px; text-align: center; color: #FFFFFF;">
+            <h1 style="font-family: 'Georgia', serif; font-style: italic; font-size: 22px; margin: 0; letter-spacing: 2px;">SARVIC</h1>
+            <p style="font-size: 11px; text-transform: uppercase; letter-spacing: 2px; color: #2563EB; margin: 6px 0 0;">Novo Pedido de Mobiliário / Trabalho</p>
           </div>
           
           <div style="padding: 24px;">
-            <div style="background-color: #F5F2ED; border-left: 4px solid #A08C75; padding: 12px 16px; margin-bottom: 20px;">
-              <p style="margin: 0; font-size: 14px; font-weight: bold; color: #1A1A1A;">Referência do Pedido: #${safeOrderId}</p>
+            <div style="background-color: #EFF6FF; border-left: 4px solid #2563EB; padding: 12px 16px; margin-bottom: 20px;">
+              <p style="margin: 0; font-size: 14px; font-weight: bold; color: #0B192C;">Referência do Pedido: #${safeOrderId}</p>
               <p style="margin: 4px 0 0; font-size: 12px; color: #5A5A5A;">Data: ${formattedDate}</p>
             </div>
 
-            <h2 style="font-size: 14px; text-transform: uppercase; letter-spacing: 1.5px; color: #A08C75; margin-bottom: 10px; border-bottom: 1px solid #E5E4E2; padding-bottom: 4px;">1. Detalhes do Cliente</h2>
+            <h2 style="font-size: 14px; text-transform: uppercase; letter-spacing: 1.5px; color: #2563EB; margin-bottom: 10px; border-bottom: 1px solid #E5E4E2; padding-bottom: 4px;">1. Detalhes do Cliente</h2>
             <table style="width: 100%; font-size: 13px; margin-bottom: 20px; line-height: 1.6;">
-              <tr><td style="width: 35%; color: #7A7A7A;">Nome Completo:</td><td style="font-weight: bold; color: #1A1A1A;">${customerFullName}</td></tr>
-              <tr><td style="color: #7A7A7A;">E-mail:</td><td><a href="mailto:${clientEmail}" style="color: #A08C75; text-decoration: none;">${clientEmail}</a></td></tr>
-              <tr><td style="color: #7A7A7A;">Telefone / WhatsApp:</td><td style="font-weight: bold; color: #1A1A1A;">${customer?.phone || 'Não informado'}</td></tr>
+              <tr><td style="width: 35%; color: #7A7A7A;">Nome Completo:</td><td style="font-weight: bold; color: #0B192C;">${customerFullName}</td></tr>
+              <tr><td style="color: #7A7A7A;">E-mail:</td><td><a href="mailto:${clientEmail}" style="color: #2563EB; text-decoration: none;">${clientEmail}</a></td></tr>
+              <tr><td style="color: #7A7A7A;">Telefone / WhatsApp:</td><td style="font-weight: bold; color: #0B192C;">${customer?.phone || 'Não informado'}</td></tr>
               <tr><td style="color: #7A7A7A;">Endereço:</td><td>${customer?.address || ''} ${customer?.apartment ? `(${customer.apartment})` : ''}</td></tr>
               <tr><td style="color: #7A7A7A;">Cidade / Província:</td><td>${customer?.city || 'Maputo'}, ${customer?.state || 'Maputo Cidade'}, Moçambique</td></tr>
               ${customer?.zipCode ? `<tr><td style="color: #7A7A7A;">Código Postal:</td><td>${customer.zipCode}</td></tr>` : ''}
               ${notes ? `<tr><td style="color: #7A7A7A;">Instruções / Ponto Ref:</td><td style="background: #FFF8E7; padding: 4px 8px; border-radius: 2px;">${notes}</td></tr>` : ''}
             </table>
 
-            <h2 style="font-size: 14px; text-transform: uppercase; letter-spacing: 1.5px; color: #A08C75; margin-bottom: 10px; border-bottom: 1px solid #E5E4E2; padding-bottom: 4px;">2. Detalhes da Compra / Trabalho Encomendado</h2>
+            <h2 style="font-size: 14px; text-transform: uppercase; letter-spacing: 1.5px; color: #2563EB; margin-bottom: 10px; border-bottom: 1px solid #E5E4E2; padding-bottom: 4px;">2. Detalhes da Compra / Trabalho Encomendado</h2>
             <table style="width: 100%; border-collapse: collapse; margin-bottom: 20px;">
               <thead>
-                <tr style="background-color: #FAF9F6; border-bottom: 2px solid #E5E4E2; text-align: left; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: #7A7A7A;">
+                <tr style="background-color: #F8FAFC; border-bottom: 2px solid #E5E4E2; text-align: left; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: #7A7A7A;">
                   <th style="padding: 8px;">Artigo / Peça</th>
                   <th style="padding: 8px;">Cor / Acabamento</th>
                   <th style="padding: 8px; text-align: center;">Qtd</th>
@@ -344,15 +344,15 @@ app.post('/api/orders/submit', async (req, res) => {
               </tbody>
             </table>
 
-            <h2 style="font-size: 14px; text-transform: uppercase; letter-spacing: 1.5px; color: #A08C75; margin-bottom: 10px; border-bottom: 1px solid #E5E4E2; padding-bottom: 4px;">3. Logística & Pagamento</h2>
+            <h2 style="font-size: 14px; text-transform: uppercase; letter-spacing: 1.5px; color: #2563EB; margin-bottom: 10px; border-bottom: 1px solid #E5E4E2; padding-bottom: 4px;">3. Logística & Pagamento</h2>
             <table style="width: 100%; font-size: 13px; line-height: 1.6; margin-bottom: 10px;">
-              <tr><td style="width: 35%; color: #7A7A7A;">Forma de Pagamento:</td><td style="font-weight: bold; color: #1A1A1A;">${paymentLabel}</td></tr>
-              <tr><td style="color: #7A7A7A;">Modalidade de Entrega:</td><td style="color: #1A1A1A;">${deliveryLabel}</td></tr>
+              <tr><td style="width: 35%; color: #7A7A7A;">Forma de Pagamento:</td><td style="font-weight: bold; color: #0B192C;">${paymentLabel}</td></tr>
+              <tr><td style="color: #7A7A7A;">Modalidade de Entrega:</td><td style="color: #0B192C;">${deliveryLabel}</td></tr>
             </table>
           </div>
 
           <div style="background-color: #F5F5F5; padding: 16px; text-align: center; font-size: 11px; color: #7A7A7A; border-top: 1px solid #E5E4E2;">
-            Sarvicimobliaria · Arquitetura, Imobiliária & Mobiliário Fino · Moçambique
+            SARVIC · Arquitetura, Imobiliária & Mobiliário Fino · Moçambique
           </div>
         </div>
       </div>
@@ -360,30 +360,30 @@ app.post('/api/orders/submit', async (req, res) => {
 
     // Generate HTML for Customer Confirmation Email
     const customerEmailHtml = `
-      <div style="background-color: #FAF9F6; padding: 24px; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; color: #1A1A1A;">
+      <div style="background-color: #F8FAFC; padding: 24px; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; color: #0B192C;">
         <div style="max-width: 600px; margin: 0 auto; background: #FFFFFF; border: 1px solid #E5E4E2; border-radius: 4px; overflow: hidden;">
-          <div style="background-color: #1A1A1A; padding: 28px 24px; text-align: center; color: #FFFFFF;">
-            <h1 style="font-family: 'Georgia', serif; font-style: italic; font-size: 24px; margin: 0; letter-spacing: 2px;">SARVICIMOBLIARIA</h1>
-            <p style="font-size: 11px; text-transform: uppercase; letter-spacing: 2px; color: #A08C75; margin: 6px 0 0;">Confirmação de Pedido de Mobiliário</p>
+          <div style="background-color: #0B192C; padding: 28px 24px; text-align: center; color: #FFFFFF;">
+            <h1 style="font-family: 'Georgia', serif; font-style: italic; font-size: 24px; margin: 0; letter-spacing: 2px;">SARVIC</h1>
+            <p style="font-size: 11px; text-transform: uppercase; letter-spacing: 2px; color: #2563EB; margin: 6px 0 0;">Confirmação de Pedido de Mobiliário</p>
           </div>
           
           <div style="padding: 24px;">
-            <p style="font-size: 15px; color: #1A1A1A; margin-top: 0;">
+            <p style="font-size: 15px; color: #0B192C; margin-top: 0;">
               Prezado(a) <strong>${customerFullName}</strong>,
             </p>
             <p style="font-size: 13px; color: #5A5A5A; line-height: 1.6;">
-              Agradecemos a sua preferência pela <strong>Sarvicimobliaria</strong>. O seu pedido foi registado com sucesso e os detalhes completos do trabalho foram encaminhados para o nosso ateliê de produção e equipa de atendimento em Moçambique.
+              Agradecemos a sua preferência pela <strong>SARVIC</strong>. O seu pedido foi registado com sucesso e os detalhes completos do trabalho foram encaminhados para o nosso ateliê de produção e equipa de atendimento em Moçambique.
             </p>
 
-            <div style="background-color: #F5F2ED; border-left: 4px solid #A08C75; padding: 12px 16px; margin: 20px 0;">
-              <p style="margin: 0; font-size: 14px; font-weight: bold; color: #1A1A1A;">Código do Pedido: #${safeOrderId}</p>
+            <div style="background-color: #EFF6FF; border-left: 4px solid #2563EB; padding: 12px 16px; margin: 20px 0;">
+              <p style="margin: 0; font-size: 14px; font-weight: bold; color: #0B192C;">Código do Pedido: #${safeOrderId}</p>
               <p style="margin: 4px 0 0; font-size: 12px; color: #5A5A5A;">Data do Registo: ${formattedDate}</p>
             </div>
 
-            <h2 style="font-size: 14px; text-transform: uppercase; letter-spacing: 1.5px; color: #A08C75; margin-bottom: 10px; border-bottom: 1px solid #E5E4E2; padding-bottom: 4px;">Peças Encomendadas</h2>
+            <h2 style="font-size: 14px; text-transform: uppercase; letter-spacing: 1.5px; color: #2563EB; margin-bottom: 10px; border-bottom: 1px solid #E5E4E2; padding-bottom: 4px;">Peças Encomendadas</h2>
             <table style="width: 100%; border-collapse: collapse; margin-bottom: 20px;">
               <thead>
-                <tr style="background-color: #FAF9F6; border-bottom: 2px solid #E5E4E2; text-align: left; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: #7A7A7A;">
+                <tr style="background-color: #F8FAFC; border-bottom: 2px solid #E5E4E2; text-align: left; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: #7A7A7A;">
                   <th style="padding: 8px;">Artigo / Design</th>
                   <th style="padding: 8px;">Acabamento</th>
                   <th style="padding: 8px; text-align: center;">Qtd</th>
@@ -394,7 +394,7 @@ app.post('/api/orders/submit', async (req, res) => {
               </tbody>
             </table>
 
-            <h2 style="font-size: 14px; text-transform: uppercase; letter-spacing: 1.5px; color: #A08C75; margin-bottom: 10px; border-bottom: 1px solid #E5E4E2; padding-bottom: 4px;">Informações de Entrega & Contacto</h2>
+            <h2 style="font-size: 14px; text-transform: uppercase; letter-spacing: 1.5px; color: #2563EB; margin-bottom: 10px; border-bottom: 1px solid #E5E4E2; padding-bottom: 4px;">Informações de Entrega & Contacto</h2>
             <table style="width: 100%; font-size: 13px; line-height: 1.6; margin-bottom: 20px;">
               <tr><td style="width: 35%; color: #7A7A7A;">Endereço de Entrega:</td><td>${customer?.address || ''} ${customer?.apartment ? `(${customer.apartment})` : ''} - ${customer?.city || 'Maputo'}, ${customer?.state || 'Maputo Cidade'}</td></tr>
               <tr><td style="color: #7A7A7A;">Telefone / WhatsApp:</td><td style="font-weight: bold;">${customer?.phone || 'Informado'}</td></tr>
@@ -402,16 +402,16 @@ app.post('/api/orders/submit', async (req, res) => {
               <tr><td style="color: #7A7A7A;">Preferência de Pagamento:</td><td style="font-weight: bold;">${paymentLabel}</td></tr>
             </table>
 
-            <div style="background-color: #FAF9F6; border: 1px solid #E5E4E2; padding: 14px; border-radius: 4px; margin-top: 20px;">
-              <h3 style="margin: 0 0 6px; font-size: 13px; color: #1A1A1A;">Próximos Passos:</h3>
+            <div style="background-color: #F8FAFC; border: 1px solid #E5E4E2; padding: 14px; border-radius: 4px; margin-top: 20px;">
+              <h3 style="margin: 0 0 6px; font-size: 13px; color: #0B192C;">Próximos Passos:</h3>
               <p style="margin: 0; font-size: 12px; color: #5A5A5A; line-height: 1.5;">
                 A nossa equipa comercial entrará em contacto consigo por WhatsApp ou chamada telefónica para confirmar os detalhes de acabamento, alinhar a data ideal de entrega especializada e formalizar o pagamento conforme a sua opção seleccionada.
               </p>
             </div>
           </div>
 
-          <div style="background-color: #1A1A1A; padding: 18px; text-align: center; font-size: 11px; color: #DEDCD7;">
-            <p style="margin: 0 0 4px; font-weight: bold; color: #FFFFFF;">Sarvicimobliaria Moçambique</p>
+          <div style="background-color: #0B192C; padding: 18px; text-align: center; font-size: 11px; color: #DEDCD7;">
+            <p style="margin: 0 0 4px; font-weight: bold; color: #FFFFFF;">SARVIC Moçambique</p>
             <p style="margin: 0;">E-mail: bestfurniture79@gmail.com | WhatsApp: +258 84 920 1842</p>
           </div>
         </div>
@@ -425,7 +425,7 @@ app.post('/api/orders/submit', async (req, res) => {
       
       // Dispatch email to store owner
       await transporter.sendMail({
-        from: '"Sarvicimobliaria Studio" <orders@sarvicimobliaria.co.mz>',
+        from: '"SARVIC Studio" <bestfurniture79@gmail.com>',
         to: storeEmail,
         subject: `[Novo Pedido #${safeOrderId}] Mobiliário - ${customerFullName} (${items.length} itens)`,
         html: adminEmailHtml,
@@ -435,11 +435,11 @@ app.post('/api/orders/submit', async (req, res) => {
       // Dispatch confirmation email to client if valid email provided
       if (clientEmail && clientEmail.includes('@')) {
         await transporter.sendMail({
-          from: '"Sarvicimobliaria Studio" <orders@sarvicimobliaria.co.mz>',
+          from: '"SARVIC Studio" <bestfurniture79@gmail.com>',
           to: clientEmail,
-          subject: `Confirmação de Pedido #${safeOrderId} - Sarvicimobliaria`,
+          subject: `Confirmação de Pedido #${safeOrderId} - SARVIC`,
           html: customerEmailHtml,
-          text: `Olá ${customerFullName}, recebemos o seu pedido #${safeOrderId} na Sarvicimobliaria. Nossa equipa entrará em contacto em breve para alinhar os detalhes e a entrega.`,
+          text: `Olá ${customerFullName}, recebemos o seu pedido #${safeOrderId} na SARVIC. Nossa equipa entrará em contacto em breve para alinhar os detalhes e a entrega.`,
         });
       }
     } catch (mailError) {

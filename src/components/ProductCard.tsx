@@ -12,7 +12,7 @@ interface ProductCardProps {
 
 export const ProductCard: React.FC<ProductCardProps> = ({ product, onOpenDetail }) => {
   const { addToCart, toggleWishlist, isInWishlist, openProductDetail, setIsAIStylistOpen } = useShop();
-  const { t, formatCurrency } = useLanguage();
+  const { t, language } = useLanguage();
 
   const [selectedColor, setSelectedColor] = useState<ColorOption>(product.colors[0]);
   const [isHovered, setIsHovered] = useState(false);
@@ -20,9 +20,8 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onOpenDetail 
 
   const inWishlist = isInWishlist(product.id);
 
-  // Derive current image index based on selected color or hover state
   const currentImage = isHovered && product.images.length > 1
-    ? product.images[1] // show alternative angle / lifestyle on hover
+    ? product.images[1]
     : product.images[selectedColor?.imageIndex ?? 0] || product.images[0];
 
   const handleQuickAdd = (e: React.MouseEvent) => {
@@ -54,19 +53,19 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onOpenDetail 
       initial={{ opacity: 0, y: 16 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.3 }}
-      className="group relative flex flex-col bg-white rounded-sm border border-[#E5E4E2] hover:border-[#1A1A1A] hover:shadow-lg transition-all duration-300 overflow-hidden cursor-pointer"
+      className="group relative flex flex-col bg-white rounded-sm border border-[#E2E8F0] hover:border-[#2563EB] hover:shadow-lg transition-all duration-300 overflow-hidden cursor-pointer"
     >
       {/* Product Image Stage */}
-      <div className="relative aspect-[4/3] bg-[#F5F5F5] overflow-hidden">
+      <div className="relative aspect-[4/3] bg-[#F1F5F9] overflow-hidden">
         {/* Badges top left */}
         <div className="absolute top-3 left-3 z-10 flex flex-col gap-1.5 pointer-events-none">
           {product.isBestSeller && (
-            <span className="px-2.5 py-0.5 rounded-xs text-[9px] font-bold uppercase tracking-[0.2em] bg-[#1A1A1A] text-white shadow-xs">
+            <span className="px-2.5 py-0.5 rounded-xs text-[9px] font-bold uppercase tracking-[0.2em] bg-[#0B192C] text-white shadow-xs">
               {t.cardSignature}
             </span>
           )}
           {product.isNew && (
-            <span className="px-2.5 py-0.5 rounded-xs text-[9px] font-bold uppercase tracking-[0.2em] bg-[#A08C75] text-white shadow-xs">
+            <span className="px-2.5 py-0.5 rounded-xs text-[9px] font-bold uppercase tracking-[0.2em] bg-[#2563EB] text-white shadow-xs">
               {t.cardNewArrival}
             </span>
           )}
@@ -78,8 +77,8 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onOpenDetail 
           onClick={handleWishlistToggle}
           className={`absolute top-3 right-3 z-20 w-8 h-8 rounded-full flex items-center justify-center backdrop-blur-md transition-all shadow-xs ${
             inWishlist
-              ? 'bg-[#A08C75] text-white'
-              : 'bg-white/80 hover:bg-white text-[#1A1A1A] hover:text-[#A08C75]'
+              ? 'bg-[#2563EB] text-white'
+              : 'bg-white/85 hover:bg-white text-[#0B192C] hover:text-[#2563EB]'
           }`}
           aria-label={inWishlist ? 'Remove from wishlist' : 'Save to wishlist'}
         >
@@ -103,8 +102,8 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onOpenDetail 
             disabled={isAdding}
             className={`flex-1 py-2 px-3 rounded-sm text-[10px] uppercase font-bold tracking-wider backdrop-blur-md flex items-center justify-center gap-1.5 shadow-md transition-all active:scale-95 ${
               isAdding
-                ? 'bg-[#A08C75] text-white'
-                : 'bg-[#1A1A1A] hover:bg-black text-white'
+                ? 'bg-[#0284C7] text-white'
+                : 'bg-[#0284C7] hover:bg-[#0369A1] text-white'
             }`}
           >
             <ShoppingBag className="w-3.5 h-3.5" />
@@ -117,7 +116,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onOpenDetail 
               e.stopPropagation();
               openProductDetail(product.id);
             }}
-            className="p-2 rounded-sm bg-white/90 hover:bg-white text-[#1A1A1A] border border-[#E5E4E2] backdrop-blur-md shadow-md transition-all"
+            className="p-2 rounded-sm bg-white/95 hover:bg-white text-[#0B192C] border border-[#CBD5E1] backdrop-blur-md shadow-md transition-all"
             title="Inspect full details"
           >
             <Eye className="w-3.5 h-3.5" />
@@ -128,20 +127,20 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onOpenDetail 
       {/* Product Content info */}
       <div className="p-4 flex-1 flex flex-col justify-between space-y-3">
         <div className="space-y-1">
-          <div className="flex items-center justify-between text-[10px] uppercase tracking-[0.2em] font-bold text-[#A08C75]">
+          <div className="flex items-center justify-between text-[10px] uppercase tracking-[0.2em] font-bold text-[#0284C7]">
             <span className="capitalize">{product.category}</span>
-            <div className="flex items-center gap-1 text-[#1A1A1A]">
-              <Star className="w-3 h-3 text-[#A08C75] fill-current" />
+            <div className="flex items-center gap-1 text-[#0C4A6E]">
+              <Star className="w-3 h-3 text-[#0284C7] fill-current" />
               <span className="font-bold text-[10px]">{product.rating}</span>
-              <span className="text-[#7A7A7A]">({product.reviewCount})</span>
+              <span className="text-[#64748B]">({product.reviewCount})</span>
             </div>
           </div>
 
-          <h3 className="font-serif italic font-bold text-sm sm:text-base text-[#1A1A1A] group-hover:text-[#A08C75] transition-colors line-clamp-1">
+          <h3 className="font-serif italic font-bold text-sm sm:text-base text-[#0C4A6E] group-hover:text-[#0284C7] transition-colors line-clamp-1">
             {product.name}
           </h3>
 
-          <p className="text-[11px] text-[#7A7A7A] line-clamp-1 font-light">
+          <p className="text-[11px] text-[#64748B] line-clamp-1 font-light">
             {product.subtitle}
           </p>
         </div>
@@ -157,23 +156,25 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onOpenDetail 
                 style={{ backgroundColor: color.hex }}
                 className={`w-3.5 h-3.5 rounded-full border transition-all ${
                   selectedColor.name === color.name
-                    ? 'ring-1 ring-[#1A1A1A] ring-offset-1 scale-110 border-transparent'
-                    : 'border-[#E5E4E2] hover:scale-105'
+                    ? 'ring-1 ring-[#0284C7] ring-offset-1 scale-110 border-transparent'
+                    : 'border-[#CBD5E1] hover:scale-105'
                 }`}
                 title={color.name}
                 aria-label={`Select color ${color.name}`}
               />
             ))}
-            <span className="text-[9px] uppercase tracking-wider text-[#7A7A7A] ml-1">
+            <span className="text-[9px] uppercase tracking-wider text-[#64748B] ml-1">
               {product.colors.length} {t.cardShades}
             </span>
           </div>
         )}
 
         {/* Card footer details & styling trigger */}
-        <div className="pt-2 border-t border-[#E5E4E2] flex items-center justify-between">
-          <div className="flex items-center gap-1.5 text-[10px] uppercase font-bold tracking-wider text-[#7A7A7A]">
-            <span>{product.inStock ? t.heroInStock : 'Sob Encomenda'}</span>
+        <div className="pt-2 border-t border-[#E0F2FE] flex items-center justify-between">
+          <div className="flex items-center gap-1.5 text-[10px] uppercase font-bold tracking-wider">
+            <span className="text-[#0284C7] bg-[#F0F9FF] px-1.5 py-0.5 rounded-xs border border-[#BAE6FD]">
+              {language === 'pt' ? 'Preço sob Consulta' : 'On Request'}
+            </span>
           </div>
 
           <button
@@ -182,10 +183,10 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onOpenDetail 
               e.stopPropagation();
               setIsAIStylistOpen(true, product);
             }}
-            className="text-[10px] uppercase tracking-wider font-bold text-[#A08C75] hover:text-[#1A1A1A] flex items-center gap-1 border-b border-[#A08C75]"
+            className="text-[10px] uppercase tracking-wider font-bold text-[#0284C7] hover:text-[#0C4A6E] flex items-center gap-1 border-b border-[#0284C7]"
             title="Get AI style pairing tips for this piece"
           >
-            <Sparkles className="w-2.5 h-2.5 text-[#A08C75]" />
+            <Sparkles className="w-2.5 h-2.5 text-[#0EA5E9]" />
             <span>{t.cardStyleAi}</span>
           </button>
         </div>
@@ -193,3 +194,4 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onOpenDetail 
     </motion.div>
   );
 };
+export default ProductCard;

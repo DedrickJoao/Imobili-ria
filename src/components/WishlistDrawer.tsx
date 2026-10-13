@@ -35,20 +35,20 @@ const WishlistDrawerContent: React.FC = () => {
           animate={{ x: 0 }}
           exit={{ x: '100%' }}
           transition={{ type: 'spring', damping: 25, stiffness: 220 }}
-          className="w-screen max-w-md bg-[#FAF9F6] shadow-2xl flex flex-col justify-between border-l border-[#E5E4E2]"
+          className="w-screen max-w-md bg-[#F8FAFC] shadow-2xl flex flex-col justify-between border-l border-[#E2E8F0]"
         >
           {/* Top Bar */}
-          <div className="p-4 sm:p-6 border-b border-[#E5E4E2] bg-[#FAF9F6] flex items-center justify-between">
+          <div className="p-4 sm:p-6 border-b border-[#E2E8F0] bg-[#F8FAFC] flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <Heart className="w-4 h-4 text-[#A08C75] fill-current" />
-              <h2 className="font-serif italic text-base sm:text-lg font-bold text-[#1A1A1A]">
+              <Heart className="w-4 h-4 text-[#2563EB] fill-current" />
+              <h2 className="font-serif italic text-base sm:text-lg font-bold text-[#0B192C]">
                 {t.wishlistTitle} ({wishlistProducts.length})
               </h2>
             </div>
             <button
               id="wishlist-drawer-close-btn"
               onClick={() => setIsWishlistOpen(false)}
-              className="p-1.5 rounded-sm text-[#1A1A1A] hover:bg-[#E5E4E2] transition-colors"
+              className="p-1.5 rounded-sm text-[#0B192C] hover:bg-[#E2E8F0] transition-colors"
               aria-label="Close wishlist"
             >
               <X className="w-4 h-4" />
@@ -62,7 +62,7 @@ const WishlistDrawerContent: React.FC = () => {
                 <div
                   key={prod.id}
                   id={`wishlist-item-${prod.id}`}
-                  className="p-3.5 rounded-sm bg-white border border-[#E5E4E2] flex gap-3.5 shadow-xs"
+                  className="p-3.5 rounded-sm bg-white border border-[#E2E8F0] flex gap-3.5 shadow-xs"
                 >
                   <img
                     src={prod.images[0]}
@@ -83,26 +83,26 @@ const WishlistDrawerContent: React.FC = () => {
                             setIsWishlistOpen(false);
                             openProductDetail(prod.id);
                           }}
-                          className="font-serif italic text-xs sm:text-sm font-bold text-[#1A1A1A] hover:text-[#A08C75] transition-colors truncate cursor-pointer"
+                          className="font-serif italic text-xs sm:text-sm font-bold text-[#0B192C] hover:text-[#2563EB] transition-colors truncate cursor-pointer"
                         >
                           {prod.name}
                         </h4>
                         <button
                           id={`wishlist-remove-${prod.id}`}
                           onClick={() => toggleWishlist(prod.id)}
-                          className="text-[#7A7A7A] hover:text-[#1A1A1A] transition-colors p-1"
+                          className="text-[#64748B] hover:text-[#0B192C] transition-colors p-1"
                           title="Remove from saved"
                         >
                           <Trash2 className="w-3.5 h-3.5" />
                         </button>
                       </div>
-                      <p className="text-[10px] text-[#7A7A7A] truncate mt-0.5 font-light">
+                      <p className="text-[10px] text-[#64748B] truncate mt-0.5 font-light">
                         {prod.materials.join(' · ')}
                       </p>
                     </div>
 
-                    <div className="flex items-center justify-between mt-2 pt-2 border-t border-[#E5E4E2]">
-                      <span className="text-[10px] uppercase font-bold text-[#7A7A7A] tracking-wider">
+                    <div className="flex items-center justify-between mt-2 pt-2 border-t border-[#E2E8F0]">
+                      <span className="text-[10px] uppercase font-bold text-[#64748B] tracking-wider">
                         {prod.inStock ? t.heroInStock : 'Sob Encomenda'}
                       </span>
 
@@ -111,7 +111,7 @@ const WishlistDrawerContent: React.FC = () => {
                         onClick={() => {
                           addToCart(prod, prod.colors[0], 1);
                         }}
-                        className="px-3 py-1.5 rounded-sm bg-[#1A1A1A] hover:bg-black text-white text-[10px] uppercase tracking-wider font-bold flex items-center gap-1.5 transition-colors"
+                        className="px-3 py-1.5 rounded-sm bg-[#0B192C] hover:bg-black text-white text-[10px] uppercase tracking-wider font-bold flex items-center gap-1.5 transition-colors"
                       >
                         <ShoppingBag className="w-3 h-3" />
                         <span>{t.wishlistMoveToBag}</span>
@@ -122,12 +122,12 @@ const WishlistDrawerContent: React.FC = () => {
               ))
             ) : (
               <div className="py-16 text-center space-y-4">
-                <div className="w-14 h-14 rounded-full bg-[#F5F2ED] border border-[#E5E4E2] flex items-center justify-center mx-auto text-[#7A7A7A]">
+                <div className="w-14 h-14 rounded-full bg-[#EFF6FF] border border-[#E2E8F0] flex items-center justify-center mx-auto text-[#64748B]">
                   <Heart className="w-6 h-6" />
                 </div>
                 <div className="space-y-1">
-                  <h3 className="font-serif italic text-base font-bold text-[#1A1A1A]">{t.wishlistEmptyTitle}</h3>
-                  <p className="text-xs text-[#7A7A7A] max-w-xs mx-auto font-light">
+                  <h3 className="font-serif italic text-base font-bold text-[#0B192C]">{t.wishlistEmptyTitle}</h3>
+                  <p className="text-xs text-[#64748B] max-w-xs mx-auto font-light">
                     {t.wishlistEmptyDesc}
                   </p>
                 </div>
@@ -137,14 +137,14 @@ const WishlistDrawerContent: React.FC = () => {
 
           {/* Bottom button */}
           {wishlistProducts.length > 0 && (
-            <div className="p-4 sm:p-6 bg-white border-t border-[#E5E4E2]">
+            <div className="p-4 sm:p-6 bg-white border-t border-[#E2E8F0]">
               <button
                 id="wishlist-add-all-btn"
                 onClick={() => {
                   wishlistProducts.forEach(p => addToCart(p, p.colors[0], 1));
                   setIsWishlistOpen(false);
                 }}
-                className="w-full py-3 px-4 rounded-sm bg-[#1A1A1A] hover:bg-black text-white text-[10px] uppercase font-bold tracking-widest flex items-center justify-center gap-2 transition-colors"
+                className="w-full py-3 px-4 rounded-sm bg-[#0B192C] hover:bg-black text-white text-[10px] uppercase font-bold tracking-widest flex items-center justify-center gap-2 transition-colors"
               >
                 <ShoppingBag className="w-3.5 h-3.5" />
                 <span>{t.wishlistAddAll}</span>

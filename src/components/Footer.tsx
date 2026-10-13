@@ -1,46 +1,52 @@
 import React, { useState } from 'react';
-import { useShop } from '../context/ShopContext';
 import { useLanguage } from '../context/LanguageContext';
-import { Sparkles, ArrowRight, CheckCircle2 } from 'lucide-react';
+import { useShop } from '../context/ShopContext';
+import { BrandLogo } from './BrandLogo';
+import { ArrowRight, CheckCircle2, Sparkles, Mail, MapPin, Phone } from 'lucide-react';
 
-export const Footer: React.FC = () => {
-  const { setFilter, setIsAIStylistOpen } = useShop();
+interface FooterProps {
+  onNavigateToCatalogs?: () => void;
+}
+
+export const Footer: React.FC<FooterProps> = ({ onNavigateToCatalogs }) => {
   const { t, language } = useLanguage();
+  const { setFilter, setIsAIStylistOpen } = useShop();
   const [email, setEmail] = useState('');
   const [subscribed, setSubscribed] = useState(false);
 
   const handleSubscribe = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!email.trim()) return;
+    if (!email) return;
     setSubscribed(true);
-    setEmail('');
+    setTimeout(() => {
+      setSubscribed(false);
+      setEmail('');
+    }, 4000);
   };
 
   return (
-    <footer className="bg-[#1A1A1A] text-[#FAF9F6] pt-16 pb-12 border-t border-[#2A2A28]">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
+    <footer id="main-footer" className="bg-[#0C2A44] text-[#F8FAFC] border-t border-[#1E456B]">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 lg:py-20 space-y-16">
         
-        {/* Newsletter & Brand Statement */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 pb-12 border-b border-[#2A2A28] items-center">
-          <div className="lg:col-span-6 space-y-2">
-            <div className="flex items-center gap-2 text-xs uppercase tracking-widest text-[#A08C75] font-bold">
-              <span>{t.footerPrivateCircle}</span>
-            </div>
-            <h3 className="font-serif italic text-2xl sm:text-3xl font-bold text-[#FAF9F6]">
+        {/* Newsletter Section */}
+        <div className="p-8 sm:p-10 rounded-sm bg-[#0F3556] border border-[#38BDF8]/30 flex flex-col lg:flex-row items-center justify-between gap-8">
+          <div className="space-y-2 max-w-xl text-center lg:text-left">
+            <span className="text-[10px] uppercase font-bold tracking-[0.25em] text-[#38BDF8] block">
+              {t.footerPrivateCircle}
+            </span>
+            <h3 className="font-serif italic text-2xl sm:text-3xl font-bold text-white">
               {t.footerNewsletterTitle}
             </h3>
-            <p className="text-xs sm:text-sm text-[#A89F96] max-w-lg">
+            <p className="text-xs text-[#94A3B8] leading-relaxed font-light">
               {t.footerNewsletterDesc}
             </p>
           </div>
 
-          <div className="lg:col-span-6">
+          <div className="w-full lg:w-auto min-w-[320px]">
             {subscribed ? (
-              <div className="p-4 rounded-sm bg-[#232320] border border-[#3D3D38] flex items-center gap-3 text-xs text-emerald-400">
-                <CheckCircle2 className="w-5 h-5 shrink-0" />
-                <span>
-                  {t.footerWelcomeCode} <strong className="text-white">WELCOME10</strong>
-                </span>
+              <div className="flex items-center gap-2 text-emerald-400 bg-emerald-950/60 p-4 rounded-sm border border-emerald-800 text-xs">
+                <CheckCircle2 className="w-4 h-4 shrink-0" />
+                <span>{t.footerWelcomeToast}</span>
               </div>
             ) : (
               <form onSubmit={handleSubscribe} className="flex flex-col sm:flex-row gap-2">
@@ -51,12 +57,12 @@ export const Footer: React.FC = () => {
                   value={email}
                   onChange={e => setEmail(e.target.value)}
                   placeholder={t.footerEmailPlaceholder}
-                  className="flex-1 bg-[#232320] border border-[#3D3D38] rounded-sm px-4 py-3 text-xs text-white placeholder:text-[#8C827A] focus:outline-none focus:border-[#A08C75]"
+                  className="flex-1 bg-[#0A2238] border border-[#1E456B] rounded-sm px-4 py-3 text-xs text-white placeholder:text-[#64748B] focus:outline-none focus:border-[#38BDF8]"
                 />
                 <button
                   id="newsletter-subscribe-btn"
                   type="submit"
-                  className="px-6 py-3 rounded-sm bg-[#A08C75] hover:bg-[#8e7a64] text-white text-xs font-semibold uppercase tracking-wider flex items-center justify-center gap-2 transition-colors shrink-0"
+                  className="px-6 py-3 rounded-sm bg-[#0284C7] hover:bg-[#0369A1] text-white text-xs font-semibold uppercase tracking-wider flex items-center justify-center gap-2 transition-colors shrink-0 shadow-sm"
                 >
                   <span>{t.footerSubscribeBtn}</span>
                   <ArrowRight className="w-4 h-4" />
@@ -70,21 +76,32 @@ export const Footer: React.FC = () => {
         <div className="grid grid-cols-2 md:grid-cols-5 gap-8 text-xs">
           {/* Brand Info */}
           <div className="col-span-2 space-y-4">
-            <span className="font-serif italic text-xl font-bold tracking-tight text-white block">
-              {t.brandName.toUpperCase()}
-            </span>
-            <p className="text-[#A89F96] leading-relaxed max-w-sm font-light">
+            <BrandLogo variant="light" size="md" isFooter={true} />
+            <p className="text-[#94A3B8] leading-relaxed max-w-sm font-light">
               {t.footerAboutBrand}
             </p>
-            <div className="flex items-center gap-3 text-[#A89F96] text-[11px] font-mono">
-              <span>{t.footerStudioLocations}</span>
+            <div className="space-y-1.5 text-[#94A3B8] text-[11px] pt-1">
+              <div className="flex items-center gap-2">
+                <Mail className="w-3.5 h-3.5 text-[#60A5FA]" />
+                <a href="mailto:bestfurniture79@gmail.com" className="hover:text-white transition-colors underline font-medium">
+                  bestfurniture79@gmail.com
+                </a>
+              </div>
+              <div className="flex items-center gap-2">
+                <Phone className="w-3.5 h-3.5 text-[#60A5FA]" />
+                <span>+258 84 920 1842</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <MapPin className="w-3.5 h-3.5 text-[#60A5FA]" />
+                <span>Maputo, Moçambique</span>
+              </div>
             </div>
           </div>
 
           {/* Categories */}
           <div className="space-y-3">
             <h4 className="font-bold text-white uppercase tracking-wider text-[11px]">{t.footerCollection}</h4>
-            <ul className="space-y-2 text-[#A89F96]">
+            <ul className="space-y-2 text-[#94A3B8]">
               <li>
                 <button
                   onClick={() => setFilter({ category: 'sofas', searchQuery: '' })}
@@ -128,16 +145,24 @@ export const Footer: React.FC = () => {
             </ul>
           </div>
 
-          {/* AI & Services */}
+          {/* AI & Digital Catalogs */}
           <div className="space-y-3">
             <h4 className="font-bold text-white uppercase tracking-wider text-[11px]">{t.footerExperience}</h4>
-            <ul className="space-y-2 text-[#A89F96]">
+            <ul className="space-y-2 text-[#94A3B8]">
+              <li>
+                <button
+                  onClick={onNavigateToCatalogs}
+                  className="text-[#60A5FA] hover:text-white font-semibold flex items-center gap-1 transition-colors"
+                >
+                  <span>{language === 'pt' ? 'Catálogos Modernos 2026' : 'Modern 2026 Catalogs'}</span>
+                </button>
+              </li>
               <li>
                 <button
                   onClick={() => setIsAIStylistOpen(true)}
-                  className="text-[#A08C75] hover:underline font-semibold flex items-center gap-1"
+                  className="hover:text-white font-medium flex items-center gap-1 transition-colors"
                 >
-                  <Sparkles className="w-3 h-3 text-[#A08C75]" />
+                  <Sparkles className="w-3 h-3 text-[#60A5FA]" />
                   <span>{t.aiModalTitle}</span>
                 </button>
               </li>
@@ -148,12 +173,7 @@ export const Footer: React.FC = () => {
               </li>
               <li>
                 <span className="hover:text-white cursor-pointer transition-colors">
-                  {language === 'pt' ? 'Programa Corporativo & Arquitetos' : 'Trade & Contract Program'}
-                </span>
-              </li>
-              <li>
-                <span className="hover:text-white cursor-pointer transition-colors">
-                  {language === 'pt' ? 'Seleção Personalizada de Pedras' : 'Custom Stone Sourcing'}
+                  {language === 'pt' ? 'Atendimento no Escritório' : 'Office Consultations'}
                 </span>
               </li>
             </ul>
@@ -162,19 +182,19 @@ export const Footer: React.FC = () => {
           {/* Guarantees */}
           <div className="space-y-3">
             <h4 className="font-bold text-white uppercase tracking-wider text-[11px]">{t.footerAssurance}</h4>
-            <ul className="space-y-2 text-[#A89F96]">
+            <ul className="space-y-2 text-[#94A3B8]">
               <li>{t.announcementWarranty}</li>
-              <li>{language === 'pt' ? '30 Dias de Teste Residencial' : '30-Day In-Home Trial'}</li>
+              <li>{language === 'pt' ? 'Garantia Estrutural 10 Anos' : '10-Year Frame Warranty'}</li>
               <li>{language === 'pt' ? 'Madeiras FSC com Certificação' : 'FSC-Certified Solid Timber'}</li>
-              <li>{language === 'pt' ? 'Fibras Naturais & Lã Italiana' : 'Durable Olefin & Wool Weaves'}</li>
+              <li>{language === 'pt' ? 'Montagem White-Glove Inclusa' : 'White-Glove Setup Included'}</li>
             </ul>
           </div>
         </div>
 
         {/* Bottom bar */}
-        <div className="pt-8 border-t border-[#2A2A28] flex flex-col sm:flex-row items-center justify-between gap-4 text-[11px] text-[#8C827A]">
+        <div className="pt-8 border-t border-[#1E293B] flex flex-col sm:flex-row items-center justify-between gap-4 text-[11px] text-[#64748B]">
           <div>
-            © {new Date().getFullYear()} {t.brandName} Studio Inc. {t.footerAllRights}
+            © {new Date().getFullYear()} SARVIC Studio Inc. {t.footerAllRights}
           </div>
           <div className="flex items-center gap-6">
             <span className="hover:text-white cursor-pointer">{t.footerPrivacy}</span>
@@ -187,3 +207,4 @@ export const Footer: React.FC = () => {
     </footer>
   );
 };
+export default Footer;

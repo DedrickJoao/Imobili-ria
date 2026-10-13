@@ -1,0 +1,57 @@
+<svg width="1268" height="948" viewBox="0 0 1268 948" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="sarvicBlueGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0284C7" />
+      <stop offset="50%" stop-color="#0369A1" />
+      <stop offset="100%" stop-color="#0C4A6E" />
+    </linearGradient>
+    <linearGradient id="sarvicLightGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#38BDF8" />
+      <stop offset="100%" stop-color="#0284C7" />
+    </linearGradient>
+  </defs>
+
+  <!-- Architectural Emblem -->
+  <g transform="translate(534, 130)">
+    <!-- Diamond / Hexagon Facets representing fine furniture and modern architecture -->
+    <path d="M100 0 L185 50 L185 150 L100 200 L15 150 L15 50 Z" fill="none" stroke="url(#sarvicBlueGrad)" stroke-width="6" stroke-linejoin="round"/>
+    <path d="M100 15 L170 56 L170 144 L100 185 L30 144 L30 56 Z" fill="none" stroke="#BAE6FD" stroke-width="2" opacity="0.6"/>
+    
+    <!-- Stylized Architectural 'S' & Furniture Structure -->
+    <path d="M100 35 L145 62 L145 105 L100 130 L70 112 L70 90 L100 108 L125 93 L125 74 L100 58 L65 78 L65 125 L100 148 L140 125" 
+          fill="none" stroke="url(#sarvicBlueGrad)" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/>
+    
+    <circle cx="100" cy="100" r="8" fill="#0284C7" />
+  </g>
+
+  <!-- Brand Name: SARVIC -->
+  <text x="634" y="490" 
+        text-anchor="middle" 
+        font-family="'DejaVu Serif', 'Liberation Serif', Georgia, serif" 
+        font-size="140" 
+        font-weight="bold" 
+        letter-spacing="18" 
+        fill="#0C4A6E">SARVIC</text>
+
+  <!-- Subtitle: MÓVEIS -->
+  <text x="634" y="600" 
+        text-anchor="middle" 
+        font-family="'Liberation Sans', 'DejaVu Sans', sans-serif" 
+        font-size="48" 
+        font-weight="900" 
+        letter-spacing="26" 
+        fill="#0369A1">MÓVEIS</text>
+
+  <!-- Accent Divider Line -->
+  <line x1="434" y1="655" x2="834" y2="655" stroke="#0284C7" stroke-width="4" stroke-linecap="round"/>
+  <circle cx="634" cy="655" r="5" fill="#0284C7"/>
+
+  <!-- Slogan -->
+  <text x="634" y="720" 
+        text-anchor="middle" 
+        font-family="'Liberation Sans', 'DejaVu Sans', sans-serif" 
+        font-size="24" 
+        font-weight="600" 
+        letter-spacing="10" 
+        fill="#0C4A6E">DESIGN CONTEMPORÂNEO &amp; ARQUITETURA</text>
+</svg>

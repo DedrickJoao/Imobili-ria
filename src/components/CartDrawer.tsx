@@ -140,14 +140,14 @@ const CartDrawerContent: React.FC = () => {
                               setIsCartOpen(false);
                               openProductDetail(item.productId);
                             }}
-                            className="font-serif italic text-xs sm:text-sm font-bold text-[#1A1A1A] hover:text-[#A08C75] transition-colors truncate cursor-pointer"
+                            className="font-serif italic text-xs sm:text-sm font-bold text-[#0B192C] hover:text-[#2563EB] transition-colors truncate cursor-pointer"
                           >
                             {item.product.name}
                           </h4>
                           <button
                             id={`cart-remove-${item.id}`}
                             onClick={() => removeFromCart(item.id)}
-                            className="text-[#7A7A7A] hover:text-[#1A1A1A] transition-colors p-1"
+                            className="text-[#64748B] hover:text-[#0B192C] transition-colors p-1"
                             title="Remove item"
                           >
                             <Trash2 className="w-3.5 h-3.5" />
@@ -160,35 +160,35 @@ const CartDrawerContent: React.FC = () => {
                             className="w-2.5 h-2.5 rounded-full border border-black/10 shrink-0"
                             style={{ backgroundColor: item.selectedColor.hex }}
                           />
-                          <span className="text-[10px] uppercase tracking-wider text-[#7A7A7A] truncate">
+                          <span className="text-[10px] uppercase tracking-wider text-[#64748B] truncate">
                             {item.selectedColor.name}
                           </span>
                         </div>
                       </div>
 
                       {/* Quantity & Item status */}
-                      <div className="flex items-center justify-between mt-2 pt-2 border-t border-[#E5E4E2]">
-                        <div className="flex items-center border border-[#E5E4E2] rounded-xs bg-[#FAF9F6] overflow-hidden">
+                      <div className="flex items-center justify-between mt-2 pt-2 border-t border-[#E2E8F0]">
+                        <div className="flex items-center border border-[#E2E8F0] rounded-xs bg-[#F8FAFC] overflow-hidden">
                           <button
                             id={`cart-qty-dec-${item.id}`}
                             onClick={() => updateCartQuantity(item.id, item.quantity - 1)}
-                            className="p-1 px-2 text-[#1A1A1A] hover:bg-[#E5E4E2] transition-colors text-xs"
+                            className="p-1 px-2 text-[#0B192C] hover:bg-[#E2E8F0] transition-colors text-xs"
                           >
                             <Minus className="w-2.5 h-2.5" />
                           </button>
-                          <span className="px-2 text-xs font-bold text-[#1A1A1A] font-mono">
+                          <span className="px-2 text-xs font-bold text-[#0B192C] font-mono">
                             {item.quantity}
                           </span>
                           <button
                             id={`cart-qty-inc-${item.id}`}
                             onClick={() => updateCartQuantity(item.id, item.quantity + 1)}
-                            className="p-1 px-2 text-[#1A1A1A] hover:bg-[#E5E4E2] transition-colors text-xs"
+                            className="p-1 px-2 text-[#0B192C] hover:bg-[#E2E8F0] transition-colors text-xs"
                           >
                             <Plus className="w-2.5 h-2.5" />
                           </button>
                         </div>
 
-                        <span className="text-[10px] uppercase font-bold text-[#A08C75] tracking-wider">
+                        <span className="text-[10px] uppercase font-bold text-[#2563EB] tracking-wider">
                           {t.checkoutQty}: {item.quantity}
                         </span>
                       </div>
@@ -197,19 +197,19 @@ const CartDrawerContent: React.FC = () => {
                 ))
               ) : (
                 <div className="py-16 text-center space-y-4">
-                  <div className="w-14 h-14 rounded-full bg-[#F5F2ED] border border-[#E5E4E2] flex items-center justify-center mx-auto text-[#7A7A7A]">
+                  <div className="w-14 h-14 rounded-full bg-[#EFF6FF] border border-[#BFDBFE] flex items-center justify-center mx-auto text-[#2563EB]">
                     <ShoppingBag className="w-6 h-6" />
                   </div>
                   <div className="space-y-1">
-                    <h3 className="font-serif italic text-base font-bold text-[#1A1A1A]">{t.cartEmptyTitle}</h3>
-                    <p className="text-xs text-[#7A7A7A] max-w-xs mx-auto font-light">
+                    <h3 className="font-serif italic text-base font-bold text-[#0B192C]">{t.cartEmptyTitle}</h3>
+                    <p className="text-xs text-[#64748B] max-w-xs mx-auto font-light">
                       {t.cartEmptyDesc}
                     </p>
                   </div>
                   <button
                     id="cart-empty-explore-btn"
                     onClick={() => setIsCartOpen(false)}
-                    className="px-6 py-2.5 rounded-sm bg-[#1A1A1A] text-white text-[10px] uppercase tracking-widest font-bold hover:bg-black transition-colors"
+                    className="px-6 py-2.5 rounded-sm bg-[#0B192C] text-white text-[10px] uppercase tracking-widest font-bold hover:bg-[#2563EB] transition-colors"
                   >
                     {t.cartStartBrowsing}
                   </button>
@@ -219,16 +219,22 @@ const CartDrawerContent: React.FC = () => {
 
             {/* Bottom Checkout & Summary Footer */}
             {cart.length > 0 && (
-              <div className="p-4 sm:p-6 bg-white border-t border-[#E5E4E2] space-y-4">
+              <div className="p-4 sm:p-6 bg-white border-t border-[#E2E8F0] space-y-4">
                 {/* Order specs summary */}
-                <div className="space-y-2 p-3.5 rounded-sm bg-[#FAF9F6] border border-[#E5E4E2] text-xs text-[#5A5A5A]">
-                  <div className="flex items-center justify-between text-[#1A1A1A] font-bold">
+                <div className="space-y-2 p-3.5 rounded-sm bg-[#F8FAFC] border border-[#E2E8F0] text-xs text-[#475569]">
+                  <div className="flex items-center justify-between text-[#0B192C] font-bold">
                     <span>{t.checkoutSummaryPieces}</span>
                     <span>{cart.reduce((a, b) => a + b.quantity, 0)} {language === 'pt' ? 'peças' : 'items'}</span>
                   </div>
-                  <div className="flex items-center justify-between text-[11px] text-[#7A7A7A]">
+                  <div className="flex items-center justify-between text-[11px] text-[#64748B]">
                     <span>{t.cartShipping}</span>
-                    <span className="text-[#A08C75] uppercase font-bold text-[10px]">{t.cartFree}</span>
+                    <span className="text-[#0284C7] uppercase font-bold text-[10px]">{t.cartFree}</span>
+                  </div>
+                  <div className="flex items-center justify-between text-xs pt-2 border-t border-[#E0F2FE]">
+                    <span className="font-semibold text-[#0C4A6E]">{language === 'pt' ? 'Valor dos Artigos' : 'Item Pricing'}</span>
+                    <span className="text-xs font-bold text-[#0284C7] bg-[#F0F9FF] px-2 py-0.5 rounded-xs border border-[#BAE6FD]">
+                      {language === 'pt' ? 'Preço sob Consulta' : 'Price on Request'}
+                    </span>
                   </div>
                 </div>
 
@@ -236,14 +242,14 @@ const CartDrawerContent: React.FC = () => {
                 <button
                   id="cart-checkout-cta-btn"
                   onClick={handleProceedToCheckout}
-                  className="w-full py-3.5 px-6 rounded-sm bg-[#1A1A1A] hover:bg-black text-white text-[10px] uppercase font-bold tracking-widest flex items-center justify-center gap-2 shadow-sm transition-all active:scale-98"
+                  className="w-full py-3.5 px-6 rounded-sm bg-[#0284C7] hover:bg-[#0369A1] text-white text-[10px] uppercase font-bold tracking-widest flex items-center justify-center gap-2 shadow-xs transition-all active:scale-98"
                 >
-                  <span>{t.cartProceedCheckout}</span>
+                  <span>{language === 'pt' ? 'Consultar Preço & Finalizar Pedido' : 'Check Pricing & Proceed to Checkout'}</span>
                   <ArrowRight className="w-3.5 h-3.5" />
                 </button>
 
-                <div className="flex items-center justify-center gap-2 text-[10px] uppercase tracking-wider text-[#7A7A7A]">
-                  <ShieldCheck className="w-3.5 h-3.5 text-[#A08C75]" />
+                <div className="flex items-center justify-center gap-2 text-[10px] uppercase tracking-wider text-[#64748B]">
+                  <ShieldCheck className="w-3.5 h-3.5 text-[#0284C7]" />
                   <span>{t.cartEncrypted}</span>
                 </div>
               </div>

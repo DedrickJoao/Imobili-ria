@@ -15,6 +15,7 @@ export interface Translations {
   navCategories: string;
   navAiStylist: string;
   navLookbooks: string;
+  navCatalogs: string;
   navWishlist: string;
   navCart: string;
   navSearchPlaceholder: string;
@@ -305,6 +306,8 @@ export interface Translations {
   checkoutOrderSummary: string;
   checkoutOrderSummaryTitle: string;
   checkoutGrandTotal: string;
+  checkoutPriceStatus: string;
+  checkoutPriceDesc: string;
   checkoutSuccessTitle: string;
   checkoutThankYou: string;
   checkoutSuccessSubtitle: string;
@@ -358,8 +361,8 @@ export interface Translations {
 export const TRANSLATIONS: Record<Language, Translations> = {
   en: {
     // Brand
-    brandName: 'SARVICIMOBLIARIA',
-    brandTagline: 'Architecture & Fine Furniture',
+    brandName: 'SARVIC',
+    brandTagline: 'Architecture & Contemporary Fine Furniture',
     estYear: 'EST. 2024',
 
     // Announcement
@@ -371,6 +374,7 @@ export const TRANSLATIONS: Record<Language, Translations> = {
     navCategories: 'Categories',
     navAiStylist: 'AI Stylist',
     navLookbooks: 'Lookbooks',
+    navCatalogs: 'Catalogs',
     navWishlist: 'Wishlist',
     navCart: 'BAG',
     navSearchPlaceholder: 'Search pieces, materials, styles...',
@@ -543,7 +547,7 @@ export const TRANSLATIONS: Record<Language, Translations> = {
     lookbookPurchaseRoom: 'Purchase Entire Curated Room',
 
     // AI Stylist Modal
-    aiModalTitle: 'Sarvicimobliaria AI Interior Stylist',
+    aiModalTitle: 'SARVIC AI Interior Stylist',
     aiModalSubtitle: 'Curated Spatial Design & Material Coordination',
     aiTabCuratedRoom: 'Curated Room',
     aiCuratedRoom: 'Curated Room',
@@ -571,7 +575,7 @@ export const TRANSLATIONS: Record<Language, Translations> = {
     aiSpatialPlacement: 'Spatial & Lighting Placement Rules',
     aiSpatialRules: 'Spatial & Lighting Placement Rules',
     aiChatPlaceholder: 'Ask about dimensions, rug clearance, lighting temperatures, or wood combinations...',
-    aiThinking: 'Sarvicimobliaria Stylist is considering proportions & pairings...',
+    aiThinking: 'SARVIC Stylist is considering proportions & pairings...',
 
     // Search Bar
     searchPlaceholder: 'Search pieces, materials, styles...',
@@ -652,15 +656,17 @@ export const TRANSLATIONS: Record<Language, Translations> = {
     checkoutCashOnDelivery: 'Pay while ordering in the office',
     checkoutOrderNotes: 'Special Instructions / Delivery Landmark (Optional)',
     checkoutNotesPlaceholder: 'e.g. Near Polana Shopping, delivery on Saturday morning preferred...',
-    checkoutSubmitOrderBtn: 'Confirm and Send Order to Email',
-    checkoutSubmittingOrder: 'Sending Order Details...',
+    checkoutSubmitOrderBtn: 'Check Pricing & Confirm Order',
+    checkoutSubmittingOrder: 'Submitting Order & Requesting Quote...',
     checkoutSuccessEmailSent: 'A complete copy with all ordered furniture pieces, finishes, and customer details was sent to bestfurniture79@gmail.com and to',
     checkoutNextStepsTitle: 'What happens next?',
-    checkoutNextStepsDesc: 'Our Sarvicimobliaria team in Mozambique will reach out to you via WhatsApp / Phone or Email within 24 hours to confirm order availability, material details, payment arrangements, and schedule white-glove delivery.',
-    checkoutWhatsAppDirect: 'Chat on WhatsApp with Sarvicimobliaria',
+    checkoutNextStepsDesc: 'Our SARVIC team in Mozambique will reach out to you via WhatsApp / Phone or Email within 24 hours to confirm order availability, material details, payment arrangements, and schedule white-glove delivery.',
+    checkoutWhatsAppDirect: 'Chat on WhatsApp with SARVIC',
     checkoutOrderSummary: 'Order Summary',
     checkoutOrderSummaryTitle: 'Order Summary',
     checkoutGrandTotal: 'Order Summary',
+    checkoutPriceStatus: 'Price on Request',
+    checkoutPriceDesc: 'Bespoke custom quotation. No online payment required — our sales advisors confirm exclusive factory pricing, custom finishes, and delivery directly via email and WhatsApp.',
     checkoutSuccessTitle: 'Thank You For Your Order!',
     checkoutThankYou: 'Thank You For Your Order!',
     checkoutSuccessSubtitle: 'Order Reference',
@@ -684,17 +690,17 @@ export const TRANSLATIONS: Record<Language, Translations> = {
     checkoutContinueBrowsing: 'Continue Browsing Studio',
 
     // Footer
-    footerPrivateCircle: 'Sarvicimobliaria · Private Circle',
+    footerPrivateCircle: 'SARVIC · Private Circle',
     footerNewsletterTitle: 'Receive First-Access to Limited Stone & Hardwood Releases',
     footerNewsletterDesc: 'Join our architectural digest for seasonal furniture drops, material care guides, and exclusive trade discounts.',
-    footerWelcomeToast: 'Welcome to Sarvicimobliaria! Use code WELCOME10 at checkout for 10% off.',
-    footerWelcomeCode: 'Welcome to Sarvicimobliaria! Use code WELCOME10 at checkout for 10% off.',
+    footerWelcomeToast: 'Welcome to SARVIC!',
+    footerWelcomeCode: 'Welcome to SARVIC!',
     footerEmailPlaceholder: 'Enter your email address...',
     footerSubscribe: 'Subscribe',
     footerSubscribeBtn: 'Subscribe',
     footerBrandStory: 'We design and construct heirloom-grade furniture and real estate aesthetics using natural Italian travertine, kiln-dried FSC hardwoods, and tactile bouclé textiles.',
     footerAboutBrand: 'We design and construct heirloom-grade furniture and real estate aesthetics using natural Italian travertine, kiln-dried FSC hardwoods, and tactile bouclé textiles.',
-    footerStudioLocations: 'Studio: Milan, Lisbon & San Francisco',
+    footerStudioLocations: 'Studio: Milan, Lisbon & Maputo',
     footerCollection: 'Collection',
     footerColCollection: 'Collection',
     footerExperience: 'Experience',
@@ -705,15 +711,15 @@ export const TRANSLATIONS: Record<Language, Translations> = {
     footerTrial: '30-Day In-Home Trial',
     footerTimber: 'FSC-Certified Solid Timber',
     footerWeaves: 'Durable Olefin & Wool Weaves',
-    footerAllRights: 'Sarvicimobliaria Design Studio & Imobiliária Inc. All rights reserved.',
+    footerAllRights: 'SARVIC Design Studio & Fine Furniture Inc. All rights reserved.',
     footerPrivacy: 'Privacy Policy',
     footerTerms: 'Terms of Service',
     footerAccessibility: 'Accessibility',
   },
   pt: {
     // Brand
-    brandName: 'SARVICIMOBLIARIA',
-    brandTagline: 'Imobiliária, Arquitetura & Design de Interiores',
+    brandName: 'SARVIC',
+    brandTagline: 'Mobiliário Contemporâneo & Arquitetura de Interiores',
     estYear: 'FUNDADA EM 2024',
 
     // Announcement
@@ -725,6 +731,7 @@ export const TRANSLATIONS: Record<Language, Translations> = {
     navCategories: 'Categorias',
     navAiStylist: 'Estilista IA',
     navLookbooks: 'Lookbooks',
+    navCatalogs: 'Catálogos',
     navWishlist: 'Favoritos',
     navCart: 'SACOLA',
     navSearchPlaceholder: 'Buscar peças, materiais, acabamentos...',
@@ -897,7 +904,7 @@ export const TRANSLATIONS: Record<Language, Translations> = {
     lookbookPurchaseRoom: 'Comprar Ambiente Completo',
 
     // AI Stylist Modal
-    aiModalTitle: 'Estilista de Interiores IA Sarvicimobliaria',
+    aiModalTitle: 'Estilista de Interiores IA SARVIC',
     aiModalSubtitle: 'Design Espacial Curado & Coordenação de Materiais',
     aiTabCuratedRoom: 'Ambiente Curado',
     aiCuratedRoom: 'Ambiente Curado',
@@ -925,7 +932,7 @@ export const TRANSLATIONS: Record<Language, Translations> = {
     aiSpatialPlacement: 'Regras de Disposição Espacial & Iluminação',
     aiSpatialRules: 'Regras de Disposição Espacial & Iluminação',
     aiChatPlaceholder: 'Pergunte sobre dimensões, tapetes, temperaturas de luz ou combinações de madeira...',
-    aiThinking: 'O Estilista Sarvicimobliaria está calculando proporções e combinações...',
+    aiThinking: 'O Estilista SARVIC está calculando proporções e combinações...',
 
     // Search Bar
     searchPlaceholder: 'Buscar peças, materiais, acabamentos...',
@@ -1006,15 +1013,17 @@ export const TRANSLATIONS: Record<Language, Translations> = {
     checkoutCashOnDelivery: 'Pagamento ao encomendar no escritório',
     checkoutOrderNotes: 'Instruções Especiais / Ponto de Referência para Entrega (Opcional)',
     checkoutNotesPlaceholder: 'Ex: Perto do Polana Shopping, preferência de entrega no sábado pela manhã...',
-    checkoutSubmitOrderBtn: 'Confirmar e Enviar Pedido por E-mail',
-    checkoutSubmittingOrder: 'Enviando Detalhes do Pedido...',
+    checkoutSubmitOrderBtn: 'Confirmar Pedido & Consultar Preço',
+    checkoutSubmittingOrder: 'Submetendo Pedido & Solicitando Cotação...',
     checkoutSuccessEmailSent: 'Uma cópia completa com todos os móveis encomendados, acabamentos e detalhes do cliente foi enviada para bestfurniture79@gmail.com e para',
     checkoutNextStepsTitle: 'O que acontece a seguir?',
-    checkoutNextStepsDesc: 'A equipa comercial da Sarvicimobliaria em Moçambique entrará em contacto consigo via WhatsApp / Telefone ou E-mail dentro de 24 horas para confirmar a disponibilidade, detalhes de acabamento, dados de pagamento e agendar a entrega no seu endereço.',
-    checkoutWhatsAppDirect: 'Falar com a Sarvicimobliaria no WhatsApp',
+    checkoutNextStepsDesc: 'A equipa comercial da SARVIC em Moçambique entrará em contacto consigo via WhatsApp / Telefone ou E-mail dentro de 24 horas para confirmar a disponibilidade, detalhes de acabamento, dados de pagamento e agendar a entrega no seu endereço.',
+    checkoutWhatsAppDirect: 'Falar com a SARVIC no WhatsApp',
     checkoutOrderSummary: 'Resumo do Pedido',
     checkoutOrderSummaryTitle: 'Resumo do Pedido',
     checkoutGrandTotal: 'Resumo de Peças',
+    checkoutPriceStatus: 'Preço sob Consulta',
+    checkoutPriceDesc: 'Orçamento personalizado sob encomenda. Sem cobrança online imediata — a nossa equipa envia a cotação oficial e confirma as especificações por e-mail e WhatsApp.',
     checkoutSuccessTitle: 'Agradecemos Pelo Seu Pedido!',
     checkoutThankYou: 'Agradecemos Pelo Seu Pedido!',
     checkoutSuccessSubtitle: 'Referência do Pedido',
@@ -1038,17 +1047,17 @@ export const TRANSLATIONS: Record<Language, Translations> = {
     checkoutContinueBrowsing: 'Continuar Explorando o Studio',
 
     // Footer
-    footerPrivateCircle: 'Sarvicimobliaria · Círculo Privado',
+    footerPrivateCircle: 'SARVIC · Círculo Privado',
     footerNewsletterTitle: 'Acesso Antecipado a Lançamentos em Mármore & Madeiras Nobres',
     footerNewsletterDesc: 'Receba nosso boletim arquitetônico com lançamentos sazonais, guias de conservação de materiais e condições exclusivas.',
-    footerWelcomeToast: 'Bem-vindo à Sarvicimobliaria! Use o cupom WELCOME10 para 10% de desconto.',
-    footerWelcomeCode: 'Bem-vindo à Sarvicimobliaria! Use o cupom WELCOME10 para 10% de desconto.',
+    footerWelcomeToast: 'Bem-vindo à SARVIC!',
+    footerWelcomeCode: 'Bem-vindo à SARVIC!',
     footerEmailPlaceholder: 'Digite seu e-mail...',
     footerSubscribe: 'Assinar',
     footerSubscribeBtn: 'Assinar',
     footerBrandStory: 'Projetamos e construímos mobiliário de alto padrão e design imobiliário atemporal, combinando travertino romano, madeiras nobres com certificação FSC e tecidos bouclé italianos.',
     footerAboutBrand: 'Projetamos e construímos mobiliário de alto padrão e design imobiliário atemporal, combinando travertino romano, madeiras nobres com certificação FSC e tecidos bouclé italianos.',
-    footerStudioLocations: 'Studios: Milão, Lisboa, São Paulo & San Francisco',
+    footerStudioLocations: 'Studios: Milão, Lisboa & Maputo',
     footerCollection: 'Coleções',
     footerColCollection: 'Coleções',
     footerExperience: 'Experiência',
@@ -1059,7 +1068,7 @@ export const TRANSLATIONS: Record<Language, Translations> = {
     footerTrial: '30 Dias de Teste em Casa',
     footerTimber: 'Madeira Maciça Certificada FSC',
     footerWeaves: 'Tecidos Nobres de Alta Durabilidade',
-    footerAllRights: 'Sarvicimobliaria Studio de Design & Imobiliária Ltda. Todos os direitos reservados.',
+    footerAllRights: 'SARVIC Studio de Design & Mobiliário Fino Ltda. Todos os direitos reservados.',
     footerPrivacy: 'Política de Privacidade',
     footerTerms: 'Termos de Serviço',
     footerAccessibility: 'Acessibilidade',
