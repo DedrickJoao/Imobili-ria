@@ -3,7 +3,7 @@ import { ShopProvider, useShop } from './context/ShopContext';
 import { LanguageProvider } from './context/LanguageContext';
 import { Navbar } from './components/Navbar';
 import { Hero } from './components/Hero';
-import { ModernCatalogsSection } from './components/ModernCatalogsSection';
+import { CatalogSection } from './components/CatalogSection';
 import { LookbookSection } from './components/LookbookSection';
 import { ProductGallery } from './components/ProductGallery';
 import { ProductModal } from './components/ProductModal';
@@ -49,9 +49,9 @@ const ShopContent: React.FC = () => {
         {/* Editorial Hero Section */}
         <Hero onShopClick={scrollToGallery} />
 
-        {/* Modern Interactive Catalogs 2026 */}
+        {/* Flagship 154-Page Master Catalog Section from Official PDF */}
         <div ref={catalogsRef}>
-          <ModernCatalogsSection onRequestQuote={() => setIsCheckoutOpen(true)} />
+          <CatalogSection onRequestQuote={() => setIsCheckoutOpen(true)} />
         </div>
 
         {/* Curated Architectural Room Lookbooks */}

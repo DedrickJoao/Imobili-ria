@@ -6,7 +6,6 @@ import {
   X,
   ChevronLeft,
   ChevronRight,
-  Download,
   Mail,
   CheckCircle2,
   BookOpen,
@@ -14,6 +13,7 @@ import {
   FileText,
   Sparkles,
   Printer,
+  Eye,
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 
@@ -32,7 +32,6 @@ export const CatalogViewerModal: React.FC<CatalogViewerModalProps> = ({
   const [currentSpreadIndex, setCurrentSpreadIndex] = useState(0);
   const [emailInput, setEmailInput] = useState('');
   const [isEmailSent, setIsEmailSent] = useState(false);
-  const [isDownloading, setIsDownloading] = useState(false);
 
   if (!catalog) return null;
 
@@ -45,46 +44,6 @@ export const CatalogViewerModal: React.FC<CatalogViewerModalProps> = ({
 
   const handleNext = () => {
     setCurrentSpreadIndex(prev => (prev < totalSpreads - 1 ? prev + 1 : 0));
-  };
-
-  const handleDownload = () => {
-    setIsDownloading(true);
-    // Create a clean printable brochure document and trigger download
-    try {
-      const content = `
-SARVIC — CATÁLOGO OFICIAL 2026
-==================================================
-Edição: ${catalog.title} (${catalog.volume})
-Ano: ${catalog.year} · Páginas: ${catalog.pagesCount}
-Contacto Comercial: bestfurniture79@gmail.com
-WhatsApp: +258 84 920 1842
-Localização: Maputo, Moçambique
-
-DESTAQUES DO CATÁLOGO:
-${catalog.spreads.map((s, idx) => `
-[Página ${idx + 1}] ${s.title}
-${s.subtitle}
-Editorial: ${s.editorial}
-Peças em Destaque:
-${s.featuredItems.map(item => `  - ${item.name} (${item.category}): ${item.material} [${item.dimensions}]`).join('\n')}
-`).join('\n')}
-
-==================================================
-SARVIC · Arquitetura & Mobiliário Fino
-Todos os direitos reservados. Solicite orçamentos personalizados via bestfurniture79@gmail.com
-`;
-      const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
-      const url = URL.createObjectURL(blob);
-      const link = document.createElement('a');
-      link.href = url;
-      link.download = `${catalog.id}-${catalog.year}-sarvic.txt`;
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-      URL.revokeObjectURL(url);
-    } finally {
-      setTimeout(() => setIsDownloading(false), 800);
-    }
   };
 
   const handleSendEmail = (e: React.FormEvent) => {
@@ -112,25 +71,20 @@ Todos os direitos reservados. Solicite orçamentos personalizados via bestfurnit
             <BrandLogo variant="dark" size="sm" showTagline={false} />
             <div className="hidden sm:block h-4 w-px bg-[#CBD5E1]" />
             <div>
-              <span className="text-[10px] uppercase font-bold tracking-[0.2em] text-[#2563EB] block">
-                {catalog.volume} · {catalog.year}
+              <span className="text-[10px] uppercase font-bold tracking-[0.2em] text-[#0284C7] block">
+                {catalog.volume} · {catalog.pageRange}
               </span>
-              <h3 className="font-serif italic font-bold text-xs sm:text-sm text-[#0B192C] truncate max-w-xs sm:max-w-md">
+              <h3 className="font-serif italic font-bold text-xs sm:text-sm text-[#0C4A6E] truncate max-w-xs sm:max-w-md">
                 {catalog.title}
               </h3>
             </div>
           </div>
 
-          <div className="flex items-center gap-2">
-            <button
-              onClick={handleDownload}
-              disabled={isDownloading}
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xs border border-[#E2E8F0] hover:border-[#2563EB] hover:text-[#2563EB] text-xs font-bold uppercase tracking-wider text-[#0F172A] transition-colors"
-              title="Download Catalog Document"
-            >
-              <Download className="w-3.5 h-3.5" />
-              <span className="hidden md:inline">{isDownloading ? (language === 'pt' ? 'Descarregando...' : 'Downloading...') : (language === 'pt' ? 'Baixar PDF' : 'Download PDF')}</span>
-            </button>
+          <div className="flex items-center gap-2.5">
+            <div className="hidden sm:flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#F0F9FF] border border-[#BAE6FD] text-[10px] font-bold uppercase tracking-wider text-[#0284C7]">
+              <Eye className="w-3.5 h-3.5" />
+              <span>{language === 'pt' ? 'Visualização Online' : 'Online Viewer'}</span>
+            </div>
 
             <button
               onClick={onClose}

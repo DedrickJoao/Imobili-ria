@@ -140,10 +140,13 @@ export const Navbar: React.FC<NavbarProps> = ({
               id="nav-catalogs-btn"
               onClick={onNavigateToCatalogs}
               className="hidden lg:flex items-center gap-1.5 px-3 py-1.5 rounded-sm border border-[#BAE6FD] hover:border-[#0284C7] bg-[#F0F9FF] hover:bg-[#E0F2FE] text-xs uppercase tracking-wider font-bold text-[#0369A1] hover:text-[#0284C7] transition-all"
-              title={language === 'pt' ? 'Ver Catálogos Modernos 2026' : 'Browse Modern 2026 Catalogs'}
+              title={language === 'pt' ? 'Ver Catálogo Geral 154 Páginas' : 'Browse Full 154-Page Catalog'}
             >
               <BookOpen className="w-3.5 h-3.5 text-[#0284C7]" />
-              <span>{language === 'pt' ? 'Catálogos' : 'Catalogs'}</span>
+              <span>{language === 'pt' ? 'Catálogo 154 Págs' : 'Catalog (154 Pgs)'}</span>
+              <span className="text-[9px] bg-[#0284C7] text-white px-1.5 py-0.2 rounded-xs font-mono">
+                NOVO
+              </span>
             </button>
 
             {/* Language Switcher Button (English <-> Portuguese) */}
@@ -270,7 +273,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                 >
                   <div className="flex items-center gap-2.5">
                     <BookOpen className="w-4 h-4 text-[#0284C7]" />
-                    <span>{language === 'pt' ? 'Catálogos SARVIC 2026' : 'SARVIC 2026 Catalogs'}</span>
+                    <span>{language === 'pt' ? 'Catálogo Completo (154 Páginas)' : 'Full Catalog (154 Pages)'}</span>
                   </div>
                   <ArrowRight className="w-4 h-4 text-[#0284C7]" />
                 </button>

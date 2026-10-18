@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { MODERN_CATALOGS, CatalogItem } from '../data/catalogs';
 import { CatalogViewerModal } from './CatalogViewerModal';
 import { useLanguage } from '../context/LanguageContext';
-import { BookOpen, Download, ArrowRight, Eye, Sparkles } from 'lucide-react';
+import { BookOpen, ArrowRight, Eye, Sparkles } from 'lucide-react';
 
 interface ModernCatalogsSectionProps {
   onRequestQuote?: () => void;
@@ -13,38 +13,6 @@ export const ModernCatalogsSection: React.FC<ModernCatalogsSectionProps> = ({
 }) => {
   const { language } = useLanguage();
   const [selectedCatalog, setSelectedCatalog] = useState<CatalogItem | null>(null);
-
-  const handleQuickDownload = (catalog: CatalogItem, e: React.MouseEvent) => {
-    e.stopPropagation();
-    const content = `
-SARVIC — ${catalog.title.toUpperCase()}
-==================================================
-Edição: ${catalog.volume} · Ano: ${catalog.year} · Páginas: ${catalog.pagesCount}
-Contacto Oficial: bestfurniture79@gmail.com
-WhatsApp: +258 84 920 1842
-Showroom & Ateliê: Maputo, Moçambique
-
-Descrição:
-${language === 'pt' ? catalog.descriptionPt : catalog.descriptionEn}
-
-Peças e Séries Inclusas:
-${catalog.spreads.flatMap(s => s.featuredItems.map(f => `- ${f.name} (${f.material})`)).join('\n')}
-
-Preços & Orçamentos:
-Todas as peças são fabricadas sob medida com condições especiais de fábrica.
-Consulte o valor e prazos de entrega em bestfurniture79@gmail.com
-==================================================
-`;
-    const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = `${catalog.id}-${catalog.year}-sarvic.txt`;
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-    URL.revokeObjectURL(url);
-  };
 
   return (
     <section id="catalogs-section" className="py-16 sm:py-20 bg-white border-t border-b border-[#E2E8F0]">
@@ -69,7 +37,7 @@ Consulte o valor e prazos de entrega em bestfurniture79@gmail.com
 
           <div className="text-xs text-[#0284C7] font-bold uppercase tracking-wider flex items-center gap-1.5 shrink-0">
             <Sparkles className="w-4 h-4 text-[#0EA5E9]" />
-            <span>{language === 'pt' ? '4 Volumes Disponíveis' : '4 Volumes Available'}</span>
+            <span>{language === 'pt' ? '8 Volumes Oficiais do PDF' : '8 Official PDF Volumes'}</span>
           </div>
         </div>
 
@@ -134,21 +102,13 @@ Consulte o valor e prazos de entrega em bestfurniture79@gmail.com
                 </div>
 
                 {/* Card Actions */}
-                <div className="pt-3 border-t border-[#E0F2FE] flex items-center justify-between gap-2">
+                <div className="pt-3 border-t border-[#E0F2FE]">
                   <button
                     onClick={() => setSelectedCatalog(catalog)}
-                    className="flex-1 py-2 px-2.5 rounded-xs bg-[#0284C7] hover:bg-[#0369A1] text-white text-[10px] uppercase font-bold tracking-wider flex items-center justify-center gap-1.5 transition-colors shadow-xs"
+                    className="w-full py-2.5 px-3 rounded-xs bg-[#0284C7] hover:bg-[#0369A1] text-white text-[10px] uppercase font-bold tracking-wider flex items-center justify-center gap-2 transition-colors shadow-xs"
                   >
                     <Eye className="w-3.5 h-3.5" />
-                    <span>{language === 'pt' ? 'Folhear Online' : 'Browse Online'}</span>
-                  </button>
-
-                  <button
-                    onClick={(e) => handleQuickDownload(catalog, e)}
-                    className="p-2 rounded-xs border border-[#BAE6FD] hover:border-[#0284C7] text-[#0C4A6E] hover:text-[#0284C7] transition-colors"
-                    title={language === 'pt' ? 'Baixar Ficha Técnica' : 'Download Spec Sheet'}
-                  >
-                    <Download className="w-3.5 h-3.5" />
+                    <span>{language === 'pt' ? 'Visualizar Catálogo Online' : 'View Catalog Online'}</span>
                   </button>
                 </div>
               </div>

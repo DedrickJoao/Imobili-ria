@@ -1,5 +1,6 @@
 import express from 'express';
 import path from 'path';
+import fs from 'fs';
 import { fileURLToPath } from 'url';
 import { GoogleGenAI, Type } from '@google/genai';
 import dotenv from 'dotenv';
@@ -72,6 +73,52 @@ const createMailTransporter = async () => {
 // API: Health check
 app.get('/api/health', (req, res) => {
   res.json({ status: 'ok', timestamp: new Date().toISOString() });
+});
+
+// API: Full 154-Page Catalog Database
+app.get('/api/catalog/products', (req, res) => {
+  try {
+    const dbPath = path.resolve(__dirname, 'public/data/catalogDatabase.json');
+    if (fs.existsSync(dbPath)) {
+      const data = JSON.parse(fs.readFileSync(dbPath, 'utf8'));
+      const { category, search, shape } = req.query;
+      let items = data.products || [];
+      if (category && category !== 'all') {
+        items = items.filter((p: any) => p.category === category);
+      }
+      if (shape && shape !== 'all') {
+        items = items.filter((p: any) => p.layoutShape === shape);
+      }
+      if (search) {
+        const q = String(search).toLowerCase();
+        items = items.filter((p: any) => 
+          p.sku.toLowerCase().includes(q) ||
+          p.name.toLowerCase().includes(q) ||
+          p.upholstery.toLowerCase().includes(q) ||
+          (p.tags && p.tags.some((t: string) => t.toLowerCase().includes(q)))
+        );
+      }
+      return res.json({
+        total: items.length,
+        totalPages: 154,
+        products: items,
+      });
+    }
+    res.status(404).json({ error: 'Catalog database not found' });
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to read catalog database' });
+  }
+});
+
+// API: Export complete catalog database JSON for download
+app.get('/api/catalog/export', (req, res) => {
+  const dbPath = path.resolve(__dirname, 'public/data/catalogDatabase.json');
+  if (fs.existsSync(dbPath)) {
+    res.setHeader('Content-Disposition', 'attachment; filename="sarvic-catalog-database-2026.json"');
+    res.setHeader('Content-Type', 'application/json');
+    return res.sendFile(dbPath);
+  }
+  res.status(404).send('Catalog export file not found');
 });
 
 // API: AI Stylist & Room Recommendations
