@@ -60,7 +60,7 @@ export const CatalogSection: React.FC<CatalogSectionProps> = ({ onRequestQuote }
   const [selectedVolume, setSelectedVolume] = useState<CatalogItem | null>(null);
 
   // Flipbook specific state
-  const [flipPage, setFlipPage] = useState<number>(2);
+  const [flipPage, setFlipPage] = useState<number>(1);
 
   // Filter products
   const filteredProducts = useMemo(() => {
@@ -126,9 +126,10 @@ export const CatalogSection: React.FC<CatalogSectionProps> = ({ onRequestQuote }
     setCurrentPage(1);
   };
 
-  // Flipbook product lookup
+  // Flipbook product lookup (safely guarded when products are cleared)
   const currentFlipProduct = useMemo(() => {
-    return CATALOG_PRODUCTS.find(p => p.pageNumber === flipPage) || CATALOG_PRODUCTS[0];
+    if (CATALOG_PRODUCTS.length === 0) return null;
+    return CATALOG_PRODUCTS.find(p => p.pageNumber === flipPage) || CATALOG_PRODUCTS[0] || null;
   }, [flipPage]);
 
   return (
@@ -141,33 +142,31 @@ export const CatalogSection: React.FC<CatalogSectionProps> = ({ onRequestQuote }
           <div className="relative z-10 max-w-3xl space-y-3">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/15 backdrop-blur-xs text-[#BAE6FD] text-[10px] uppercase font-bold tracking-[0.25em]">
               <BookOpen className="w-3.5 h-3.5 text-[#38BDF8]" />
-              <span>Catálogos Oficiais do PDF · 154 Páginas Digitalizadas</span>
+              <span>{language === 'pt' ? 'Área de Catálogos SARVIC' : 'SARVIC Catalogs Hub'}</span>
             </div>
             
             <h1 className="font-serif italic text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight text-white">
-              Coleção Completa de Catálogos SARVIC 2026
+              {language === 'pt' ? 'Catálogos Oficiais SARVIC' : 'Official SARVIC Catalogs'}
             </h1>
 
             <p className="text-xs sm:text-sm text-[#E0F2FE] font-light leading-relaxed max-w-2xl">
-              Organizamos meticulosamente todo o conteúdo das 154 páginas do catálogo original da marca em 8 volumes temáticos disponíveis para visualização online. Explore sofás reclináveis elétricos alemães OKIN, seccionais monumentais em U de até 4,64 m, poltronas cinema VIP e a cartela oficial de 24 couros legítimos.
+              {language === 'pt'
+                ? 'Coleção oficial de estofados contemporâneos em couro genuíno. Explore modelos seccionais em L, reclináveis elétricos inteligentes e conjuntos de living com especificações técnicas completas e visualização online.'
+                : 'Official contemporary genuine leather upholstery collection. Explore L-shaped sectionals, smart power recliners, and architectural living suites with full technical specifications and online viewing.'}
             </p>
 
             <div className="flex flex-wrap items-center gap-4 pt-2 text-xs font-semibold text-[#BAE6FD]">
               <span className="flex items-center gap-1.5">
                 <span className="w-2 h-2 rounded-full bg-[#38BDF8]" />
-                <span>154 Páginas Oficiais do PDF</span>
+                <span>{language === 'pt' ? `${CATALOG_PRODUCTS.length} Modelos Oficiais` : `${CATALOG_PRODUCTS.length} Official Models`}</span>
               </span>
               <span className="flex items-center gap-1.5">
                 <span className="w-2 h-2 rounded-full bg-[#38BDF8]" />
-                <span>8 Volumes Temáticos</span>
+                <span>{language === 'pt' ? `${MODERN_CATALOGS.length} Volumes do Catálogo` : `${MODERN_CATALOGS.length} Catalog Volumes`}</span>
               </span>
               <span className="flex items-center gap-1.5">
-                <span className="w-2 h-2 rounded-full bg-[#38BDF8]" />
-                <span>Visualização Online Interativa</span>
-              </span>
-              <span className="flex items-center gap-1.5">
-                <span className="w-2 h-2 rounded-full bg-[#38BDF8]" />
-                <span>Esquemas CAD de Medidas</span>
+                <span className="w-2 h-2 rounded-full bg-emerald-400" />
+                <span>{language === 'pt' ? 'Visualização Online Ativa' : 'Online Viewing Active'}</span>
               </span>
             </div>
 
@@ -181,19 +180,7 @@ export const CatalogSection: React.FC<CatalogSectionProps> = ({ onRequestQuote }
                 }`}
               >
                 <FolderOpen className="w-4 h-4 text-[#0284C7]" />
-                <span>Ver 8 Volumes do Catálogo</span>
-              </button>
-
-              <button
-                onClick={() => setViewMode('flipbook')}
-                className={`px-4 py-2.5 rounded-sm transition-all text-xs font-bold uppercase tracking-wider flex items-center gap-2 shadow-xs ${
-                  viewMode === 'flipbook'
-                    ? 'bg-white text-[#0C4A6E]'
-                    : 'bg-white/20 hover:bg-white/30 text-white'
-                }`}
-              >
-                <BookOpen className="w-4 h-4 text-[#38BDF8]" />
-                <span>Folhear Páginas (1 a 154)</span>
+                <span>{language === 'pt' ? 'Volumes do Catálogo' : 'Catalog Volumes'}</span>
               </button>
 
               <button
@@ -205,7 +192,19 @@ export const CatalogSection: React.FC<CatalogSectionProps> = ({ onRequestQuote }
                 }`}
               >
                 <Grid3X3 className="w-4 h-4 text-[#38BDF8]" />
-                <span>Explorar Modelos & Filtros</span>
+                <span>{language === 'pt' ? 'Modelos & Especificações' : 'Models & Specifications'}</span>
+              </button>
+
+              <button
+                onClick={() => setViewMode('flipbook')}
+                className={`px-4 py-2.5 rounded-sm transition-all text-xs font-bold uppercase tracking-wider flex items-center gap-2 shadow-xs ${
+                  viewMode === 'flipbook'
+                    ? 'bg-white text-[#0C4A6E]'
+                    : 'bg-white/20 hover:bg-white/30 text-white'
+                }`}
+              >
+                <BookOpen className="w-4 h-4 text-[#38BDF8]" />
+                <span>{language === 'pt' ? 'Leitor de Páginas' : 'Page Reader'}</span>
               </button>
             </div>
           </div>
@@ -386,94 +385,123 @@ export const CatalogSection: React.FC<CatalogSectionProps> = ({ onRequestQuote }
               <div className="space-y-1">
                 <div className="flex items-center gap-2 text-[#0284C7] text-xs font-bold uppercase tracking-wider">
                   <Sparkles className="w-4 h-4 text-[#0EA5E9]" />
-                  <span>{language === 'pt' ? '8 Volumes Temáticos do PDF de 154 Páginas' : '8 Thematic Volumes of the 154-Page PDF'}</span>
+                  <span>{language === 'pt' ? 'Volumes do Catálogo' : 'Catalog Volumes'}</span>
                 </div>
                 <h3 className="font-serif italic text-xl sm:text-2xl font-bold text-[#0C4A6E]">
-                  {language === 'pt' ? 'Escolha uma Edição Oficial para Folhear Online' : 'Select an Official Edition to Browse Online'}
+                  {language === 'pt' ? 'Coleção de Estofados em Couro Legítimo' : 'Official Leather Upholstery Collection'}
                 </h3>
               </div>
               <div className="text-xs text-[#64748B] flex items-center gap-2">
                 <span className="inline-block w-2.5 h-2.5 rounded-full bg-emerald-500" />
-                <span>{language === 'pt' ? 'Todos os catálogos disponíveis para visualização' : 'All catalogs ready for interactive viewing'}</span>
+                <span>{language === 'pt' ? `${MODERN_CATALOGS.length} volumes disponíveis para folhear online` : `${MODERN_CATALOGS.length} volumes available for online viewing`}</span>
               </div>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-              {MODERN_CATALOGS.map((catalog) => (
-                <div
-                  key={catalog.id}
-                  onClick={() => setSelectedVolume(catalog)}
-                  className="group bg-white rounded-xs border border-[#E0F2FE] hover:border-[#0284C7] hover:shadow-xl transition-all duration-300 flex flex-col justify-between overflow-hidden cursor-pointer"
-                >
-                  {/* Cover Image */}
-                  <div className="relative aspect-[4/3] bg-[#0C4A6E] overflow-hidden">
-                    <img
-                      src={catalog.coverImage}
-                      alt={catalog.title}
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ease-out"
-                      referrerPolicy="no-referrer"
-                      loading="lazy"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
-
-                    {/* Badge Top Left */}
-                    <div className="absolute top-3 left-3">
-                      <span className="px-2.5 py-0.5 rounded-xs text-[9px] font-bold uppercase tracking-[0.2em] bg-[#0284C7] text-white shadow-xs">
-                        {language === 'pt' ? catalog.badge : catalog.badgeEn}
-                      </span>
-                    </div>
-
-                    {/* Volume & Pages Bottom Left */}
-                    <div className="absolute bottom-3 left-3 text-white">
-                      <span className="text-[10px] font-mono uppercase tracking-widest text-slate-200 block">
-                        {catalog.volume} · {catalog.pageRange}
-                      </span>
-                      <span className="text-xs font-bold text-white">
-                        {catalog.pagesCount} {language === 'pt' ? 'Páginas' : 'Pages'}
-                      </span>
-                    </div>
-                  </div>
-
-                  {/* Info */}
-                  <div className="p-4 flex-1 flex flex-col justify-between space-y-3 bg-white">
-                    <div className="space-y-1.5">
-                      <h3 className="font-serif italic font-bold text-sm sm:text-base text-[#0C4A6E] group-hover:text-[#0284C7] transition-colors line-clamp-2">
-                        {catalog.title}
-                      </h3>
-                      <p className="text-[11px] text-[#64748B] line-clamp-2 font-light leading-relaxed">
-                        {language === 'pt' ? catalog.descriptionPt : catalog.descriptionEn}
-                      </p>
-                    </div>
-
-                    {/* Tags */}
-                    <div className="flex flex-wrap gap-1 pt-1">
-                      {catalog.tags.slice(0, 3).map((tag, idx) => (
-                        <span
-                          key={idx}
-                          className="px-1.5 py-0.5 rounded-xs bg-[#F0F9FF] text-[#0369A1] text-[9px] uppercase tracking-wider font-medium"
-                        >
-                          {tag}
-                        </span>
-                      ))}
-                    </div>
-
-                    {/* Action: Folhear Online */}
-                    <div className="pt-3 border-t border-[#E0F2FE]">
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          setSelectedVolume(catalog);
-                        }}
-                        className="w-full py-2.5 px-3 rounded-xs bg-[#0284C7] hover:bg-[#0369A1] text-white text-[10px] uppercase font-bold tracking-wider flex items-center justify-center gap-2 transition-colors shadow-xs"
-                      >
-                        <Eye className="w-3.5 h-3.5" />
-                        <span>{language === 'pt' ? 'Visualizar Catálogo Online' : 'View Catalog Online'}</span>
-                      </button>
-                    </div>
-                  </div>
+            {MODERN_CATALOGS.length === 0 ? (
+              <div className="bg-white rounded-xs border-2 border-dashed border-[#CBD5E1] p-10 sm:p-14 text-center space-y-4">
+                <div className="w-16 h-16 mx-auto rounded-full bg-[#F0F9FF] border border-[#BAE6FD] flex items-center justify-center text-[#0284C7]">
+                  <FolderOpen className="w-8 h-8" />
                 </div>
-              ))}
-            </div>
+                <div className="space-y-2 max-w-lg mx-auto">
+                  <h4 className="font-serif italic text-xl sm:text-2xl font-bold text-[#0C4A6E]">
+                    {language === 'pt' ? 'Catálogos Anteriores Removidos' : 'Previous Catalogs Removed'}
+                  </h4>
+                  <p className="text-xs sm:text-sm text-[#64748B] leading-relaxed font-light">
+                    {language === 'pt'
+                      ? 'Todos os catálogos anteriores e todas as imagens foram removidos com sucesso. A infraestrutura está pronta para adicionarmos os catálogos definitivos.'
+                      : 'All previous catalogs and images have been successfully removed. The infrastructure is ready to add the final catalogs.'}
+                  </p>
+                </div>
+                <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#F0F9FF] border border-[#BAE6FD] text-[#0284C7] text-xs font-bold uppercase tracking-wider">
+                  <Sparkles className="w-3.5 h-3.5 text-[#0EA5E9]" />
+                  <span>{language === 'pt' ? 'Pronto para receber novos catálogos' : 'Ready to receive new catalogs'}</span>
+                </div>
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                {MODERN_CATALOGS.map((catalog) => (
+                  <div
+                    key={catalog.id}
+                    onClick={() => setSelectedVolume(catalog)}
+                    className="group bg-white rounded-xs border border-[#E0F2FE] hover:border-[#0284C7] hover:shadow-xl transition-all duration-300 flex flex-col justify-between overflow-hidden cursor-pointer"
+                  >
+                    {/* Cover Stage */}
+                    <div className="relative aspect-[4/3] bg-[#0C4A6E] overflow-hidden flex items-center justify-center">
+                      {catalog.coverImage ? (
+                        <img
+                          src={catalog.coverImage}
+                          alt={catalog.title}
+                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ease-out"
+                          referrerPolicy="no-referrer"
+                          loading="lazy"
+                        />
+                      ) : (
+                        <div className="w-full h-full flex flex-col items-center justify-center p-4 bg-gradient-to-br from-[#0C4A6E] to-[#0284C7] text-white">
+                          <BookOpen className="w-8 h-8 text-[#38BDF8] mb-2" />
+                          <span className="text-xs font-bold text-center">{catalog.title}</span>
+                        </div>
+                      )}
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
+
+                      {/* Badge Top Left */}
+                      <div className="absolute top-3 left-3">
+                        <span className="px-2.5 py-0.5 rounded-xs text-[9px] font-bold uppercase tracking-[0.2em] bg-[#0284C7] text-white shadow-xs">
+                          {language === 'pt' ? catalog.badge : catalog.badgeEn}
+                        </span>
+                      </div>
+
+                      {/* Volume & Pages Bottom Left */}
+                      <div className="absolute bottom-3 left-3 text-white">
+                        <span className="text-[10px] font-mono uppercase tracking-widest text-slate-200 block">
+                          {catalog.volume} · {catalog.pageRange}
+                        </span>
+                        <span className="text-xs font-bold text-white">
+                          {catalog.pagesCount} {language === 'pt' ? 'Páginas' : 'Pages'}
+                        </span>
+                      </div>
+                    </div>
+
+                    {/* Info */}
+                    <div className="p-4 flex-1 flex flex-col justify-between space-y-3 bg-white">
+                      <div className="space-y-1.5">
+                        <h3 className="font-serif italic font-bold text-sm sm:text-base text-[#0C4A6E] group-hover:text-[#0284C7] transition-colors line-clamp-2">
+                          {catalog.title}
+                        </h3>
+                        <p className="text-[11px] text-[#64748B] line-clamp-2 font-light leading-relaxed">
+                          {language === 'pt' ? catalog.descriptionPt : catalog.descriptionEn}
+                        </p>
+                      </div>
+
+                      {/* Tags */}
+                      <div className="flex flex-wrap gap-1 pt-1">
+                        {catalog.tags.slice(0, 3).map((tag, idx) => (
+                          <span
+                            key={idx}
+                            className="px-1.5 py-0.5 rounded-xs bg-[#F0F9FF] text-[#0369A1] text-[9px] uppercase tracking-wider font-medium"
+                          >
+                            {tag}
+                          </span>
+                        ))}
+                      </div>
+
+                      {/* Action: Folhear Online */}
+                      <div className="pt-3 border-t border-[#E0F2FE]">
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setSelectedVolume(catalog);
+                          }}
+                          className="w-full py-2.5 px-3 rounded-xs bg-[#0284C7] hover:bg-[#0369A1] text-white text-[10px] uppercase font-bold tracking-wider flex items-center justify-center gap-2 transition-colors shadow-xs"
+                        >
+                          <Eye className="w-3.5 h-3.5" />
+                          <span>{language === 'pt' ? 'Visualizar Catálogo Online' : 'View Catalog Online'}</span>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
         )}
 
@@ -482,22 +510,46 @@ export const CatalogSection: React.FC<CatalogSectionProps> = ({ onRequestQuote }
         ========================================================================= */}
         {viewMode === 'grid' && (
           <div className="space-y-8">
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-              {paginatedProducts.map((product) => (
-                <div
-                  key={product.id}
-                  onClick={() => setModalProduct(product)}
-                  className="group bg-white rounded-xs border border-[#E0F2FE] hover:border-[#0284C7] hover:shadow-lg transition-all duration-300 flex flex-col justify-between overflow-hidden cursor-pointer"
-                >
-                  {/* Top Image Stage */}
-                  <div className="relative aspect-[4/3] bg-[#0C4A6E]/5 overflow-hidden">
-                    <img
-                      src={product.image}
-                      alt={product.seoTitle}
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ease-out"
-                      referrerPolicy="no-referrer"
-                      loading="lazy"
-                    />
+            {paginatedProducts.length === 0 ? (
+              <div className="bg-white rounded-xs border-2 border-dashed border-[#CBD5E1] p-10 sm:p-14 text-center space-y-4">
+                <div className="w-16 h-16 mx-auto rounded-full bg-[#F0F9FF] border border-[#BAE6FD] flex items-center justify-center text-[#0284C7]">
+                  <Grid3X3 className="w-8 h-8" />
+                </div>
+                <div className="space-y-2 max-w-lg mx-auto">
+                  <h4 className="font-serif italic text-xl sm:text-2xl font-bold text-[#0C4A6E]">
+                    {language === 'pt' ? 'Modelos Anteriores Removidos' : 'Previous Models Removed'}
+                  </h4>
+                  <p className="text-xs sm:text-sm text-[#64748B] leading-relaxed font-light">
+                    {language === 'pt'
+                      ? 'Todos os modelos e imagens anteriores foram removidos. Estamos prontos para adicionar os novos modelos do catálogo.'
+                      : 'All previous models and images have been removed. Ready to add the new catalog models.'}
+                  </p>
+                </div>
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                {paginatedProducts.map((product) => (
+                  <div
+                    key={product.id}
+                    onClick={() => setModalProduct(product)}
+                    className="group bg-white rounded-xs border border-[#E0F2FE] hover:border-[#0284C7] hover:shadow-lg transition-all duration-300 flex flex-col justify-between overflow-hidden cursor-pointer"
+                  >
+                    {/* Top Image Stage */}
+                    <div className="relative aspect-[4/3] bg-[#0C4A6E]/5 overflow-hidden flex items-center justify-center">
+                      {product.image ? (
+                        <img
+                          src={product.image}
+                          alt={product.seoTitle}
+                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ease-out"
+                          referrerPolicy="no-referrer"
+                          loading="lazy"
+                        />
+                      ) : (
+                        <div className="w-full h-full flex flex-col items-center justify-center bg-slate-100 text-[#0C4A6E]">
+                          <Armchair className="w-8 h-8 text-[#0284C7] mb-1" />
+                          <span className="text-[10px] font-mono font-bold">{product.sku}</span>
+                        </div>
+                      )}
 
                     {/* SKU Badge Top Left */}
                     <div className="absolute top-2.5 left-2.5">
@@ -590,6 +642,7 @@ export const CatalogSection: React.FC<CatalogSectionProps> = ({ onRequestQuote }
                 </div>
               ))}
             </div>
+            )}
 
             {/* Pagination Controls */}
             {totalPagesCount > 1 && (
@@ -645,80 +698,98 @@ export const CatalogSection: React.FC<CatalogSectionProps> = ({ onRequestQuote }
         ========================================================================= */}
         {viewMode === 'table' && (
           <div className="bg-white border border-[#BAE6FD] rounded-xs overflow-hidden shadow-xs">
-            <div className="overflow-x-auto">
-              <table className="w-full text-left text-xs">
-                <thead className="bg-[#F0F9FF] border-b border-[#BAE6FD] text-[10px] uppercase font-bold text-[#0369A1] tracking-wider">
-                  <tr>
-                    <th className="py-3 px-4">Pág.</th>
-                    <th className="py-3 px-4">Código/SKU</th>
-                    <th className="py-3 px-4">Nome do Modelo</th>
-                    <th className="py-3 px-4">Categoria</th>
-                    <th className="py-3 px-4">Dimensões (LxPxA)</th>
-                    <th className="py-3 px-4">Mecanismo</th>
-                    <th className="py-3 px-4">Revestimento</th>
-                    <th className="py-3 px-4">Cores</th>
-                    <th className="py-3 px-4 text-right">Ação</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-[#E0F2FE] text-[#0C4A6E]">
-                  {filteredProducts.map((p) => (
-                    <tr
-                      key={p.id}
-                      onClick={() => setModalProduct(p)}
-                      className="hover:bg-[#F8FAFC] transition-colors cursor-pointer"
-                    >
-                      <td className="py-3 px-4 font-mono font-bold text-[#0284C7]">
-                        Pág. {p.pageNumber}
-                      </td>
-                      <td className="py-3 px-4 font-mono font-bold">
-                        <span className="bg-[#E0F2FE] text-[#0284C7] px-2 py-0.5 rounded-xs">
-                          {p.sku}
-                        </span>
-                      </td>
-                      <td className="py-3 px-4 font-serif font-bold text-[#0C4A6E]">
-                        {p.name}
-                      </td>
-                      <td className="py-3 px-4 text-[#64748B]">
-                        {p.categoryLabelPt}
-                      </td>
-                      <td className="py-3 px-4 font-mono">
-                        {p.dimensions.totalWidthCm} × {p.dimensions.depthCm} × {p.dimensions.heightCm} cm
-                        {p.dimensions.chaiseDepthCm ? ` (Chaise ${p.dimensions.chaiseDepthCm}cm)` : ''}
-                      </td>
-                      <td className="py-3 px-4 font-medium text-[#0369A1]">
-                        {p.mechanism}
-                      </td>
-                      <td className="py-3 px-4 text-[#475569]">
-                        {p.upholstery}
-                      </td>
-                      <td className="py-3 px-4">
-                        <div className="flex items-center -space-x-1">
-                          {p.colors.map((c, i) => (
-                            <span
-                              key={i}
-                              title={c.namePt}
-                              className="w-3.5 h-3.5 rounded-full border border-white shadow-2xs"
-                              style={{ backgroundColor: c.hex }}
-                            />
-                          ))}
-                        </div>
-                      </td>
-                      <td className="py-3 px-4 text-right">
-                        <button
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            setModalProduct(p);
-                          }}
-                          className="px-2.5 py-1 rounded-xs bg-[#0284C7] text-white hover:bg-[#0369A1] font-bold text-[10px] uppercase tracking-wider"
-                        >
-                          Ver Detalhes
-                        </button>
-                      </td>
+            {filteredProducts.length === 0 ? (
+              <div className="p-10 sm:p-14 text-center space-y-4">
+                <div className="w-16 h-16 mx-auto rounded-full bg-[#F0F9FF] border border-[#BAE6FD] flex items-center justify-center text-[#0284C7]">
+                  <FileSpreadsheet className="w-8 h-8" />
+                </div>
+                <div className="space-y-2 max-w-lg mx-auto">
+                  <h4 className="font-serif italic text-xl sm:text-2xl font-bold text-[#0C4A6E]">
+                    {language === 'pt' ? 'Tabela Técnica Pronta para Importação' : 'Technical Table Ready for Import'}
+                  </h4>
+                  <p className="text-xs sm:text-sm text-[#64748B] leading-relaxed font-light">
+                    {language === 'pt'
+                      ? 'A tabela técnica está limpa e será preenchida com as especificações dos novos catálogos.'
+                      : 'The technical table is clear and will be filled with specs from the new catalogs.'}
+                  </p>
+                </div>
+              </div>
+            ) : (
+              <div className="overflow-x-auto">
+                <table className="w-full text-left text-xs">
+                  <thead className="bg-[#F0F9FF] border-b border-[#BAE6FD] text-[10px] uppercase font-bold text-[#0369A1] tracking-wider">
+                    <tr>
+                      <th className="py-3 px-4">Pág.</th>
+                      <th className="py-3 px-4">Código/SKU</th>
+                      <th className="py-3 px-4">Nome do Modelo</th>
+                      <th className="py-3 px-4">Categoria</th>
+                      <th className="py-3 px-4">Dimensões (LxPxA)</th>
+                      <th className="py-3 px-4">Mecanismo</th>
+                      <th className="py-3 px-4">Revestimento</th>
+                      <th className="py-3 px-4">Cores</th>
+                      <th className="py-3 px-4 text-right">Ação</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
+                  </thead>
+                  <tbody className="divide-y divide-[#E0F2FE] text-[#0C4A6E]">
+                    {filteredProducts.map((p) => (
+                      <tr
+                        key={p.id}
+                        onClick={() => setModalProduct(p)}
+                        className="hover:bg-[#F8FAFC] transition-colors cursor-pointer"
+                      >
+                        <td className="py-3 px-4 font-mono font-bold text-[#0284C7]">
+                          Pág. {p.pageNumber}
+                        </td>
+                        <td className="py-3 px-4 font-mono font-bold">
+                          <span className="bg-[#E0F2FE] text-[#0284C7] px-2 py-0.5 rounded-xs">
+                            {p.sku}
+                          </span>
+                        </td>
+                        <td className="py-3 px-4 font-serif font-bold text-[#0C4A6E]">
+                          {p.name}
+                        </td>
+                        <td className="py-3 px-4 text-[#64748B]">
+                          {p.categoryLabelPt}
+                        </td>
+                        <td className="py-3 px-4 font-mono">
+                          {p.dimensions.totalWidthCm} × {p.dimensions.depthCm} × {p.dimensions.heightCm} cm
+                          {p.dimensions.chaiseDepthCm ? ` (Chaise ${p.dimensions.chaiseDepthCm}cm)` : ''}
+                        </td>
+                        <td className="py-3 px-4 font-medium text-[#0369A1]">
+                          {p.mechanism}
+                        </td>
+                        <td className="py-3 px-4 text-[#475569]">
+                          {p.upholstery}
+                        </td>
+                        <td className="py-3 px-4">
+                          <div className="flex items-center -space-x-1">
+                            {p.colors.map((c, i) => (
+                              <span
+                                key={i}
+                                title={c.namePt}
+                                className="w-3.5 h-3.5 rounded-full border border-white shadow-2xs"
+                                style={{ backgroundColor: c.hex }}
+                              />
+                            ))}
+                          </div>
+                        </td>
+                        <td className="py-3 px-4 text-right">
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setModalProduct(p);
+                            }}
+                            className="px-2.5 py-1 rounded-xs bg-[#0284C7] text-white hover:bg-[#0369A1] font-bold text-[10px] uppercase tracking-wider"
+                          >
+                            Ver Detalhes
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
           </div>
         )}
 
@@ -727,116 +798,153 @@ export const CatalogSection: React.FC<CatalogSectionProps> = ({ onRequestQuote }
         ========================================================================= */}
         {viewMode === 'flipbook' && (
           <div className="bg-white border border-[#BAE6FD] p-6 sm:p-8 rounded-xs shadow-md space-y-6">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-[#E0F2FE] pb-4">
-              <div className="space-y-1">
-                <span className="text-[10px] uppercase font-bold tracking-[0.2em] text-[#0284C7]">
-                  Visualizador de Catálogo Original
-                </span>
-                <h3 className="font-serif italic text-2xl font-bold text-[#0C4A6E]">
-                  Página {flipPage} de 154 · {currentFlipProduct?.name || 'Catálogo Oficial SARVIC'}
-                </h3>
-              </div>
-
-              {/* Page Selector & Prev/Next */}
-              <div className="flex items-center gap-2">
-                <button
-                  onClick={() => setFlipPage(prev => Math.max(prev - 1, 1))}
-                  disabled={flipPage === 1}
-                  className="px-3 py-2 rounded-xs border border-[#CBD5E1] bg-[#F8FAFC] text-xs font-bold text-[#0C4A6E] hover:bg-[#F0F9FF] disabled:opacity-30"
-                >
-                  <ChevronLeft className="w-4 h-4" />
-                </button>
-
-                <div className="flex items-center gap-1.5 text-xs font-mono font-bold text-[#0284C7]">
-                  <span>Ir para Pág:</span>
-                  <input
-                    type="number"
-                    min={1}
-                    max={154}
-                    value={flipPage}
-                    onChange={(e) => setFlipPage(Math.min(Math.max(Number(e.target.value) || 1, 1), 154))}
-                    className="w-16 px-2 py-1 border border-[#BAE6FD] text-center font-bold text-[#0C4A6E] rounded-xs"
-                  />
-                  <span>/ 154</span>
+            {!currentFlipProduct ? (
+              <div className="rounded-xs border-2 border-dashed border-[#CBD5E1] p-10 sm:p-14 text-center space-y-4">
+                <div className="w-16 h-16 mx-auto rounded-full bg-[#F0F9FF] border border-[#BAE6FD] flex items-center justify-center text-[#0284C7]">
+                  <BookOpen className="w-8 h-8" />
                 </div>
-
-                <button
-                  onClick={() => setFlipPage(prev => Math.min(prev + 1, 154))}
-                  disabled={flipPage === 154}
-                  className="px-3 py-2 rounded-xs border border-[#CBD5E1] bg-[#F8FAFC] text-xs font-bold text-[#0C4A6E] hover:bg-[#F0F9FF] disabled:opacity-30"
-                >
-                  <ChevronRight className="w-4 h-4" />
-                </button>
-              </div>
-            </div>
-
-            {/* Flipbook Content Stage */}
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-              
-              {/* Left Column: Full Page Visualization */}
-              <div className="lg:col-span-7 space-y-4">
-                <div className="relative aspect-[16/11] bg-[#0C4A6E]/5 rounded-xs border border-[#BAE6FD] overflow-hidden group shadow-sm">
-                  <img
-                    src={currentFlipProduct.image}
-                    alt={currentFlipProduct.name}
-                    className="w-full h-full object-cover"
-                  />
-                  <div className="absolute top-3 left-3 bg-[#0284C7] text-white px-3 py-1 rounded-xs text-xs font-bold font-mono">
-                    MODELO {currentFlipProduct.sku}
-                  </div>
-                  <div className="absolute bottom-3 right-3 bg-black/80 text-white px-3 py-1 rounded-xs text-xs font-mono">
-                    Página Oficial #{flipPage}
-                  </div>
-                </div>
-
-                {/* Thumbnail slider for surrounding pages */}
-                <div className="flex items-center gap-2 overflow-x-auto py-2">
-                  {CATALOG_PRODUCTS.slice(0, 15).map((p) => (
-                    <button
-                      key={p.id}
-                      onClick={() => setFlipPage(p.pageNumber)}
-                      className={`relative w-20 aspect-[4/3] rounded-xs overflow-hidden shrink-0 border-2 transition-all ${
-                        flipPage === p.pageNumber
-                          ? 'border-[#0284C7] scale-105 shadow-md'
-                          : 'border-transparent opacity-60 hover:opacity-100'
-                      }`}
-                    >
-                      <img src={p.image} alt={p.name} className="w-full h-full object-cover" />
-                      <span className="absolute bottom-0 inset-x-0 bg-black/70 text-white text-[8px] text-center font-mono">
-                        P.{p.pageNumber}
-                      </span>
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              {/* Right Column: Matched Technical Information & CAD blueprint */}
-              <div className="lg:col-span-5 space-y-4">
-                <div className="p-4 rounded-xs bg-[#F0F9FF] border border-[#BAE6FD] space-y-2">
-                  <span className="text-[10px] uppercase font-bold tracking-wider text-[#0284C7]">
-                    Ficha Técnica Extraída do PDF · Pág. {flipPage}
-                  </span>
-                  <h4 className="font-serif italic text-2xl font-bold text-[#0C4A6E]">
-                    {currentFlipProduct.name}
+                <div className="space-y-2 max-w-lg mx-auto">
+                  <h4 className="font-serif italic text-xl sm:text-2xl font-bold text-[#0C4A6E]">
+                    {language === 'pt' ? 'Visualizador de Páginas Preparado' : 'Page Viewer Ready'}
                   </h4>
-                  <p className="text-xs text-[#64748B] font-light leading-relaxed">
-                    {currentFlipProduct.fullDescriptionPt}
+                  <p className="text-xs sm:text-sm text-[#64748B] leading-relaxed font-light">
+                    {language === 'pt'
+                      ? 'Todas as imagens foram removidas. O leitor digital exibirá as páginas assim que adicionarmos os novos catálogos.'
+                      : 'All images have been removed. The digital reader will display pages once we add the new catalogs.'}
                   </p>
                 </div>
-
-                {/* CAD Schematic */}
-                <CatalogSchematicView product={currentFlipProduct} />
-
-                <button
-                  onClick={() => setModalProduct(currentFlipProduct)}
-                  className="w-full py-3 rounded-sm bg-[#0284C7] hover:bg-[#0369A1] text-white text-xs font-bold uppercase tracking-wider flex items-center justify-center gap-2 shadow-xs transition-colors"
-                >
-                  <MessageCircle className="w-4 h-4" />
-                  <span>Pedir Orçamento Deste Modelo ({currentFlipProduct.sku})</span>
-                </button>
+                <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#F0F9FF] border border-[#BAE6FD] text-[#0284C7] text-xs font-bold uppercase tracking-wider">
+                  <Sparkles className="w-3.5 h-3.5 text-[#0EA5E9]" />
+                  <span>{language === 'pt' ? 'Aguardando novas páginas' : 'Waiting for new pages'}</span>
+                </div>
               </div>
+            ) : (
+              <>
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-[#E0F2FE] pb-4">
+                  <div className="space-y-1">
+                    <span className="text-[10px] uppercase font-bold tracking-[0.2em] text-[#0284C7]">
+                      Visualizador de Catálogo Original
+                    </span>
+                    <h3 className="font-serif italic text-2xl font-bold text-[#0C4A6E]">
+                      Página {flipPage} de {CATALOG_PRODUCTS.length} · {currentFlipProduct?.name || 'Catálogo Oficial SARVIC'}
+                    </h3>
+                  </div>
 
-            </div>
+                  {/* Page Selector & Prev/Next */}
+                  <div className="flex items-center gap-2">
+                    <button
+                      onClick={() => setFlipPage(prev => Math.max(prev - 1, 1))}
+                      disabled={flipPage === 1}
+                      className="px-3 py-2 rounded-xs border border-[#CBD5E1] bg-[#F8FAFC] text-xs font-bold text-[#0C4A6E] hover:bg-[#F0F9FF] disabled:opacity-30"
+                    >
+                      <ChevronLeft className="w-4 h-4" />
+                    </button>
+
+                    <div className="flex items-center gap-1.5 text-xs font-mono font-bold text-[#0284C7]">
+                      <span>Ir para Pág:</span>
+                      <input
+                        type="number"
+                        min={1}
+                        max={CATALOG_PRODUCTS.length}
+                        value={flipPage}
+                        onChange={(e) => setFlipPage(Math.min(Math.max(Number(e.target.value) || 1, 1), CATALOG_PRODUCTS.length))}
+                        className="w-16 px-2 py-1 border border-[#BAE6FD] text-center font-bold text-[#0C4A6E] rounded-xs"
+                      />
+                      <span>/ {CATALOG_PRODUCTS.length}</span>
+                    </div>
+
+                    <button
+                      onClick={() => setFlipPage(prev => Math.min(prev + 1, CATALOG_PRODUCTS.length))}
+                      disabled={flipPage === CATALOG_PRODUCTS.length}
+                      className="px-3 py-2 rounded-xs border border-[#CBD5E1] bg-[#F8FAFC] text-xs font-bold text-[#0C4A6E] hover:bg-[#F0F9FF] disabled:opacity-30"
+                    >
+                      <ChevronRight className="w-4 h-4" />
+                    </button>
+                  </div>
+                </div>
+
+                {/* Flipbook Content Stage */}
+                <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+                  
+                  {/* Left Column: Full Page Visualization */}
+                  <div className="lg:col-span-7 space-y-4">
+                    <div className="relative aspect-[16/11] bg-[#0C4A6E]/5 rounded-xs border border-[#BAE6FD] overflow-hidden group shadow-sm flex items-center justify-center">
+                      {currentFlipProduct.image ? (
+                        <img
+                          src={currentFlipProduct.image}
+                          alt={currentFlipProduct.name}
+                          className="w-full h-full object-cover"
+                        />
+                      ) : (
+                        <div className="w-full h-full flex flex-col items-center justify-center bg-slate-100 text-[#0C4A6E]">
+                          <BookOpen className="w-12 h-12 text-[#0284C7] mb-2" />
+                          <span className="text-xs font-mono font-bold">MODELO {currentFlipProduct.sku}</span>
+                        </div>
+                      )}
+                      <div className="absolute top-3 left-3 bg-[#0284C7] text-white px-3 py-1 rounded-xs text-xs font-bold font-mono">
+                        MODELO {currentFlipProduct.sku}
+                      </div>
+                      <div className="absolute bottom-3 right-3 bg-black/80 text-white px-3 py-1 rounded-xs text-xs font-mono">
+                        Página Oficial #{flipPage}
+                      </div>
+                    </div>
+
+                    {/* Thumbnail slider for surrounding pages */}
+                    <div className="flex items-center gap-2 overflow-x-auto py-2">
+                      {CATALOG_PRODUCTS.slice(0, 15).map((p) => (
+                        <button
+                          key={p.id}
+                          onClick={() => setFlipPage(p.pageNumber)}
+                          className={`relative w-20 aspect-[4/3] rounded-xs overflow-hidden shrink-0 border-2 transition-all ${
+                            flipPage === p.pageNumber
+                              ? 'border-[#0284C7] scale-105 shadow-md'
+                              : 'border-transparent opacity-60 hover:opacity-100'
+                          }`}
+                        >
+                          {p.image ? (
+                            <img src={p.image} alt={p.name} className="w-full h-full object-cover" />
+                          ) : (
+                            <div className="w-full h-full bg-slate-200 flex items-center justify-center text-[9px] font-mono font-bold">
+                              {p.sku}
+                            </div>
+                          )}
+                          <span className="absolute bottom-0 inset-x-0 bg-black/70 text-white text-[8px] text-center font-mono">
+                            P.{p.pageNumber}
+                          </span>
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Right Column: Matched Technical Information & CAD blueprint */}
+                  <div className="lg:col-span-5 space-y-4">
+                    <div className="p-4 rounded-xs bg-[#F0F9FF] border border-[#BAE6FD] space-y-2">
+                      <span className="text-[10px] uppercase font-bold tracking-wider text-[#0284C7]">
+                        Ficha Técnica Extraída do PDF · Pág. {flipPage}
+                      </span>
+                      <h4 className="font-serif italic text-2xl font-bold text-[#0C4A6E]">
+                        {currentFlipProduct.name}
+                      </h4>
+                      <p className="text-xs text-[#64748B] font-light leading-relaxed">
+                        {currentFlipProduct.fullDescriptionPt}
+                      </p>
+                    </div>
+
+                    {/* CAD Schematic */}
+                    <CatalogSchematicView product={currentFlipProduct} />
+
+                    <button
+                      onClick={() => setModalProduct(currentFlipProduct)}
+                      className="w-full py-3 rounded-sm bg-[#0284C7] hover:bg-[#0369A1] text-white text-xs font-bold uppercase tracking-wider flex items-center justify-center gap-2 shadow-xs transition-colors"
+                    >
+                      <MessageCircle className="w-4 h-4" />
+                      <span>Pedir Orçamento Deste Modelo ({currentFlipProduct.sku})</span>
+                    </button>
+                  </div>
+
+                </div>
+              </>
+            )}
           </div>
         )}
 

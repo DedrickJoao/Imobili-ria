@@ -167,12 +167,20 @@ export const CatalogViewerModal: React.FC<CatalogViewerModalProps> = ({
 
               {/* Right / High-Res Photograph Column (7 cols) */}
               <div className="lg:col-span-7 relative bg-[#0B192C] overflow-hidden flex items-center justify-center min-h-[380px] lg:min-h-[500px]">
-                <img
-                  src={currentSpread.image}
-                  alt={currentSpread.title}
-                  className="w-full h-full object-cover object-center transition-all duration-700"
-                  referrerPolicy="no-referrer"
-                />
+                {currentSpread?.image ? (
+                  <img
+                    src={currentSpread.image}
+                    alt={currentSpread.title}
+                    className="w-full h-full object-cover object-center transition-all duration-700"
+                    referrerPolicy="no-referrer"
+                  />
+                ) : (
+                  <div className="w-full h-full flex flex-col items-center justify-center p-8 bg-gradient-to-br from-[#0C4A6E] to-[#0284C7] text-white">
+                    <BookOpen className="w-16 h-16 text-[#38BDF8] mb-3" />
+                    <span className="font-serif italic text-lg font-bold text-center">{catalog.title}</span>
+                    <span className="text-xs text-[#BAE6FD] mt-1">{currentSpread?.title}</span>
+                  </div>
+                )}
                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent pointer-events-none" />
 
                 <div className="absolute bottom-4 left-4 right-4 flex items-center justify-between text-white text-xs drop-shadow-md">
