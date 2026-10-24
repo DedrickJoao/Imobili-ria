@@ -108,28 +108,10 @@ export const CatalogProductModal: React.FC<CatalogProductModalProps> = ({
           </div>
 
           <div className="flex items-center gap-2">
-            {/* Prev / Next Page Navigator */}
-            <div className="flex items-center gap-1 bg-white border border-[#BAE6FD] rounded-xs px-1.5 py-0.5 text-xs text-[#0C4A6E]">
-              <button
-                onClick={handlePrev}
-                disabled={!hasPrev}
-                className="p-1 hover:text-[#0284C7] disabled:opacity-30 disabled:hover:text-[#0C4A6E]"
-                title="Modelo Anterior"
-              >
-                <ChevronLeft className="w-4 h-4" />
-              </button>
-              <span className="text-[10px] font-mono font-bold px-1 text-[#0284C7]">
-                {currentIndex + 1}/{allProducts.length}
-              </span>
-              <button
-                onClick={handleNext}
-                disabled={!hasNext}
-                className="p-1 hover:text-[#0284C7] disabled:opacity-30 disabled:hover:text-[#0C4A6E]"
-                title="Próximo Modelo"
-              >
-                <ChevronRight className="w-4 h-4" />
-              </button>
-            </div>
+            {/* Static Photo Indicator (No Carousel) */}
+            <span className="text-[10px] font-mono font-bold px-2.5 py-1 bg-[#F0F9FF] border border-[#BAE6FD] text-[#0284C7] rounded-xs">
+              Foto {currentIndex + 1} de {allProducts.length}
+            </span>
 
             <button
               onClick={handleCopyLink}

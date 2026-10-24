@@ -1,7 +1,7 @@
 {
-  "updatedAt": "2026-10-21T22:15:00.000Z",
+  "updatedAt": "2026-10-24T18:00:00.000Z",
   "catalogTitle": "SARVIC — Catálogo Oficial de Estofados em Couro Legítimo 2026",
-  "totalProducts": 6,
+  "totalProducts": 9,
   "volumes": [
     {
       "id": "vol-1-seccionais",
@@ -12,6 +12,11 @@
       "id": "vol-2-recliners-living",
       "title": "Volume 2 · Smart Reclináveis & Living Sets Contemporâneos",
       "pages": "4-6"
+    },
+    {
+      "id": "vol-3-exclusive-additions",
+      "title": "Volume 3 · Master Editions & Coleção Bar Contemporânea",
+      "pages": "7-9"
     }
   ],
   "products": [
@@ -80,6 +85,39 @@
       "dimensions": "346 × 90 × 92 cm (Chaise 175 cm)",
       "upholstery": "Couro Nappa Azul Petróleo & Motor OKIN",
       "image": "/assets/aistudio/Sofa_azul_4_lugares_71f12fa0.png"
+    },
+    {
+      "id": "sofa-ivory-zebra-lounge",
+      "sku": "2A33-Z#",
+      "name": "Sofá Seccional Ivory Pearl em L com Almofadas Zebra (4 Lugares + Chaise)",
+      "pageNumber": 7,
+      "category": "sectionals",
+      "categoryLabel": "Sofás de Canto & Chaise Longue",
+      "dimensions": "360 × 90 × 90 cm (Chaise 175 cm)",
+      "upholstery": "Couro Nappa Premium Marfim Perolado",
+      "image": "/assets/aistudio/image_8d255d1a.png"
+    },
+    {
+      "id": "sofa-champagne-2927-2-bar",
+      "sku": "2927-2#",
+      "name": "Sofá Modular 2927-2# Champagne Gold com Console Bar & Pufe (4 Lugares)",
+      "pageNumber": 8,
+      "category": "smart-tech",
+      "categoryLabel": "Sofás Inteligentes & Bar",
+      "dimensions": "420 × 105 × 95 cm (Chaise 185 cm, Pufe 80 × 70 cm)",
+      "upholstery": "Couro Genuíno Top-Grain Champagne Gold",
+      "image": "/assets/aistudio/image_d13e3a9d.png"
+    },
+    {
+      "id": "sofa-terracota-9028-amber",
+      "sku": "9028#",
+      "name": "Sofá Seccional 9028# Terracota Âmbar em L (4 Lugares + Chaise)",
+      "pageNumber": 9,
+      "category": "sectionals",
+      "categoryLabel": "Sofás de Canto & Chaise Longue",
+      "dimensions": "360 × 90 × 95 cm (Chaise 180 cm)",
+      "upholstery": "Couro Genuíno Top-Grain Terracota & Madeira Nobre",
+      "image": "/assets/aistudio/image_64bb778c.png"
     }
   ]
 }
